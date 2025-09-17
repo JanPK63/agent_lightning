@@ -1,0 +1,13 @@
+{
+  "id": "test_spec",
+  "name": "Test Spec",
+  "description": "A test specification",
+  "version": "1.0.0",
+  "inputs": {},
+  "outputs": {},
+  "workflow": [],
+  "resources": {},
+  "metadata": {},
+  "created_at": 1758023489.7216609,
+  "updated_at": 1758023489.7216609
+}

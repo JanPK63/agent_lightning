@@ -1,0 +1,32 @@
+[
+  {
+    "id": "data_analysis_e2f55538_20250903061249",
+    "category": "data_analysis",
+    "content": "Data analysis approach:\n        1. Identify data sources and formats\n        2. Map data schemas and relationships\n        3. Analyze data quality and completeness\n        4. Document business rules and transformations\n        5. Identify optimization opportunities\n        6. Create data flow diagrams",
+    "source": "training",
+    "timestamp": "2025-09-03T06:12:49.915087",
+    "metadata": {},
+    "usage_count": 0,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "api_analysis_6d8050ad_20250903061249",
+    "category": "api_analysis",
+    "content": "API analysis checklist:\n        - Endpoint structure and naming conventions\n        - Request/response formats (JSON, XML, etc.)\n        - Authentication and authorization methods\n        - Rate limiting and throttling\n        - Error handling and status codes\n        - Versioning strategy\n        - Documentation completeness",
+    "source": "training",
+    "timestamp": "2025-09-03T06:12:49.915197",
+    "metadata": {},
+    "usage_count": 0,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "database_optimization_12950163_20250903061249",
+    "category": "database_optimization",
+    "content": "Database optimization strategies:\n        - Index frequently queried columns\n        - Normalize to reduce redundancy\n        - Denormalize for read performance\n        - Partition large tables\n        - Optimize query execution plans\n        - Use caching strategically\n        - Monitor slow queries",
+    "source": "training",
+    "timestamp": "2025-09-03T06:12:49.915288",
+    "metadata": {},
+    "usage_count": 0,
+    "relevance_score": 1.0
+  }
+]

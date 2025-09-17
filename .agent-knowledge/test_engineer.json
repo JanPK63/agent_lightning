@@ -1,0 +1,112 @@
+[
+  {
+    "id": "technical_documentation_5d52ce59_20250907070446",
+    "category": "technical_documentation",
+    "content": "## \ud83d\udcda AI & Machine Learning\n- **Coursera**: [Machine Learning (Andrew Ng)](https://www.coursera.org/learn/machine-learning)  \n- **fast.ai**: Gratis deep learning cursussen \u2192 [fast.ai](https://www.fast.ai/)  \n- **Khan Academy**: Statistiek, algebra, kansrekening \u2192 [khanacademy.org](https://www.khanacademy.org/)  \n- **Books**: *Hands-On Machine Learning with Scikit-Learn & TensorFlow* (O\u2019Reilly)  \n- **Kaggle**: Datasets & notebooks \u2192 [kaggle.com](https://www.kaggle.com/)  \n- **Hugging Face**: Pre-trained modellen \u2192 [huggingface.co](https://huggingface.co/)  \n\n---\n\n## \ud83e\uddea AI Testing\n- **Papers with Code**: [paperswithcode.com](https://paperswithcode.com/)  \n- **IEEE Xplore**: Wetenschappelijke publicaties \u2192 [ieeexplore.ieee.org](https://ieeexplore.ieee.org/)  \n- **ACM Digital Library**: [dl.acm.org](https://dl.acm.org/)  \n- **ISTQB AI Testing Syllabus**: [istqb.org](https://www.istqb.org/)  \n\n---\n\n## \u2699\ufe0f Java\n- **Documentatie**: [Oracle Java Docs](https://docs.oracle.com/javase/)  \n- **Tutorials**: [W3Schools Java](https://www.w3schools.com/java/), [Baeldung](https://www.baeldung.com/java-tutorial)  \n- **Boeken**: *Effective Java* (Joshua Bloch), *Head First Java* (Kathy Sierra)  \n- **Community**: [Stack Overflow Java](https://stackoverflow.com/questions/tagged/java), [Reddit r/java](https://www.reddit.com/r/java/)  \n\n---\n\n## \ud83d\udd17 Blockchain\n- **Ethereum developers**: [ethereum.org/developers](https://ethereum.org/developers/)  \n- **Bitcoin developers**: [developer.bitcoin.org](https://developer.bitcoin.org/)  \n- **Solidity**: [soliditylang.org](https://soliditylang.org/)  \n- **Web3 libraries**: [web3.js](https://web3js.readthedocs.io/), [ethers.js](https://docs.ethers.org/)  \n- **OpenZeppelin Contracts**: [GitHub](https://github.com/OpenZeppelin/openzeppelin-contracts)  \n- **Community**: [Reddit r/cryptodevs](https://www.reddit.com/r/cryptodevs/)  \n\n---\n\n## \u269b\ufe0f React\n- **Offici\u00eble docs**: [react.dev](https://react.dev/)  \n- **Tutorials**: [Scrimba React](https://scrimba.com/learn/learnreact), [freeCodeCamp](https://www.freecodecamp.org/learn/front-end-development-libraries/#react)  \n- **Component libraries**: [shadcn/ui](https://ui.shadcn.com/), [Material UI](https://mui.com/)  \n- **Community**: [Reactiflux Discord](https://www.reactiflux.com/), [Reddit r/reactjs](https://www.reddit.com/r/reactjs/)  \n\n---\n\n## \ud83d\udc39 Go (Golang)\n- **Documentatie**: [go.dev/doc](https://go.dev/doc/)  \n- **Tutorials**: [Tour of Go](https://go.dev/tour/), [Go by Example](https://gobyexample.com/)  \n- **Boek**: *The Go Programming Language* (Alan Donovan & Brian Kernighan)  \n- **Community**: [Gophers Slack](https://invite.slack.golangbridge.org/), [Reddit r/golang](https://www.reddit.com/r/golang/)  \n\n---\n\n## \u26a1 Vite\n- **Offici\u00eble docs**: [vitejs.dev](https://vitejs.dev/)  \n- **Tutorial**: [Vite Crash Course \u2013 Traversy Media](https://www.youtube.com/watch?v=2LDOJm9DYUI)  \n- **Integraties**: [React + Vite Guide](https://vitejs.dev/guide/)  \n- **Community**: [GitHub Vite](https://github.com/vitejs/vite), [Reddit r/vitejs](https://www.reddit.com/r/vitejs/)  \n\n---\n\n## \ud83c\udfdb\ufe0f Domein & Regelgeving\n- **EU AI Act**: [artificialintelligenceact.eu](https://artificialintelligenceact.eu/)  \n- **GDPR/AVG**: [Autoriteit Persoonsgegevens](https://autoriteitpersoonsgegevens.nl/)  \n- **ISO/IEC Standards (AI & Testing)**: [iso.org](https://www.iso.org/)  \n- **IEEE Standards**: [standards.ieee.org](https://standards.ieee.org/)  ",
+    "source": "# \ud83c\udf10 Knowledge Map \u2013 AI Agent Testing & Development  ## \ud83d\udcda AI & Machine Learning - **Coursera**: [Machine Learning (Andrew Ng)](https://www.coursera.org/learn/machine-learning)   - **fast.ai**: Gratis deep learning cursussen \u2192 [fast.ai](https://www.fast.ai/)   - **Khan Academy**: Statistiek, algebra, kansrekening \u2192 [khanacademy.org](https://www.khanacademy.org/)   - **Books**: *Hands-On Machine Learning with Scikit-Learn & TensorFlow* (O\u2019Reilly)   - **Kaggle**: Datasets & notebooks \u2192 [kaggle.com](https://www.kaggle.com/)   - **Hugging Face**: Pre-trained modellen \u2192 [huggingface.co](https://huggingface.co/)    ---  ## \ud83e\uddea AI Testing - **Papers with Code**: [paperswithcode.com](https://paperswithcode.com/)   - **IEEE Xplore**: Wetenschappelijke publicaties \u2192 [ieeexplore.ieee.org](https://ieeexplore.ieee.org/)   - **ACM Digital Library**: [dl.acm.org](https://dl.acm.org/)   - **ISTQB AI Testing Syllabus**: [istqb.org](https://www.istqb.org/)    ---  ## \u2699\ufe0f Java - **Documentatie**: [Oracle Java Docs](https://docs.oracle.com/javase/)   - **Tutorials**: [W3Schools Java](https://www.w3schools.com/java/), [Baeldung](https://www.baeldung.com/java-tutorial)   - **Boeken**: *Effective Java* (Joshua Bloch), *Head First Java* (Kathy Sierra)   - **Community**: [Stack Overflow Java](https://stackoverflow.com/questions/tagged/java), [Reddit r/java](https://www.reddit.com/r/java/)    ---  ## \ud83d\udd17 Blockchain - **Ethereum developers**: [ethereum.org/developers](https://ethereum.org/developers/)   - **Bitcoin developers**: [developer.bitcoin.org](https://developer.bitcoin.org/)   - **Solidity**: [soliditylang.org](https://soliditylang.org/)   - **Web3 libraries**: [web3.js](https://web3js.readthedocs.io/), [ethers.js](https://docs.ethers.org/)   - **OpenZeppelin Contracts**: [GitHub](https://github.com/OpenZeppelin/openzeppelin-contracts)   - **Community**: [Reddit r/cryptodevs](https://www.reddit.com/r/cryptodevs/)    ---  ## \u269b\ufe0f React - **Offici\u00eble docs**: [react.dev](https://react.dev/)   - **Tutorials**: [Scrimba React](https://scrimba.com/learn/learnreact), [freeCodeCamp](https://www.freecodecamp.org/learn/front-end-development-libraries/#react)   - **Component libraries**: [shadcn/ui](https://ui.shadcn.com/), [Material UI](https://mui.com/)   - **Community**: [Reactiflux Discord](https://www.reactiflux.com/), [Reddit r/reactjs](https://www.reddit.com/r/reactjs/)    ---  ## \ud83d\udc39 Go (Golang) - **Documentatie**: [go.dev/doc](https://go.dev/doc/)   - **Tutorials**: [Tour of Go](https://go.dev/tour/), [Go by Example](https://gobyexample.com/)   - **Boek**: *The Go Programming Language* (Alan Donovan & Brian Kernighan)   - **Community**: [Gophers Slack](https://invite.slack.golangbridge.org/), [Reddit r/golang](https://www.reddit.com/r/golang/)    ---  ## \u26a1 Vite - **Offici\u00eble docs**: [vitejs.dev](https://vitejs.dev/)   - **Tutorial**: [Vite Crash Course \u2013 Traversy Media](https://www.youtube.com/watch?v=2LDOJm9DYUI)   - **Integraties**: [React + Vite Guide](https://vitejs.dev/guide/)   - **Community**: [GitHub Vite](https://github.com/vitejs/vite), [Reddit r/vitejs](https://www.reddit.com/r/vitejs/)    ---  ## \ud83c\udfdb\ufe0f Domein & Regelgeving - **EU AI Act**: [artificialintelligenceact.eu](https://artificialintelligenceact.eu/)   - **GDPR/AVG**: [Autoriteit Persoonsgegevens](https://autoriteitpersoonsgegevens.nl/)   - **ISO/IEC Standards (AI & Testing)**: [iso.org](https://www.iso.org/)   - **IEEE Standards**: [standards.ieee.org](https://standards.ieee.org/)  ",
+    "timestamp": "2025-09-07T07:04:46.041162",
+    "metadata": {},
+    "usage_count": 8,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "best_practices_15db89c3_20250907071832",
+    "category": "best_practices",
+    "content": "Always write tests that are independent and can run in any order. Each test should set up its own test data and clean up after itself.",
+    "source": "testing_best_practices",
+    "timestamp": "2025-09-07T07:18:32.506153",
+    "metadata": {},
+    "usage_count": 5,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "code_examples_cdf33e30_20250907071832",
+    "category": "code_examples",
+    "content": "Python unit test example with pytest:\nimport pytest\n\nclass TestCalculator:\n    def test_addition(self):\n        assert add(2, 3) == 5\n    \n    def test_division_by_zero(self):\n        with pytest.raises(ZeroDivisionError):\n            divide(10, 0)\n            \n    @pytest.mark.parametrize(\"a,b,expected\", [\n        (2, 3, 5),\n        (-1, 1, 0),\n        (0, 0, 0)\n    ])\n    def test_add_parametrized(self, a, b, expected):\n        assert add(a, b) == expected",
+    "source": "pytest_patterns",
+    "timestamp": "2025-09-07T07:18:32.506570",
+    "metadata": {},
+    "usage_count": 5,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "technical_documentation_ff8f8fd5_20250907071832",
+    "category": "technical_documentation",
+    "content": "Performance testing should include: Load testing (normal expected load), Stress testing (beyond normal capacity), Spike testing (sudden load increases), and Endurance testing (sustained load over time).",
+    "source": "performance_testing_guide",
+    "timestamp": "2025-09-07T07:18:32.506869",
+    "metadata": {},
+    "usage_count": 5,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "tutorials_74212b65_20250907073421",
+    "category": "tutorials",
+    "content": "all knowledge",
+    "source": "# \ud83c\udf10 Knowledge Map \u2013 AI Agent Testing & Development  ## \ud83d\udcda AI & Machine Learning - **Coursera**: [Machine Learning (Andrew Ng)](https://www.coursera.org/learn/machine-learning)   - **fast.ai**: Gratis deep learning cursussen \u2192 [fast.ai](https://www.fast.ai/)   - **Khan Academy**: Statistiek, algebra, kansrekening \u2192 [khanacademy.org](https://www.khanacademy.org/)   - **Books**: *Hands-On Machine Learning with Scikit-Learn & TensorFlow* (O\u2019Reilly)   - **Kaggle**: Datasets & notebooks \u2192 [kaggle.com](https://www.kaggle.com/)   - **Hugging Face**: Pre-trained modellen \u2192 [huggingface.co](https://huggingface.co/)    ---  ## \ud83e\uddea AI Testing - **Papers with Code**: [paperswithcode.com](https://paperswithcode.com/)   - **IEEE Xplore**: Wetenschappelijke publicaties \u2192 [ieeexplore.ieee.org](https://ieeexplore.ieee.org/)   - **ACM Digital Library**: [dl.acm.org](https://dl.acm.org/)   - **ISTQB AI Testing Syllabus**: [istqb.org](https://www.istqb.org/)    ---  ## \u2699\ufe0f Java - **Documentatie**: [Oracle Java Docs](https://docs.oracle.com/javase/)   - **Tutorials**: [W3Schools Java](https://www.w3schools.com/java/), [Baeldung](https://www.baeldung.com/java-tutorial)   - **Boeken**: *Effective Java* (Joshua Bloch), *Head First Java* (Kathy Sierra)   - **Community**: [Stack Overflow Java](https://stackoverflow.com/questions/tagged/java), [Reddit r/java](https://www.reddit.com/r/java/)    ---  ## \ud83d\udd17 Blockchain - **Ethereum developers**: [ethereum.org/developers](https://ethereum.org/developers/)   - **Bitcoin developers**: [developer.bitcoin.org](https://developer.bitcoin.org/)   - **Solidity**: [soliditylang.org](https://soliditylang.org/)   - **Web3 libraries**: [web3.js](https://web3js.readthedocs.io/), [ethers.js](https://docs.ethers.org/)   - **OpenZeppelin Contracts**: [GitHub](https://github.com/OpenZeppelin/openzeppelin-contracts)   - **Community**: [Reddit r/cryptodevs](https://www.reddit.com/r/cryptodevs/)    ---  ## \u269b\ufe0f React - **Offici\u00eble docs**: [react.dev](https://react.dev/)   - **Tutorials**: [Scrimba React](https://scrimba.com/learn/learnreact), [freeCodeCamp](https://www.freecodecamp.org/learn/front-end-development-libraries/#react)   - **Component libraries**: [shadcn/ui](https://ui.shadcn.com/), [Material UI](https://mui.com/)   - **Community**: [Reactiflux Discord](https://www.reactiflux.com/), [Reddit r/reactjs](https://www.reddit.com/r/reactjs/)    ---  ## \ud83d\udc39 Go (Golang) - **Documentatie**: [go.dev/doc](https://go.dev/doc/)   - **Tutorials**: [Tour of Go](https://go.dev/tour/), [Go by Example](https://gobyexample.com/)   - **Boek**: *The Go Programming Language* (Alan Donovan & Brian Kernighan)   - **Community**: [Gophers Slack](https://invite.slack.golangbridge.org/), [Reddit r/golang](https://www.reddit.com/r/golang/)    ---  ## \u26a1 Vite - **Offici\u00eble docs**: [vitejs.dev](https://vitejs.dev/)   - **Tutorial**: [Vite Crash Course \u2013 Traversy Media](https://www.youtube.com/watch?v=2LDOJm9DYUI)   - **Integraties**: [React + Vite Guide](https://vitejs.dev/guide/)   - **Community**: [GitHub Vite](https://github.com/vitejs/vite), [Reddit r/vitejs](https://www.reddit.com/r/vitejs/)    ---  ## \ud83c\udfdb\ufe0f Domein & Regelgeving - **EU AI Act**: [artificialintelligenceact.eu](https://artificialintelligenceact.eu/)   - **GDPR/AVG**: [Autoriteit Persoonsgegevens](https://autoriteitpersoonsgegevens.nl/)   - **ISO/IEC Standards (AI & Testing)**: [iso.org](https://www.iso.org/)   - **IEEE Standards**: [standards.ieee.org](https://standards.ieee.org/)  ",
+    "timestamp": "2025-09-07T07:34:21.811124",
+    "metadata": {},
+    "usage_count": 4,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "tutorials_74212b65_20250907073437",
+    "category": "tutorials",
+    "content": "all knowledge",
+    "source": "# \ud83c\udf10 Knowledge Map \u2013 AI Agent Testing & Development  ## \ud83d\udcda AI & Machine Learning - **Coursera**: [Machine Learning (Andrew Ng)](https://www.coursera.org/learn/machine-learning)   - **fast.ai**: Gratis deep learning cursussen \u2192 [fast.ai](https://www.fast.ai/)   - **Khan Academy**: Statistiek, algebra, kansrekening \u2192 [khanacademy.org](https://www.khanacademy.org/)   - **Books**: *Hands-On Machine Learning with Scikit-Learn & TensorFlow* (O\u2019Reilly)   - **Kaggle**: Datasets & notebooks \u2192 [kaggle.com](https://www.kaggle.com/)   - **Hugging Face**: Pre-trained modellen \u2192 [huggingface.co](https://huggingface.co/)    ---  ## \ud83e\uddea AI Testing - **Papers with Code**: [paperswithcode.com](https://paperswithcode.com/)   - **IEEE Xplore**: Wetenschappelijke publicaties \u2192 [ieeexplore.ieee.org](https://ieeexplore.ieee.org/)   - **ACM Digital Library**: [dl.acm.org](https://dl.acm.org/)   - **ISTQB AI Testing Syllabus**: [istqb.org](https://www.istqb.org/)    ---  ## \u2699\ufe0f Java - **Documentatie**: [Oracle Java Docs](https://docs.oracle.com/javase/)   - **Tutorials**: [W3Schools Java](https://www.w3schools.com/java/), [Baeldung](https://www.baeldung.com/java-tutorial)   - **Boeken**: *Effective Java* (Joshua Bloch), *Head First Java* (Kathy Sierra)   - **Community**: [Stack Overflow Java](https://stackoverflow.com/questions/tagged/java), [Reddit r/java](https://www.reddit.com/r/java/)    ---  ## \ud83d\udd17 Blockchain - **Ethereum developers**: [ethereum.org/developers](https://ethereum.org/developers/)   - **Bitcoin developers**: [developer.bitcoin.org](https://developer.bitcoin.org/)   - **Solidity**: [soliditylang.org](https://soliditylang.org/)   - **Web3 libraries**: [web3.js](https://web3js.readthedocs.io/), [ethers.js](https://docs.ethers.org/)   - **OpenZeppelin Contracts**: [GitHub](https://github.com/OpenZeppelin/openzeppelin-contracts)   - **Community**: [Reddit r/cryptodevs](https://www.reddit.com/r/cryptodevs/)    ---  ## \u269b\ufe0f React - **Offici\u00eble docs**: [react.dev](https://react.dev/)   - **Tutorials**: [Scrimba React](https://scrimba.com/learn/learnreact), [freeCodeCamp](https://www.freecodecamp.org/learn/front-end-development-libraries/#react)   - **Component libraries**: [shadcn/ui](https://ui.shadcn.com/), [Material UI](https://mui.com/)   - **Community**: [Reactiflux Discord](https://www.reactiflux.com/), [Reddit r/reactjs](https://www.reddit.com/r/reactjs/)    ---  ## \ud83d\udc39 Go (Golang) - **Documentatie**: [go.dev/doc](https://go.dev/doc/)   - **Tutorials**: [Tour of Go](https://go.dev/tour/), [Go by Example](https://gobyexample.com/)   - **Boek**: *The Go Programming Language* (Alan Donovan & Brian Kernighan)   - **Community**: [Gophers Slack](https://invite.slack.golangbridge.org/), [Reddit r/golang](https://www.reddit.com/r/golang/)    ---  ## \u26a1 Vite - **Offici\u00eble docs**: [vitejs.dev](https://vitejs.dev/)   - **Tutorial**: [Vite Crash Course \u2013 Traversy Media](https://www.youtube.com/watch?v=2LDOJm9DYUI)   - **Integraties**: [React + Vite Guide](https://vitejs.dev/guide/)   - **Community**: [GitHub Vite](https://github.com/vitejs/vite), [Reddit r/vitejs](https://www.reddit.com/r/vitejs/)    ---  ## \ud83c\udfdb\ufe0f Domein & Regelgeving - **EU AI Act**: [artificialintelligenceact.eu](https://artificialintelligenceact.eu/)   - **GDPR/AVG**: [Autoriteit Persoonsgegevens](https://autoriteitpersoonsgegevens.nl/)   - **ISO/IEC Standards (AI & Testing)**: [iso.org](https://www.iso.org/)   - **IEEE Standards**: [standards.ieee.org](https://standards.ieee.org/)  ",
+    "timestamp": "2025-09-07T07:34:37.420711",
+    "metadata": {},
+    "usage_count": 4,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "tutorials_e04d1bce_20250907073952",
+    "category": "tutorials",
+    "content": "machine learning",
+    "source": "https://www.coursera.org/learn/machine-learning",
+    "timestamp": "2025-09-07T07:39:52.067636",
+    "metadata": {},
+    "usage_count": 4,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "tutorials_e04d1bce_20250907073956",
+    "category": "tutorials",
+    "content": "machine learning",
+    "source": "https://www.coursera.org/learn/machine-learning",
+    "timestamp": "2025-09-07T07:39:56.133581",
+    "metadata": {},
+    "usage_count": 4,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "tutorials_e04d1bce_20250907074241",
+    "category": "tutorials",
+    "content": "machine learning",
+    "source": "https://www.coursera.org/learn/machine-learning",
+    "timestamp": "2025-09-07T07:42:41.470392",
+    "metadata": {},
+    "usage_count": 4,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "tutorials_e04d1bce_20250907074527",
+    "category": "tutorials",
+    "content": "machine learning",
+    "source": "https://www.coursera.org/learn/machine-learning",
+    "timestamp": "2025-09-07T07:45:27.834476",
+    "metadata": {},
+    "usage_count": 4,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "technical_documentation_42e42c3a_20250907081621",
+    "category": "technical_documentation",
+    "content": "URL Reference: fast.ai \n\nDescription: dep knowledge\n\nCategory: technical_documentation\nAdded: 2025-09-07 08:16:21",
+    "source": "url:fast.ai ",
+    "timestamp": "2025-09-07T08:16:21.005201",
+    "metadata": {},
+    "usage_count": 1,
+    "relevance_score": 1.0
+  }
+]

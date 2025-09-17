@@ -1,0 +1,162 @@
+{
+  "dashboard": {
+    "uid": "test-metrics",
+    "title": "Test Metrics Dashboard",
+    "tags": [
+      "testing",
+      "coverage",
+      "quality"
+    ],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Test Coverage",
+        "type": "gauge",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 6,
+          "h": 8
+        },
+        "targets": [
+          {
+            "query": "from(bucket: \"test_metrics\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"test_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"coverage\")\n  |> last()",
+            "refId": "A"
+          }
+        ],
+        "transparent": false,
+        "options": {},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 60
+                },
+                {
+                  "color": "green",
+                  "value": 80
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Test Execution Time",
+        "type": "graph",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB"
+        },
+        "gridPos": {
+          "x": 6,
+          "y": 0,
+          "w": 18,
+          "h": 8
+        },
+        "targets": [
+          {
+            "query": "from(bucket: \"test_metrics\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"test_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"execution_time\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+            "refId": "A"
+          }
+        ],
+        "transparent": false,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Test Pass/Fail Ratio",
+        "type": "piechart",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 8,
+          "w": 8,
+          "h": 8
+        },
+        "targets": [
+          {
+            "query": "from(bucket: \"test_metrics\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"test_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"test_result\")\n  |> group(columns: [\"result\"])\n  |> count()",
+            "refId": "A"
+          }
+        ],
+        "transparent": false,
+        "options": {}
+      },
+      {
+        "id": 4,
+        "title": "Test Runs Over Time",
+        "type": "graph",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB"
+        },
+        "gridPos": {
+          "x": 8,
+          "y": 8,
+          "w": 16,
+          "h": 8
+        },
+        "targets": [
+          {
+            "query": "from(bucket: \"test_metrics\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"test_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"test_run\")\n  |> aggregateWindow(every: v.windowPeriod, fn: count, createEmpty: false)",
+            "refId": "A"
+          }
+        ],
+        "transparent": false,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short"
+          }
+        }
+      }
+    ],
+    "schemaVersion": 37,
+    "version": 1,
+    "refresh": "30s",
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "links": [],
+    "liveNow": false,
+    "weekStart": ""
+  },
+  "overwrite": true
+}

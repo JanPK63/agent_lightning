@@ -1,0 +1,72 @@
+services:
+- id: agent-designer-1
+  type: agent_designer
+  url: http://localhost:8001
+  health_check: /health
+  weight: 1
+- id: agent-designer-2
+  type: agent_designer
+  url: http://localhost:8011
+  health_check: /health
+  weight: 1
+- id: workflow-engine-1
+  type: workflow_engine
+  url: http://localhost:8002
+  health_check: /health
+  weight: 1
+- id: integration-hub-1
+  type: integration_hub
+  url: http://localhost:8003
+  health_check: /health
+  weight: 1
+routes:
+- path: ^/api/v1/agents
+  service: agent_designer
+  methods:
+  - GET
+  - POST
+  - PUT
+  - DELETE
+  auth_required: true
+  rate_limit: 100
+  cache_ttl: 0
+  timeout: 30
+  retry_count: 3
+- path: ^/api/v1/workflows
+  service: workflow_engine
+  methods:
+  - GET
+  - POST
+  - PUT
+  - DELETE
+  auth_required: true
+  rate_limit: 50
+  cache_ttl: 0
+  timeout: 60
+  retry_count: 2
+- path: ^/api/v1/integrations
+  service: integration_hub
+  methods:
+  - GET
+  - POST
+  - PUT
+  - DELETE
+  auth_required: true
+  rate_limit: 200
+  cache_ttl: 300
+  timeout: 30
+  retry_count: 3
+global:
+  cors:
+    origins:
+    - '*'
+    methods:
+    - '*'
+    headers:
+    - '*'
+  rate_limit:
+    default: 100
+    window: 60
+  circuit_breaker:
+    threshold: 5
+    timeout: 60

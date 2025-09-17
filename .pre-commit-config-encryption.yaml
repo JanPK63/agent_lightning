@@ -1,0 +1,52 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        files: ^(shared/encrypted_fields\.py|shared/encryption_middleware\.py|services/key_management_service\.py|services/key_rotation_service\.py)$
+        args: [--line-length=88]
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.1.13
+    hooks:
+      - id: ruff
+        files: ^(shared/encrypted_fields\.py|shared/encryption_middleware\.py|services/key_management_service\.py|services/key_rotation_service\.py)$
+        args: [--fix]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.7.1
+    hooks:
+      - id: mypy
+        files: ^(shared/encrypted_fields\.py|shared/encryption_middleware\.py|services/key_management_service\.py|services/key_rotation_service\.py)$
+        additional_dependencies: [types-all]
+        args: [--ignore-missing-imports, --no-strict-optional]
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
+        files: ^(shared/encrypted_fields\.py|shared/encryption_middleware\.py|services/key_management_service\.py|services/key_rotation_service\.py)$
+        args: [-c, pyproject.toml]
+        additional_dependencies: ["bandit[toml]"]
+
+  - repo: local
+    hooks:
+      - id: encryption-tests
+        name: Run encryption unit tests
+        entry: python -m pytest
+        language: system
+        files: ^tests/test_encryption.*\.py$
+        pass_filenames: false
+        args: [tests/test_encryption_system.py, tests/test_key_management.py, -v, --tb=short]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        files: ^(shared/encrypted_fields\.py|shared/encryption_middleware\.py|services/key_management_service\.py|services/key_rotation_service\.py)$
+
+      - id: end-of-file-fixer
+        files: ^(shared/encrypted_fields\.py|shared/encryption_middleware\.py|services/key_management_service\.py|services/key_rotation_service\.py)$
+
+      - id: check-merge-conflict
+        files: ^(shared/encrypted_fields\.py|shared/encryption_middleware\.py|services/key_management_service\.py|services/key_rotation_service\.py)$

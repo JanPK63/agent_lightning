@@ -1,0 +1,47 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "RL Performance Analytics",
+    "tags": ["rl", "performance"],
+    "panels": [
+      {
+        "id": 1,
+        "title": "Performance Gain %",
+        "type": "gauge",
+        "targets": [{"expr": "rl_performance_gain_percent"}],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 50,
+            "unit": "percent",
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 15},
+                {"color": "green", "value": 25}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 8, "w": 8, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Average Epochs",
+        "type": "stat",
+        "targets": [{"expr": "rl_avg_epochs"}],
+        "gridPos": {"h": 4, "w": 8, "x": 8, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Training Sessions Rate",
+        "type": "graph",
+        "targets": [
+          {"expr": "rate(rl_sessions_total[5m])", "legendFormat": "Sessions/sec"},
+          {"expr": "rate(rl_auto_triggered_total[5m])", "legendFormat": "Auto-triggered/sec"}
+        ],
+        "gridPos": {"h": 8, "w": 16, "x": 0, "y": 8}
+      }
+    ]
+  }
+}

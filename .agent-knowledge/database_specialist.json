@@ -1,0 +1,74 @@
+[
+  {
+    "id": "postgresql_optimization_a5d6f319_20250903081246",
+    "category": "postgresql_optimization",
+    "content": "PostgreSQL Performance Tuning:\n1. Configuration tuning:\n   - shared_buffers: 25% of RAM\n   - effective_cache_size: 50-75% of RAM\n   - work_mem: RAM / (max_connections * 2)\n   - maintenance_work_mem: RAM / 16\n   \n2. Query optimization:\n   - Use EXPLAIN ANALYZE for execution plans\n   - Check for sequential scans on large tables\n   - Ensure statistics are up-to-date (ANALYZE)\n   - Use CTEs and window functions for complex queries\n   \n3. Index strategies:\n   - B-tree for equality and range queries\n   - Hash for equality only\n   - GIN for full-text search and JSONB\n   - Partial indexes for filtered queries\n   - Covering indexes to avoid heap lookups",
+    "source": "postgresql_expertise",
+    "timestamp": "2025-09-03T08:12:46.438029",
+    "metadata": {},
+    "usage_count": 6,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "mongodb_patterns_19e6bad9_20250903081246",
+    "category": "mongodb_patterns",
+    "content": "MongoDB Design Patterns:\n1. Embedding vs Referencing:\n   - Embed: 1-to-few relationships, data accessed together\n   - Reference: 1-to-many or many-to-many, large documents\n   \n2. Bucketing Pattern:\n   - Group time-series data into buckets\n   - Reduces index size and improves query performance\n   \n3. Computed Pattern:\n   - Pre-calculate and store frequently computed values\n   - Trade write performance for read performance\n   \n4. Schema Versioning:\n   - Add schema_version field to documents\n   - Handle multiple versions in application code\n   \n5. Aggregation Pipeline Optimization:\n   - Use $match early to reduce dataset\n   - $project to limit fields before $group\n   - Use indexes with $match and $sort",
+    "source": "mongodb_expertise",
+    "timestamp": "2025-09-03T08:12:46.438283",
+    "metadata": {},
+    "usage_count": 6,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "redis_patterns_a66c48b1_20250903081246",
+    "category": "redis_patterns",
+    "content": "Redis Advanced Patterns:\n1. Cache Patterns:\n   - Cache-aside: Read from cache, fallback to DB\n   - Write-through: Write to cache and DB simultaneously\n   - Write-behind: Write to cache, async to DB\n   \n2. Distributed Locking:\n   SET resource_lock unique_id NX PX 30000\n   \n3. Rate Limiting:\n   - Sliding window with sorted sets\n   - Token bucket with Lua scripts\n   \n4. Real-time Analytics:\n   - HyperLogLog for unique counts\n   - Streams for event processing\n   - Sorted sets for rankings\n   \n5. Pub/Sub Patterns:\n   - Fan-out messaging\n   - Event-driven architectures\n   - Real-time notifications",
+    "source": "redis_expertise",
+    "timestamp": "2025-09-03T08:12:46.438407",
+    "metadata": {},
+    "usage_count": 6,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "troubleshooting_1fb180f3_20250903093506",
+    "category": "troubleshooting",
+    "content": "Problem: How do I optimize a PostgreSQL query?\nSolution: {'response': 'Optimizing a PostgreSQL query involves several steps to ensure that the query runs efficiently and makes the best use of available resources. Here are some strategies you can use to optimize a PostgreSQL query:\\n\\n1. **Analyze the Query Plan:**\\n   - Use the `EXPLAIN` command to understand how PostgreSQL executes your query. This will give you insights into the query plan, including which indexes are used and the estimated cost of operations.\\n   - Example: `EXPLAIN ANALYZE SELECT * FROM your_table WHERE condition;`\\n\\n2. **Indexing:**\\n   - Ensure that appropriate indexes are in place for columns used in `WHERE`, `JOIN`, `ORDER BY`, and `GROUP BY` clauses.\\n   - Consider using B-tree indexes for equality and range queries, and GiST or GIN indexes for full-text search and JSONB data types.\\n\\n3. **Query Rewriting:**\\n   - Simplify complex queries by breaking them into smaller, more manageable parts.\\n   - Avoid using `SELECT *` and specify only the columns you need.\\n   - Use subqueries or Common Table Expressions (CTEs) judiciously, as they can sometimes lead to performance overhead.\\n\\n4. **Configuration Tuning:**\\n   - Adjust PostgreSQL configuration settings to better utilize system resources:\\n     - `shared_buffers`: Set to 25% of RAM.\\n     - `effective_cache_size`: Set to 50-75% of RAM.\\n     - `work_mem`: Allocate enough memory for operations like sorting and hashing (RAM / (max_connections * 2)).\\n     - `maintenance_work_mem`: Increase for maintenance operations like `VACUUM`.\\n\\n5. **Partitioning:**\\n   - For large tables, consider partitioning to improve query performance by reducing the amount of data scanned.\\n\\n6. **Vacuuming and Analyzing:**\\n   - Regularly run `VACUUM` to reclaim storage and `ANALYZE` to update statistics for the query planner.\\n\\n7. **Avoiding Locks:**\\n   - Use appropriate isolation levels to avoid unnecessary locking. Consider using `READ COMMITTED` for most applications.\\n\\n8. **Connection Pooling:**\\n   - Use a connection pooler like PgBouncer to manage database connections efficiently and reduce overhead.\\n\\n9. **Monitoring and Profiling:**\\n   - Continuously monitor query performance using tools like `pg_stat_statements` to identify slow queries and optimize them.\\n\\nBy following these strategies, you can significantly improve the performance of your PostgreSQL queries. Always test changes in a development environment before applying them to production to ensure they have the desired effect.', 'agent': 'database_specialist', 'knowledge_items_used': 3, 'task': 'How do I optimize a PostgreSQL query?', 'agent_role': 'data_scientist'}",
+    "source": "interaction",
+    "timestamp": "2025-09-03T09:35:06.048609",
+    "metadata": {
+      "task_id": "a166bf01-bfb2-40e0-b615-f0f415cde1d9",
+      "timestamp": "2025-09-03T09:35:06.048104",
+      "confidence": 0.9
+    },
+    "usage_count": 4,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "troubleshooting_9f895e49_20250903093512",
+    "category": "troubleshooting",
+    "content": "Problem: What's the best caching strategy with Redis?\nSolution: {'response': \"The best caching strategy with Redis depends on your specific use case and requirements. Here are some common caching patterns and their ideal use cases:\\n\\n1. **Cache-aside (Lazy Loading):**\\n   - **Use Case:** When you want to load data into the cache only when it's requested. This is ideal for read-heavy workloads where not all data needs to be cached upfront.\\n   - **How It Works:** \\n     - Check the cache for the data.\\n     - If the data is not found (cache miss), load it from the database and store it in the cache for future requests.\\n     - Subsequent requests for the same data will be served from the cache.\\n\\n2. **Write-through:**\\n   - **Use Case:** When you want to ensure that the cache is always consistent with the database. This is suitable for applications where data consistency is critical.\\n   - **How It Works:**\\n     - Write data to both the cache and the database simultaneously.\\n     - Ensures that the cache is always up-to-date with the latest data.\\n\\n3. **Write-behind (Write-back):**\\n   - **Use Case:** When you want to improve write performance by deferring database writes. This is useful for write-heavy workloads where immediate consistency is not required.\\n   - **How It Works:**\\n     - Write data to the cache and queue it for asynchronous writing to the database.\\n     - This can reduce the load on the database but may introduce a delay in data consistency.\\n\\n4. **Read-through:**\\n   - **Use Case:** Similar to cache-aside, but the application interacts directly with the cache, which handles loading data from the database if it's not present.\\n   - **How It Works:**\\n     - The cache itself is responsible for loading data from the database on a cache miss.\\n\\n5. **Cache Eviction Policies:**\\n   - **Considerations:** Choose an appropriate eviction policy (e.g., LRU, LFU) based on your application's access patterns and memory constraints.\\n\\nChoosing the right strategy involves considering factors such as data consistency requirements, read/write workload balance, and the acceptable latency for your application. For many applications, a combination of these strategies might be used to optimize performance and resource utilization.\", 'agent': 'database_specialist', 'knowledge_items_used': 4, 'task': \"What's the best caching strategy with Redis?\", 'agent_role': 'data_scientist'}",
+    "source": "interaction",
+    "timestamp": "2025-09-03T09:35:12.972621",
+    "metadata": {
+      "task_id": "86941f12-b6ba-4810-bc00-9fd979c7a195",
+      "timestamp": "2025-09-03T09:35:12.972574",
+      "confidence": 0.9
+    },
+    "usage_count": 2,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "troubleshooting_5468ef94_20250903093523",
+    "category": "troubleshooting",
+    "content": "Problem: How to design MongoDB schema for e-commerce?\nSolution: {'response': \"Designing a MongoDB schema for an e-commerce application involves understanding the relationships between different entities and how they will be accessed. Here are some steps and considerations to guide you through the process:\\n\\n### Key Entities:\\n1. **Products**: Information about the items being sold.\\n2. **Customers**: User profiles and related information.\\n3. **Orders**: Details of customer purchases.\\n4. **Inventory**: Stock levels and warehouse locations.\\n5. **Reviews**: Customer feedback on products.\\n\\n### Design Considerations:\\n\\n#### 1. **Embedding vs Referencing:**\\n- **Embed**:\\n  - Use embedding for 1-to-few relationships where data is accessed together. For example, embedding product details within an order document.\\n  - Example: Embed customer address details within the customer document.\\n\\n- **Reference**:\\n  - Use referencing for 1-to-many or many-to-many relationships, especially when dealing with large documents or when the related data is frequently updated independently.\\n  - Example: Reference product IDs in the order documents instead of embedding full product details.\\n\\n#### 2. **Product Schema:**\\n- **Attributes**: `product_id`, `name`, `description`, `price`, `category`, `inventory_id`\\n- **Design**: \\n  - If products have multiple categories, use an array of category references.\\n  - Use referencing for inventory to keep stock levels updated independently.\\n\\n#### 3. **Customer Schema:**\\n- **Attributes**: `customer_id`, `name`, `email`, `address`, `order_ids`\\n- **Design**:\\n  - Embed addresses if they are not expected to change frequently.\\n  - Reference order IDs to keep the customer document size manageable.\\n\\n#### 4. **Order Schema:**\\n- **Attributes**: `order_id`, `customer_id`, `product_ids`, `order_date`, `status`, `total_amount`\\n- **Design**:\\n  - Reference customer and product IDs.\\n  - Embed order status history if needed for quick access.\\n\\n#### 5. **Inventory Schema:**\\n- **Attributes**: `inventory_id`, `product_id`, `quantity`, `warehouse_location`\\n- **Design**:\\n  - Reference product IDs to allow independent updates to stock levels.\\n\\n#### 6. **Review Schema:**\\n- **Attributes**: `review_id`, `product_id`, `customer_id`, `rating`, `comment`, `review_date`\\n- **Design**:\\n  - Reference product and customer IDs.\\n  - Consider embedding reviews within product documents if reviews are frequently accessed with product details.\\n\\n### Additional Considerations:\\n- **Sharding**: Consider sharding strategies based on the expected query patterns and data distribution. For example, shard orders by customer ID if most queries are customer-centric.\\n- **Indexing**: Create indexes on frequently queried fields such as `product_id`, `customer_id`, and `order_date` to improve query performance.\\n- **Aggregation**: Use MongoDB's aggregation framework to efficiently compute metrics like total sales, average ratings, etc.\\n\\nBy carefully considering how data is accessed and updated, you can design a MongoDB schema that is both efficient and scalable for an e-commerce application.\", 'agent': 'database_specialist', 'knowledge_items_used': 5, 'task': 'How to design MongoDB schema for e-commerce?', 'agent_role': 'data_scientist'}",
+    "source": "interaction",
+    "timestamp": "2025-09-03T09:35:23.653164",
+    "metadata": {
+      "task_id": "c146fab7-5d11-450a-a814-3daa8cddb76c",
+      "timestamp": "2025-09-03T09:35:23.653099",
+      "confidence": 0.9
+    },
+    "usage_count": 0,
+    "relevance_score": 1.0
+  }
+]

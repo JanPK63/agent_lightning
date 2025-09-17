@@ -1,0 +1,335 @@
+include:
+  - docker/networks.yml
+  - docker/volumes.yml
+
+services:
+  # Database Layer
+  postgres:
+    build: ./docker/services/postgres
+    container_name: agent-postgres
+    environment:
+      POSTGRES_DB: agent_lightning_memory
+      POSTGRES_USER: agent_user
+      POSTGRES_PASSWORD: agent_pass_2024
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent_user -d agent_lightning_memory"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: agent-redis
+    command: redis-server --requirepass redis_pass_2024 --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: agent-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+      RABBITMQ_DEFAULT_VHOST: agent_vhost
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+  # Application Layer
+  api:
+    build: ./docker/services/api
+    container_name: agent-api
+    environment:
+      - DATABASE_URL=postgresql://agent_user:agent_pass_2024@postgres:5432/agent_lightning_memory
+      - REDIS_URL=redis://:redis_pass_2024@redis:6379/0
+      - APP_ENV=production
+    ports:
+      - "8001:8001"
+    volumes:
+      - app_logs:/app/logs
+      - agent_configs:/app/.agent-configs:ro
+    networks:
+      - frontend
+      - backend
+      - database
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  dashboard:
+    build: ./docker/services/dashboard
+    container_name: agent-dashboard
+    environment:
+      - DATABASE_URL=postgresql://agent_user:agent_pass_2024@postgres:5432/agent_lightning_memory
+      - REDIS_URL=redis://:redis_pass_2024@redis:6379/0
+    ports:
+      - "8051:8051"
+    volumes:
+      - app_logs:/app/logs
+    networks:
+      - frontend
+      - backend
+      - database
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Log Aggregation
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: agent-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.0
+    container_name: agent-logstash
+    ports:
+      - "5044:5044"
+    environment:
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+    volumes:
+      - ./docker/configs/logstash:/usr/share/logstash/pipeline
+    networks:
+      - monitoring
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: agent-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - monitoring
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: agent-jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://elasticsearch:9200
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+      - "4317:4317"
+      - "4318:4318"
+    networks:
+      - monitoring
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  # Monitoring Layer
+  influxdb:
+    image: influxdb:2.7-alpine
+    container_name: agent-influxdb
+    environment:
+      - INFLUXDB_DB=performance_metrics
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=supersecret123
+      - INFLUXDB_INIT_MODE=setup
+      - INFLUXDB_INIT_USERNAME=admin
+      - INFLUXDB_INIT_PASSWORD=supersecret123
+      - INFLUXDB_INIT_ORG=agent-system
+      - INFLUXDB_INIT_BUCKET=performance_metrics
+      - INFLUXDB_INIT_RETENTION=30d
+      - INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: agent-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/configs/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/configs/prometheus/alerts.yml:/etc/prometheus/alerts.yml
+      - prometheus_data:/prometheus
+    networks:
+      - monitoring
+      - backend
+    restart: unless-stopped
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: agent-alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093'
+      - '--cluster.listen-address='
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./docker/configs/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager_data:/alertmanager
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: agent-grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/configs/grafana:/etc/grafana/provisioning
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+      - influxdb
+    restart: unless-stopped
+
+  # Agent Services
+  agents:
+    build: ./docker/services/agents
+    container_name: agent-services
+    environment:
+      - DATABASE_URL=postgresql://agent_user:agent_pass_2024@postgres:5432/agent_lightning_memory
+      - REDIS_URL=redis://:redis_pass_2024@redis:6379/0
+    ports:
+      - "8002:8002"
+    volumes:
+      - agent_configs:/app/.agent-configs
+      - app_logs:/app/logs
+    networks:
+      - backend
+      - database
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  rl-orchestrator:
+    build: ./docker/services/rl-orchestrator
+    container_name: agent-rl-orchestrator
+    environment:
+      - DATABASE_URL=postgresql://agent_user:agent_pass_2024@postgres:5432/agent_lightning_memory
+      - REDIS_URL=redis://:redis_pass_2024@redis:6379/0
+    ports:
+      - "8003:8003"
+    volumes:
+      - model_storage:/app/models
+      - app_logs:/app/logs
+    networks:
+      - backend
+      - database
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker:
+    build: ./docker/services/worker
+    container_name: agent-worker
+    environment:
+      - DATABASE_URL=postgresql://agent_user:agent_pass_2024@postgres:5432/agent_lightning_memory
+      - REDIS_URL=redis://:redis_pass_2024@redis:6379/0
+      - CELERY_BROKER_URL=redis://:redis_pass_2024@redis:6379/1
+    volumes:
+      - app_logs:/app/logs
+    networks:
+      - backend
+      - database
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Load Balancer
+  nginx:
+    image: nginx:alpine
+    container_name: agent-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/configs/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/configs/ssl:/etc/nginx/ssl
+    networks:
+      - frontend
+    depends_on:
+      - api
+      - dashboard
+    restart: unless-stopped

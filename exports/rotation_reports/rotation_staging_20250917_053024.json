@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-09-17T05:30:24.501852",
+  "environment": "staging",
+  "dry_run": true,
+  "success": false,
+  "status": "rolled_back",
+  "records_processed": 0,
+  "records_failed": 0,
+  "duration_seconds": 0.000938,
+  "new_data_key_id": null,
+  "new_field_key_id": null,
+  "error_message": "'KeyManagementService' object has no attribute 'get_active_keys'",
+  "rollback_available": false
+}

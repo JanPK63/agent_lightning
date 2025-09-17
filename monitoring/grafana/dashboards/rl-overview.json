@@ -1,0 +1,40 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "RL System Overview",
+    "tags": ["rl", "overview"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "RL Sessions Today",
+        "type": "stat",
+        "targets": [{"expr": "rl_sessions_total"}],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "short"
+          }
+        },
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Auto-Triggered",
+        "type": "stat", 
+        "targets": [{"expr": "rl_auto_triggered_total"}],
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Success Rate",
+        "type": "gauge",
+        "targets": [{"expr": "rl_success_rate * 100"}],
+        "fieldConfig": {
+          "defaults": {"min": 0, "max": 100, "unit": "percent"}
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      }
+    ]
+  }
+}

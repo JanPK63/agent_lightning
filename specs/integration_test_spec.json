@@ -1,0 +1,36 @@
+{
+  "id": "integration_test_spec",
+  "name": "Integration Test Spec",
+  "description": "A spec for integration testing",
+  "version": "1.0.0",
+  "inputs": {},
+  "outputs": {},
+  "workflow": [
+    {
+      "id": "step1",
+      "name": "First Step",
+      "description": "The first step in integration test",
+      "agent_type": null,
+      "inputs": {},
+      "outputs": {},
+      "dependencies": [],
+      "metadata": {}
+    },
+    {
+      "id": "step2",
+      "name": "Second Step",
+      "description": "The second step in integration test",
+      "agent_type": null,
+      "inputs": {},
+      "outputs": {},
+      "dependencies": [
+        "step1"
+      ],
+      "metadata": {}
+    }
+  ],
+  "resources": {},
+  "metadata": {},
+  "created_at": 1758023482.450596,
+  "updated_at": 1758023482.450596
+}

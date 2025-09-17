@@ -1,0 +1,134 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Agent Lightning Telemetry Dashboard",
+    "tags": ["agent-lightning", "telemetry"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Task Assignment Success Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "rate(task_assigned_total[5m]) / (rate(task_assigned_total[5m]) + rate(task_submission_failed_total[5m])) * 100",
+            "legendFormat": "Success Rate %"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Task Submission Latency",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(task_submission_latency_bucket[5m]))",
+            "legendFormat": "95th percentile"
+          },
+          {
+            "expr": "histogram_quantile(0.50, rate(task_submission_latency_bucket[5m]))",
+            "legendFormat": "50th percentile"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Agent Assignment Confidence",
+        "type": "heatmap",
+        "targets": [
+          {
+            "expr": "task_assigned_confidence",
+            "legendFormat": "{{agent}}"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "SLA Compliance Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "rate(sla_check_compliant_total[5m]) / rate(sla_check_total[5m]) * 100",
+            "legendFormat": "SLA Compliance %"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 95
+                },
+                {
+                  "color": "green",
+                  "value": 99
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Service Health Status",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "up{job=~\"agent-lightning.*\"}",
+            "legendFormat": "{{job}}"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Task Priority Distribution",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "sum by (priority) (rate(task_assigned_total[1h]))",
+            "legendFormat": "{{priority}}"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Agent Utilization",
+        "type": "barchart",
+        "targets": [
+          {
+            "expr": "sum by (assigned_agent) (rate(task_assigned_total[1h]))",
+            "legendFormat": "{{assigned_agent}}"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Error Rate by Category",
+        "type": "barchart",
+        "targets": [
+          {
+            "expr": "sum by (category) (rate(error_total{source=\"dashboard\"}[5m]))",
+            "legendFormat": "{{category}}"
+          }
+        ]
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "30s"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "bucket": "deployment_metrics",
+  "timestamp": "2025-09-04T20:05:53.710660",
+  "algorithm": "brotli",
+  "original_size": 0,
+  "compressed_size": 1,
+  "compression_ratio": 0.0,
+  "file": "deployment_metrics_20250904_200553.brotli"
+}

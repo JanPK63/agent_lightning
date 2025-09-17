@@ -1,0 +1,4 @@
+- always check the current implementation to start from after finishing a task
+- always read the pdf in the project folder first before starting a task to get a better understanding of what we try to build
+- always read the todo Resources & Documentation section before you start working on a task
+- always read ai agent.docx before start working on a task

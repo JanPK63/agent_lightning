@@ -1,0 +1,333 @@
+{
+  "summary": {
+    "total_tests": 34,
+    "passed": 31,
+    "failed": 0,
+    "warnings": 3,
+    "skipped": 0,
+    "duration": 0.4838848114013672,
+    "pass_rate": 91.17647058823529
+  },
+  "timestamp": "2025-09-08T16:48:49.669640",
+  "results": [
+    {
+      "name": "PostgreSQL Database",
+      "category": "Infrastructure",
+      "status": "\u2705 PASSED",
+      "message": "Connected successfully",
+      "duration": 0.09759831428527832,
+      "details": {
+        "version": "PostgreSQL 17.5 (Homebrew) on aarch64-apple-darwin"
+      }
+    },
+    {
+      "name": "Redis Cache",
+      "category": "Infrastructure",
+      "status": "\u2705 PASSED",
+      "message": "Connected successfully",
+      "duration": 0.015285968780517578,
+      "details": {
+        "version": "8.2.1",
+        "used_memory": "1.23M"
+      }
+    },
+    {
+      "name": "Service Discovery",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.010252952575683594,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Auth Service",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.011102914810180664,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Agent Designer",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.012880325317382812,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "AI Model Service",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.020843982696533203,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Integration Hub",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.03966522216796875,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Workflow Engine",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.04978370666503906,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Monitoring Service",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.05298113822937012,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "API Gateway",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.0679769515991211,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "LangGraph Integration",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.08121609687805176,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "WebSocket Service",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.09026312828063965,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "CI/CD Matrix",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.09000897407531738,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Batch Accumulator",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.09024786949157715,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Polyglot Test Runner",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.09408712387084961,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Security Gates",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.09537816047668457,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "AutoGen Integration",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.1002960205078125,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Git Integration",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.1032712459564209,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Code RAG Service",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.15139007568359375,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "RL Orchestrator",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.17029500007629395,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "RL Server",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.17348623275756836,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Checkpoint Service",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.21014809608459473,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Memory Service",
+      "category": "Services",
+      "status": "\u2705 PASSED",
+      "message": "Service healthy",
+      "duration": 0.21708011627197266,
+      "details": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Agent Registration",
+      "category": "Integration",
+      "status": "\u26a0\ufe0f WARNING",
+      "message": "Registration returned 422",
+      "duration": 0.012381792068481445,
+      "details": null
+    },
+    {
+      "name": "Workflow Creation",
+      "category": "Integration",
+      "status": "\u26a0\ufe0f WARNING",
+      "message": "Creation returned 422",
+      "duration": 0.01162409782409668,
+      "details": null
+    },
+    {
+      "name": "Task Execution",
+      "category": "Integration",
+      "status": "\u2705 PASSED",
+      "message": "23 tasks completed",
+      "duration": 0.013120174407958984,
+      "details": null
+    },
+    {
+      "name": "Memory Persistence",
+      "category": "Integration",
+      "status": "\u26a0\ufe0f WARNING",
+      "message": "No memories found in cache",
+      "duration": 0.004676103591918945,
+      "details": null
+    },
+    {
+      "name": "Workflow Registry",
+      "category": "Workflows",
+      "status": "\u2705 PASSED",
+      "message": "3 workflows registered",
+      "duration": 0.002734661102294922,
+      "details": null
+    },
+    {
+      "name": "Development Agents",
+      "category": "Agents",
+      "status": "\u2705 PASSED",
+      "message": "All 7 agents registered",
+      "duration": 0.0076770782470703125,
+      "details": null
+    },
+    {
+      "name": "API Gateway Response",
+      "category": "Performance",
+      "status": "\u2705 PASSED",
+      "message": "Response time: 43.2ms",
+      "duration": 0.04316377639770508,
+      "details": null
+    },
+    {
+      "name": "Auth Service Response",
+      "category": "Performance",
+      "status": "\u2705 PASSED",
+      "message": "Response time: 21.0ms",
+      "duration": 0.021023273468017578,
+      "details": null
+    },
+    {
+      "name": "Agent Designer Response",
+      "category": "Performance",
+      "status": "\u2705 PASSED",
+      "message": "Response time: 10.9ms",
+      "duration": 0.010854959487915039,
+      "details": null
+    },
+    {
+      "name": "Workflow Engine Response",
+      "category": "Performance",
+      "status": "\u2705 PASSED",
+      "message": "Response time: 20.0ms",
+      "duration": 0.020026206970214844,
+      "details": null
+    },
+    {
+      "name": "AI Model Service Response",
+      "category": "Performance",
+      "status": "\u2705 PASSED",
+      "message": "Response time: 3.1ms",
+      "duration": 0.0031380653381347656,
+      "details": null
+    }
+  ]
+}

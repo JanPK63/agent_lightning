@@ -1,0 +1,23 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    database: performance_metrics
+    user: admin
+    secureJsonData:
+      password: supersecret123
+    jsonData:
+      version: Flux
+      organization: agent-system
+      defaultBucket: performance_metrics
+      tlsSkipVerify: true

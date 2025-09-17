@@ -1,0 +1,161 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Agent Lightning RL System",
+    "tags": ["agent-lightning", "rl", "ai"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "RL Training Sessions",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "rl_sessions_total",
+            "legendFormat": "Total Sessions"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "custom": {"displayMode": "basic"},
+            "unit": "short"
+          }
+        },
+        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Active RL Sessions",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "rl_sessions_active",
+            "legendFormat": "Active"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 3},
+                {"color": "red", "value": 5}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "RL Success Rate",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "rl_success_rate * 100",
+            "legendFormat": "Success %"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "unit": "percent",
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 70},
+                {"color": "green", "value": 90}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0}
+      },
+      {
+        "id": 4,
+        "title": "Performance Gain",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "rl_performance_gain_percent",
+            "legendFormat": "Gain %"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 50,
+            "unit": "percent",
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 10},
+                {"color": "green", "value": 20}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0}
+      },
+      {
+        "id": 5,
+        "title": "RL Sessions Over Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(rl_sessions_total[5m]) * 300",
+            "legendFormat": "Sessions/5min"
+          },
+          {
+            "expr": "rate(rl_auto_triggered_total[5m]) * 300",
+            "legendFormat": "Auto-triggered/5min"
+          }
+        ],
+        "yAxes": [
+          {"label": "Sessions", "min": 0},
+          {"show": false}
+        ],
+        "gridPos": {"h": 9, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 6,
+        "title": "Average Training Epochs",
+        "type": "singlestat",
+        "targets": [
+          {
+            "expr": "rl_avg_epochs",
+            "legendFormat": "Avg Epochs"
+          }
+        ],
+        "valueName": "current",
+        "format": "short",
+        "gridPos": {"h": 9, "w": 12, "x": 12, "y": 8}
+      },
+      {
+        "id": 7,
+        "title": "System Resources During RL",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "system_cpu_percent",
+            "legendFormat": "CPU %"
+          },
+          {
+            "expr": "system_memory_percent",
+            "legendFormat": "Memory %"
+          }
+        ],
+        "yAxes": [
+          {"label": "Percentage", "min": 0, "max": 100},
+          {"show": false}
+        ],
+        "gridPos": {"h": 9, "w": 24, "x": 0, "y": 17}
+      }
+    ],
+    "time": {"from": "now-1h", "to": "now"},
+    "refresh": "10s"
+  }
+}

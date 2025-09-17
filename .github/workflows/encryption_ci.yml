@@ -1,0 +1,320 @@
+name: Encryption CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'shared/encrypted_fields.py'
+      - 'shared/encryption_middleware.py'
+      - 'services/key_management_service.py'
+      - 'services/key_rotation_service.py'
+      - 'migrations/migration_007_encryption_keys.py'
+      - 'migrations/migration_008_encrypt_existing_data.py'
+      - 'tests/test_encryption*.py'
+      - 'docs/encryption_*'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'shared/encrypted_fields.py'
+      - 'shared/encryption_middleware.py'
+      - 'services/key_management_service.py'
+      - 'services/key_rotation_service.py'
+      - 'migrations/migration_007_encryption_keys.py'
+      - 'migrations/migration_008_encrypt_existing_data.py'
+      - 'tests/test_encryption*.py'
+      - 'docs/encryption_*'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-dev.txt
+    - name: Run Ruff linter
+      run: |
+        ruff check shared/encrypted_fields.py shared/encryption_middleware.py services/key_management_service.py services/key_rotation_service.py
+    - name: Run Black formatter check
+      run: |
+        black --check --diff shared/encrypted_fields.py shared/encryption_middleware.py services/key_management_service.py services/key_rotation_service.py
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-dev.txt
+    - name: Run MyPy type checking
+      run: |
+        mypy shared/encrypted_fields.py shared/encryption_middleware.py services/key_management_service.py services/key_rotation_service.py --ignore-missing-imports
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt -r requirements-dev.txt
+    - name: Run encryption tests
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+        ENCRYPTION_MASTER_PASSPHRASE: test_passphrase_for_ci
+      run: |
+        # Create test database
+        PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE test_db;"
+
+        # Run encryption-specific tests
+        python -m pytest tests/test_encryption_system.py tests/test_key_management.py -v --tb=short
+
+        # Run migration smoke tests
+        python -c "
+        import sys
+        sys.path.append('.')
+        from shared.database import init_database
+        from migrations.migration_007_encryption_keys import run_migration
+        from migrations.migration_008_encrypt_existing_data import run_migration
+
+        # Test migrations don't crash
+        init_database()
+        run_migration()  # Keys migration
+        run_migration()  # Data migration
+        print('Migration smoke tests passed')
+        "
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install bandit[sarif]
+    - name: Run Bandit security scan
+      run: |
+        bandit -r shared/encrypted_fields.py shared/encryption_middleware.py services/key_management_service.py services/key_rotation_service.py -f json -o bandit-results.json
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: bandit-results.json
+      if: always()
+
+  migration-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Test encryption migrations
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/migration_test
+        ENCRYPTION_MASTER_PASSPHRASE: test_passphrase_for_ci
+      run: |
+        # Create migration test database
+        PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE migration_test;"
+
+        # Test forward migration
+        python -c "
+        import sys
+        sys.path.append('.')
+        from shared.database import init_database
+        from migrations.migration_007_encryption_keys import run_migration as run_keys_migration
+        from migrations.migration_008_encrypt_existing_data import run_migration as run_data_migration
+
+        init_database()
+        print('Running keys migration...')
+        run_keys_migration()
+        print('Running data migration...')
+        run_data_migration()
+        print('Forward migrations completed successfully')
+        "
+
+        # Test basic encryption operations work
+        python -c "
+        import sys
+        sys.path.append('.')
+        from services.key_management_service import KeyManagementService
+        from shared.encrypted_fields import EncryptedString
+        from shared.database import get_db_session
+
+        kms = KeyManagementService()
+        kms.generate_master_key()
+
+        # Test basic encryption/decryption
+        test_data = 'test_sensitive_data'
+        encrypted = kms._encrypt_data(test_data.encode(), kms.get_master_key())
+        decrypted = kms._decrypt_data(encrypted, kms.get_master_key())
+        assert decrypted.decode() == test_data
+        print('Basic encryption operations verified')
+        "
+
+  integration-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt -r requirements-dev.txt
+    - name: Run integration tests
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/integration_test
+        ENCRYPTION_MASTER_PASSPHRASE: test_passphrase_for_ci
+      run: |
+        # Create integration test database
+        PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE integration_test;"
+
+        # Run integration tests
+        python -m pytest tests/test_encryption_integration.py -v --tb=short
+
+  performance-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run performance tests
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/perf_test
+        ENCRYPTION_MASTER_PASSPHRASE: test_passphrase_for_ci
+      run: |
+        # Create performance test database
+        PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE perf_test;"
+
+        # Run performance benchmarks
+        python -c "
+        import sys
+        sys.path.append('.')
+        import time
+        from services.key_management_service import KeyManagementService
+        from shared.database import init_database
+
+        init_database()
+        kms = KeyManagementService()
+
+        # Performance test: key generation
+        start = time.time()
+        for i in range(10):
+            kms.generate_data_key(f'perf_test_table_{i}')
+        key_gen_time = (time.time() - start) / 10
+
+        print(f'Average key generation time: {key_gen_time:.4f}s')
+        assert key_gen_time < 1.0, f'Key generation too slow: {key_gen_time}s'
+
+        # Performance test: encryption/decryption
+        test_data = b'test data for performance measurement'
+        master_key = kms.get_master_key()
+
+        start = time.time()
+        for i in range(100):
+            encrypted = kms._encrypt_data(test_data, master_key)
+            decrypted = kms._decrypt_data(encrypted, master_key)
+            assert decrypted == test_data
+        crypto_time = (time.time() - start) / 100
+
+        print(f'Average encrypt/decrypt time: {crypto_time:.6f}s')
+        assert crypto_time < 0.001, f'Crypto operations too slow: {crypto_time}s'
+
+        print('Performance tests passed')
+        "
+
+  deploy-staging:
+    needs: [lint, type-check, test, security-scan, migration-test, integration-test, performance-test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    steps:
+    - uses: actions/checkout@v4
+    - name: Deploy to staging
+      run: |
+        echo "Deploying encryption changes to staging environment"
+        # Add actual deployment commands here
+
+  deploy-production:
+    needs: [lint, type-check, test, security-scan, migration-test, integration-test, performance-test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+    - uses: actions/checkout@v4
+    - name: Deploy to production
+      run: |
+        echo "Deploying encryption changes to production environment"
+        # Add actual deployment commands here

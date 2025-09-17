@@ -1,0 +1,43 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "RL System Health",
+    "tags": ["rl", "system", "health"],
+    "panels": [
+      {
+        "id": 1,
+        "title": "CPU Usage During RL",
+        "type": "graph",
+        "targets": [{"expr": "system_cpu_percent"}],
+        "yAxes": [{"min": 0, "max": 100, "unit": "percent"}],
+        "gridPos": {"h": 6, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Memory Usage During RL", 
+        "type": "graph",
+        "targets": [{"expr": "system_memory_percent"}],
+        "yAxes": [{"min": 0, "max": 100, "unit": "percent"}],
+        "gridPos": {"h": 6, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Service Health",
+        "type": "stat",
+        "targets": [
+          {"expr": "service_up{service=\"enhanced_api\"}", "legendFormat": "Enhanced API"},
+          {"expr": "service_up{service=\"dashboard\"}", "legendFormat": "Dashboard"}
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {"options": {"0": {"text": "DOWN", "color": "red"}}, "type": "value"},
+              {"options": {"1": {"text": "UP", "color": "green"}}, "type": "value"}
+            ]
+          }
+        },
+        "gridPos": {"h": 6, "w": 24, "x": 0, "y": 6}
+      }
+    ]
+  }
+}

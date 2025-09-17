@@ -1,0 +1,344 @@
+# Encryption SLOs and Alert Configuration
+# Service Level Objectives and monitoring alerts for database encryption
+
+slos:
+  # Decrypt Error Rate SLO
+  decrypt_error_rate:
+    description: "Percentage of failed decryption operations"
+    objective: 0.001  # 0.1% error rate
+    window: "5m"
+    burn_rate_thresholds:
+      - threshold: 14.4  # Alert if error rate exceeds 14.4x normal (would breach SLO in 1h)
+        severity: critical
+        alert_name: "DecryptErrorRateHigh"
+      - threshold: 6  # Alert if error rate exceeds 6x normal (would breach SLO in 1h)
+        severity: warning
+        alert_name: "DecryptErrorRateElevated"
+
+  # Key Rotation Duration SLO
+  rotation_duration:
+    description: "Time to complete key rotation"
+    objective: 14400  # 4 hours in seconds
+    window: "24h"
+    burn_rate_thresholds:
+      - threshold: 2  # Alert if rotation takes > 8 hours
+        severity: critical
+        alert_name: "KeyRotationDurationExceeded"
+      - threshold: 1.5  # Alert if rotation takes > 6 hours
+        severity: warning
+        alert_name: "KeyRotationDurationElevated"
+
+  # Audit Log Coverage SLO
+  audit_coverage:
+    description: "Percentage of encryption operations with audit logs"
+    objective: 0.999  # 99.9% coverage
+    window: "5m"
+    burn_rate_thresholds:
+      - threshold: 100  # Alert if any gaps detected
+        severity: critical
+        alert_name: "AuditLogGapDetected"
+      - threshold: 50  # Alert if coverage drops below 50%
+        severity: warning
+        alert_name: "AuditLogCoverageLow"
+
+  # Performance Impact SLO
+  performance_impact:
+    description: "Query latency increase due to encryption"
+    objective: 0.15  # 15% increase allowed
+    window: "5m"
+    burn_rate_thresholds:
+      - threshold: 0.3  # Alert if impact exceeds 30%
+        severity: critical
+        alert_name: "EncryptionPerformanceDegraded"
+      - threshold: 0.2  # Alert if impact exceeds 20%
+        severity: warning
+        alert_name: "EncryptionPerformanceElevated"
+
+alerts:
+  # Decrypt Error Rate Alerts
+  - alert_name: "DecryptErrorRateHigh"
+    expr: |
+      rate(encryption_decrypt_errors_total[5m]) /
+      rate(encryption_decrypt_operations_total[5m]) > 0.001
+    for: "5m"
+    labels:
+      severity: critical
+      team: security
+    annotations:
+      summary: "High decryption error rate detected"
+      description: |
+        Decryption error rate is {{ $value | printf "%.4f" }}%,
+        exceeding the 0.1% SLO threshold.
+        This may indicate key rotation issues or data corruption.
+      runbook_url: "docs/key_rotation_playbook.md#rollback-procedure"
+
+  - alert_name: "DecryptErrorRateElevated"
+    expr: |
+      rate(encryption_decrypt_errors_total[5m]) /
+      rate(encryption_decrypt_operations_total[5m]) > 0.0005
+    for: "10m"
+    labels:
+      severity: warning
+      team: security
+    annotations:
+      summary: "Elevated decryption error rate"
+      description: |
+        Decryption error rate is {{ $value | printf "%.4f" }}%,
+        approaching the 0.1% SLO threshold.
+
+  # Key Rotation Duration Alerts
+  - alert_name: "KeyRotationDurationExceeded"
+    expr: |
+      encryption_key_rotation_duration_seconds > 28800
+    for: "5m"
+    labels:
+      severity: critical
+      team: security
+    annotations:
+      summary: "Key rotation taking too long"
+      description: |
+        Key rotation has been running for {{ $value | printf "%.0f" }} seconds
+        ({{ $value | printf "%.1f" }} hours), exceeding the 8-hour threshold.
+      runbook_url: "docs/key_rotation_playbook.md#rollback-procedure"
+
+  - alert_name: "KeyRotationDurationElevated"
+    expr: |
+      encryption_key_rotation_duration_seconds > 21600
+    for: "5m"
+    labels:
+      severity: warning
+      team: security
+    annotations:
+      summary: "Key rotation duration elevated"
+      description: |
+        Key rotation has been running for {{ $value | printf "%.0f" }} seconds
+        ({{ $value | printf "%.1f" }} hours), exceeding the 6-hour warning threshold.
+
+  # Audit Log Coverage Alerts
+  - alert_name: "AuditLogGapDetected"
+    expr: |
+      (rate(encryption_operations_total[5m]) -
+       rate(encryption_audit_logs_total[5m])) > 0
+    for: "5m"
+    labels:
+      severity: critical
+      team: security
+    annotations:
+      summary: "Audit log gap detected"
+      description: |
+        {{ $value | printf "%.0f" }} encryption operations in the last 5 minutes
+        lack corresponding audit logs. This violates compliance requirements.
+      runbook_url: "docs/key_rotation_playbook.md#monitoring-and-alerts"
+
+  - alert_name: "AuditLogCoverageLow"
+    expr: |
+      rate(encryption_audit_logs_total[5m]) /
+      rate(encryption_operations_total[5m]) < 0.5
+    for: "5m"
+    labels:
+      severity: warning
+      team: security
+    annotations:
+      summary: "Audit log coverage low"
+      description: |
+        Audit log coverage is {{ $value | printf "%.1f" }}%,
+        below the 50% warning threshold.
+
+  # Performance Impact Alerts
+  - alert_name: "EncryptionPerformanceDegraded"
+    expr: |
+      (rate(encryption_query_duration_seconds_sum[5m]) /
+       rate(encryption_query_duration_seconds_count[5m])) /
+      (rate(query_duration_seconds_sum[5m]) /
+       rate(query_duration_seconds_count[5m])) > 1.3
+    for: "5m"
+    labels:
+      severity: critical
+      team: platform
+    annotations:
+      summary: "Encryption performance severely degraded"
+      description: |
+        Encrypted queries are {{ $value | printf "%.1f" }}x slower than
+        non-encrypted queries, exceeding the 30% degradation threshold.
+
+  - alert_name: "EncryptionPerformanceElevated"
+    expr: |
+      (rate(encryption_query_duration_seconds_sum[5m]) /
+       rate(encryption_query_duration_seconds_count[5m])) /
+      (rate(query_duration_seconds_sum[5m]) /
+       rate(query_duration_seconds_count[5m])) > 1.2
+    for: "5m"
+    labels:
+      severity: warning
+      team: platform
+    annotations:
+      summary: "Encryption performance elevated"
+      description: |
+        Encrypted queries are {{ $value | printf "%.1f" }}x slower than
+        non-encrypted queries, exceeding the 20% warning threshold.
+
+  # Key Lifecycle Alerts
+  - alert_name: "EncryptionKeyExpiringSoon"
+    expr: |
+      (encryption_key_expires_at - time()) / 86400 < 30
+    for: "1h"
+    labels:
+      severity: warning
+      team: security
+    annotations:
+      summary: "Encryption key expiring soon"
+      description: |
+        Encryption key {{ $labels.key_id }} expires in
+        {{ $value | printf "%.0f" }} days. Schedule rotation.
+      runbook_url: "docs/key_rotation_playbook.md#execution-phases"
+
+  - alert_name: "EncryptionKeyExpired"
+    expr: |
+      encryption_key_expires_at < time()
+    for: "5m"
+    labels:
+      severity: critical
+      team: security
+    annotations:
+      summary: "Encryption key has expired"
+      description: |
+        Encryption key {{ $labels.key_id }} has expired.
+        Immediate rotation required.
+      runbook_url: "docs/key_rotation_playbook.md#emergency-rollback"
+
+  # Key Compromise Alerts
+  - alert_name: "EncryptionKeyCompromised"
+    expr: |
+      encryption_key_compromise_detected == 1
+    for: "1m"
+    labels:
+      severity: critical
+      team: security
+    annotations:
+      summary: "Encryption key compromise detected"
+      description: |
+        Compromise detected for key {{ $labels.key_id }}.
+        Immediate emergency rotation required.
+      runbook_url: "docs/key_rotation_playbook.md#emergency-rollback"
+
+metrics:
+  # Counter metrics
+  - name: encryption_operations_total
+    type: counter
+    description: "Total number of encryption operations"
+    labels: ["operation", "key_type", "table_name"]
+
+  - name: encryption_decrypt_operations_total
+    type: counter
+    description: "Total number of decryption operations"
+    labels: ["key_type", "table_name"]
+
+  - name: encryption_decrypt_errors_total
+    type: counter
+    description: "Total number of decryption errors"
+    labels: ["key_type", "table_name", "error_type"]
+
+  - name: encryption_audit_logs_total
+    type: counter
+    description: "Total number of audit log entries"
+    labels: ["operation", "table_name"]
+
+  # Histogram metrics
+  - name: encryption_operation_duration_seconds
+    type: histogram
+    description: "Duration of encryption operations"
+    buckets: [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0, 5.0]
+    labels: ["operation", "key_type"]
+
+  - name: query_duration_seconds
+    type: histogram
+    description: "Duration of database queries"
+    buckets: [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0, 5.0]
+    labels: ["encrypted"]
+
+  # Gauge metrics
+  - name: encryption_key_expires_at
+    type: gauge
+    description: "Unix timestamp when encryption key expires"
+    labels: ["key_id", "key_type"]
+
+  - name: encryption_key_compromise_detected
+    type: gauge
+    description: "Whether key compromise has been detected (1=yes, 0=no)"
+    labels: ["key_id", "key_type"]
+
+  - name: encryption_key_rotation_duration_seconds
+    type: gauge
+    description: "Current key rotation duration in seconds"
+    labels: ["environment", "key_type"]
+
+dashboards:
+  - name: "Encryption Health"
+    description: "Monitor encryption system health and performance"
+    panels:
+      - title: "Decrypt Error Rate"
+        type: "stat"
+        query: |
+          rate(encryption_decrypt_errors_total[5m]) /
+          rate(encryption_decrypt_operations_total[5m]) * 100
+        thresholds:
+          - value: 0.1
+            color: red
+          - value: 0.05
+            color: yellow
+
+      - title: "Audit Log Coverage"
+        type: "stat"
+        query: |
+          rate(encryption_audit_logs_total[5m]) /
+          rate(encryption_operations_total[5m]) * 100
+        thresholds:
+          - value: 99.9
+            color: green
+          - value: 95
+            color: yellow
+          - value: 90
+            color: red
+
+      - title: "Key Expiration Status"
+        type: "table"
+        query: |
+          (encryption_key_expires_at - time()) / 86400
+        columns:
+          - name: "Key ID"
+            field: "key_id"
+          - name: "Days Until Expiry"
+            field: "value"
+            thresholds:
+              - value: 30
+                color: yellow
+              - value: 7
+                color: red
+
+      - title: "Encryption Performance Impact"
+        type: "graph"
+        query: |
+          (rate(encryption_query_duration_seconds_sum[5m]) /
+           rate(encryption_query_duration_seconds_count[5m])) /
+          (rate(query_duration_seconds_sum{encrypted="false"}[5m]) /
+           rate(query_duration_seconds_count{encrypted="false"}[5m]))
+
+notification_channels:
+  - name: "security-oncall"
+    type: "pagerduty"
+    routing_key: "${PAGERDUTY_ROUTING_KEY}"
+    severity_map:
+      critical: "P1"
+      warning: "P2"
+      info: "P3"
+
+  - name: "platform-slack"
+    type: "slack"
+    webhook_url: "${SLACK_WEBHOOK_URL}"
+    channel: "#platform-alerts"
+    username: "Encryption Monitor"
+
+  - name: "security-email"
+    type: "email"
+    to: ["security@company.com", "platform@company.com"]
+    from: "encryption-monitor@company.com"

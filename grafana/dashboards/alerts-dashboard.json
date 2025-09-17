@@ -1,0 +1,143 @@
+{
+  "dashboard": {
+    "uid": "agent-alerts",
+    "title": "System Alerts Dashboard",
+    "tags": [
+      "alerts",
+      "monitoring",
+      "notifications"
+    ],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Alert Count by Severity",
+        "type": "piechart",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 8,
+          "h": 8
+        },
+        "targets": [
+          {
+            "query": "from(bucket: \"alerts\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"alerts\")\n  |> group(columns: [\"level\"])\n  |> count()",
+            "refId": "A"
+          }
+        ],
+        "transparent": false,
+        "options": {}
+      },
+      {
+        "id": 2,
+        "title": "Recent Alerts",
+        "type": "table",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB"
+        },
+        "gridPos": {
+          "x": 8,
+          "y": 0,
+          "w": 16,
+          "h": 8
+        },
+        "targets": [
+          {
+            "query": "from(bucket: \"alerts\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"alerts\")\n  |> sort(columns: [\"_time\"], desc: true)\n  |> limit(n: 20)",
+            "refId": "A"
+          }
+        ],
+        "transparent": false,
+        "options": {}
+      },
+      {
+        "id": 3,
+        "title": "Alert Timeline",
+        "type": "graph",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 8,
+          "w": 24,
+          "h": 8
+        },
+        "targets": [
+          {
+            "query": "from(bucket: \"alerts\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"alerts\")\n  |> group(columns: [\"level\"])\n  |> aggregateWindow(every: v.windowPeriod, fn: count, createEmpty: false)",
+            "refId": "A"
+          }
+        ],
+        "transparent": false,
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Critical Alerts",
+        "type": "stat",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "InfluxDB"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 16,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "query": "from(bucket: \"alerts\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"alerts\")\n  |> filter(fn: (r) => r[\"level\"] == \"critical\")\n  |> count()",
+            "refId": "A"
+          }
+        ],
+        "transparent": false,
+        "options": {},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "schemaVersion": 37,
+    "version": 1,
+    "refresh": "5s",
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "links": [],
+    "liveNow": false,
+    "weekStart": ""
+  },
+  "overwrite": true
+}

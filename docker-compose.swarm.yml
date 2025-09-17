@@ -1,0 +1,169 @@
+version: '3.8'
+
+networks:
+  backend:
+    driver: overlay
+
+volumes:
+  postgres_data:
+  redis_data:
+  grafana_data:
+  prometheus_data:
+  app_logs:
+
+secrets:
+  postgres_password:
+    external: true
+  redis_password:
+    external: true
+  jwt_secret:
+    external: true
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: agent_lightning_memory
+      POSTGRES_USER: agent_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+      restart_policy:
+        condition: on-failure
+
+  redis:
+    image: redis:7-alpine
+    command: |
+      sh -c '
+        PASSWORD=$$(cat /run/secrets/redis_password)
+        redis-server --requirepass "$$PASSWORD" --maxmemory 256mb --maxmemory-policy allkeys-lru
+      '
+    secrets:
+      - redis_password
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.25'
+      restart_policy:
+        condition: on-failure
+
+  api:
+    image: agent-lightning-api:latest
+    environment:
+      - DATABASE_URL=postgresql://agent_user@postgres:5432/agent_lightning_memory
+      - REDIS_URL=redis://redis:6379/0
+      - APP_ENV=production
+    secrets:
+      - postgres_password
+      - redis_password
+      - jwt_secret
+    ports:
+      - "8001:8001"
+    volumes:
+      - app_logs:/app/logs
+    networks:
+      - backend
+    depends_on:
+      - postgres
+      - redis
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+      restart_policy:
+        condition: on-failure
+
+  dashboard:
+    image: agent-lightning-dashboard:latest
+    ports:
+      - "8051:8051"
+    networks:
+      - backend
+    depends_on:
+      - api
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.25'
+      restart_policy:
+        condition: on-failure
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/configs/nginx-simple.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - backend
+    depends_on:
+      - api
+      - dashboard
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+      restart_policy:
+        condition: on-failure
+
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/configs/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./docker/configs/prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.25'
+      restart_policy:
+        condition: on-failure
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/configs/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./docker/configs/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+    networks:
+      - backend
+    depends_on:
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.25'
+      restart_policy:
+        condition: on-failure

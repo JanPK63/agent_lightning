@@ -1,0 +1,88 @@
+[
+  {
+    "id": "architecture_patterns_0837a2b7_20250903061249",
+    "category": "architecture_patterns",
+    "content": "Common architectural patterns:\n        - Layered Architecture: Organizes code into layers (presentation, business, data)\n        - Microservices: Decomposes application into small, independent services\n        - Event-Driven: Uses events to trigger and communicate between services\n        - Serverless: Leverages cloud functions for scalability\n        - Monolithic: Single deployable unit with all functionality",
+    "source": "training",
+    "timestamp": "2025-09-03T06:12:49.914723",
+    "metadata": {},
+    "usage_count": 8,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "code_analysis_cc17da3e_20250903061249",
+    "category": "code_analysis",
+    "content": "When analyzing a codebase:\n        1. Start with the entry point (main file, index, app.js, etc.)\n        2. Map out the directory structure and module organization\n        3. Identify core components and their responsibilities\n        4. Trace data flow and control flow\n        5. Document external dependencies and integrations\n        6. Assess code quality metrics (complexity, coupling, cohesion)",
+    "source": "training",
+    "timestamp": "2025-09-03T06:12:49.914870",
+    "metadata": {},
+    "usage_count": 8,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "best_practices_44a923dd_20250903061249",
+    "category": "best_practices",
+    "content": "Architecture best practices:\n        - Keep components loosely coupled\n        - Design for scalability from the start\n        - Implement proper error handling and logging\n        - Use dependency injection for flexibility\n        - Follow DRY and SOLID principles\n        - Document architectural decisions (ADRs)\n        - Plan for monitoring and observability",
+    "source": "training",
+    "timestamp": "2025-09-03T06:12:49.914988",
+    "metadata": {},
+    "usage_count": 7,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "troubleshooting_3979364e_20250912145040",
+    "category": "troubleshooting",
+    "content": "Problem: analyze this directory on my ubuntu server: fabric-api-gateway-modular\nSolution: {'response': \"To analyze the directory `fabric-api-gateway-modular` on your Ubuntu server, follow these steps:\\n\\n1. **Access the Directory**:\\n   - Open a terminal on your Ubuntu server.\\n   - Navigate to the directory using `cd`:\\n     ```bash\\n     cd /path/to/fabric-api-gateway-modular\\n     ```\\n\\n2. **Identify the Entry Point**:\\n   - Look for files like `main`, `index`, `app.js`, or similar common entry points.\\n   - You can list all files in the directory to identify potential entry points:\\n     ```bash\\n     ls -l\\n     ```\\n\\n3. **Map Out the Directory Structure**:\\n   - Use the `tree` command to visualize the directory structure. If `tree` is not installed, you can install it using:\\n     ```bash\\n     sudo apt-get install tree\\n     ```\\n   - Then run:\\n     ```bash\\n     tree\\n     ```\\n   - This will help you understand the organization of folders and files.\\n\\n4. **Identify Core Components**:\\n   - Based on the directory structure, identify key components such as services, controllers, models, or utilities.\\n   - Look for directories like `src`, `lib`, `services`, `controllers`, etc.\\n\\n5. **Determine the Architectural Pattern**:\\n   - Analyze the organization of the code to see if it follows a specific architectural pattern.\\n   - Check if it uses Layered Architecture by separating concerns into directories like `presentation`, `business`, and `data`.\\n   - Alternatively, see if it's organized as a Microservices architecture with separate services.\\n\\n6. **Analyze Code and Dependencies**:\\n   - Open key files to understand their purpose and how they interact.\\n   - Check for a `package.json`, `requirements.txt`, or similar dependency management files to understand external libraries being used.\\n\\n7. **Assess Best Practices**:\\n   - Look for signs of loosely coupled components and scalability considerations.\\n   - Check for error handling implementations and logging mechanisms.\\n   - Review the use of dependency injection or other best practices.\\n\\n8. **Document Findings**:\\n   - Make notes on your findings, including the architectural pattern, key components, and any potential improvements.\\n\\nBy following these steps, you'll have a comprehensive understanding of the `fabric-api-gateway-modular` directory on your server. If you need further analysis or have specific questions about the directory, feel free to ask!\\n\\n\u274c Could not access analyze on server\", 'agent': 'system_architect', 'knowledge_items_used': 3, 'task': 'analyze this directory on my ubuntu server: fabric-api-gateway-modular', 'agent_role': 'custom', 'action_executed': 'enterprise_analysis', 'action_success': True}",
+    "source": "interaction",
+    "timestamp": "2025-09-12T14:50:40.464107",
+    "metadata": {
+      "task_id": "92315454-aacc-4dfd-b008-1dc9f7e1c17a",
+      "timestamp": "2025-09-12T14:50:40.464043",
+      "confidence": 0.9
+    },
+    "usage_count": 6,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "troubleshooting_530cf422_20250912145354",
+    "category": "troubleshooting",
+    "content": "Problem: analyze /Users/jankootstra/agent-lightning-main\nSolution: {'response': \"To analyze the directory `/Users/jankootstra/agent-lightning-main`, follow these steps:\\n\\n1. **Identify the Entry Point:**\\n   - Look for files like `main.py`, `index.js`, `app.js`, or any file commonly used as the entry point in the project's primary programming language. This file typically contains the main logic to initiate the application.\\n\\n2. **Map the Directory Structure:**\\n   - List all directories and files to understand the organization. You can use the command `tree` if available, or `ls -R`, to recursively list all files and directories.\\n\\n3. **Understand Module Organization:**\\n   - Note the directory structure and categorize files into likely modules such as presentation, business logic, data access, utilities, etc. This will help you understand the architecture pattern, like Layered Architecture or Microservices.\\n\\n4. **Identify Core Components:**\\n   - Look for directories or files that suggest core functionalities, such as:\\n     - `controllers` or `routes` for handling incoming requests.\\n     - `models` or `entities` for data structures.\\n     - `services` or `business_logic` for core business logic.\\n     - `config` for configuration files.\\n     - `tests` for unit or integration tests.\\n\\n5. **Check for Configuration Files:**\\n   - Look for files like `package.json`, `requirements.txt`, `Dockerfile`, etc., which provide information about dependencies, environment setup, and deployment configurations.\\n\\n6. **Review README or Documentation:**\\n   - If available, read the README file or any other documentation for an overview of the project's purpose, setup instructions, and usage.\\n\\n7. **Examine Dependencies:**\\n   - Analyze the dependency management files to understand external libraries or frameworks used.\\n\\n8. **Analyze Code for Patterns:**\\n   - Look for architectural patterns such as Layered Architecture or Microservices by identifying how the code is structured and how modules interact.\\n\\n9. **Security and Performance Considerations:**\\n   - Identify any security measures (e.g., authentication, validation) and performance optimizations (e.g., caching, load balancing).\\n\\n10. **Run the Application (if possible):**\\n   - If you have the environment set up, try running the application to see how it behaves and log any errors or warnings for further analysis.\\n\\nBy following these steps, you'll gain a comprehensive understanding of the directory and the project it contains. If you need more detailed help or specific commands for any of the steps, let me know!\\n\\n\u2705 **LOCAL ANALYSIS EXECUTED**\\nPath: /Users/jankootstra/agent-lightning-main\\n\\n\ud83d\udcc1 LOCAL: agent-lightning-main\\nFiles: 2 JS, 377 Python, 87 JSON\\n\ud83d\udfe2 Python Project\\nKey files: requirements.txt, README.md\", 'agent': 'system_architect', 'knowledge_items_used': 4, 'task': 'analyze /Users/jankootstra/agent-lightning-main', 'agent_role': 'custom', 'action_executed': 'enterprise_analysis', 'action_success': True}",
+    "source": "interaction",
+    "timestamp": "2025-09-12T14:53:54.297124",
+    "metadata": {
+      "task_id": "268fbc3d-8333-4916-9e65-58ceea18d262",
+      "timestamp": "2025-09-12T14:53:54.297024",
+      "confidence": 0.9
+    },
+    "usage_count": 4,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "troubleshooting_4a4f481e_20250912145408",
+    "category": "troubleshooting",
+    "content": "Problem: analyze fabric-api-gateway-modular directory\nSolution: {'response': \"To analyze the `fabric-api-gateway-modular` directory on your Ubuntu server, follow these structured steps to gain a comprehensive understanding of its structure and functionality:\\n\\n1. **Identify the Entry Point:**\\n   - Start by locating the main entry point of the application. Common entry files could be named `index.js`, `app.js`, or similar, depending on the programming language and framework used.\\n\\n2. **Directory Structure Mapping:**\\n   - Use commands like `ls` or `tree` to map out the directory structure. This helps in understanding how files and directories are organized.\\n   ```bash\\n   cd /path/to/fabric-api-gateway-modular\\n   tree -L 2  # Adjust depth as needed\\n   ```\\n\\n3. **Examine Configuration Files:**\\n   - Look for configuration files such as `.env`, `config.json`, `config.yaml`, etc. These files often contain essential configuration settings for the application.\\n\\n4. **Review Key Directories and Files:**\\n   - **Source Code:** Identify directories containing the source code. Look for directories like `src`, `lib`, or similar.\\n   - **Dependencies:** Check for `package.json` (Node.js), `requirements.txt` (Python), or other dependency management files to understand the libraries and frameworks used.\\n   - **Documentation:** Look for README files or documentation directories that provide an overview and usage instructions.\\n\\n5. **Identify Core Components:**\\n   - Analyze the modules and components used within the application. Identify business logic, utility functions, and helper modules.\\n   - Pay attention to any API routes or service interfaces that are defined.\\n\\n6. **Examine Build or Deployment Scripts:**\\n   - Check for scripts related to building or deploying the application, typically found in directories or files named `scripts`, `build`, or similar.\\n\\n7. **Check for Tests:**\\n   - Identify any testing frameworks or test files. These might be located in a `tests` directory or similar.\\n\\n8. **Analyze Logging and Error Handling:**\\n   - Examine how logging and error handling are implemented. Look for log configurations or error management modules.\\n\\n9. **Security and Performance Considerations:**\\n   - Review the codebase for any security vulnerabilities or performance bottlenecks, particularly in how data is handled and processed.\\n\\n10. **Documentation and Commenting:**\\n    - Evaluate the level of documentation and commenting within the codebase to understand the thought process of the developers.\\n\\nBy following these steps, you'll be able to systematically analyze the `fabric-api-gateway-modular` directory and understand its structure, dependencies, and functionality. If needed, I can assist further with specific tasks like optimizing performance, identifying potential issues, or integrating new features.\\n\\n\u274c **Analysis failed:** Path 'analyze' not found locally or remotely\", 'agent': 'system_architect', 'knowledge_items_used': 5, 'task': 'analyze fabric-api-gateway-modular directory', 'agent_role': 'custom', 'action_executed': 'enterprise_analysis', 'action_success': True}",
+    "source": "interaction",
+    "timestamp": "2025-09-12T14:54:08.239817",
+    "metadata": {
+      "task_id": "410620bc-cc05-4a1b-8037-822969433520",
+      "timestamp": "2025-09-12T14:54:08.239708",
+      "confidence": 0.9
+    },
+    "usage_count": 2,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "troubleshooting_9b0e6020_20250912151629",
+    "category": "troubleshooting",
+    "content": "Problem: analyze fabric-api-gateway-modular directory on my ubuntu server\nSolution: {'response': 'To analyze the `fabric-api-gateway-modular` directory on your Ubuntu server, follow these structured steps to gain a comprehensive understanding of the project:\\n\\n1. **Access the Directory:**\\n   - Open a terminal on your Ubuntu server.\\n   - Navigate to the directory by executing:\\n     ```bash\\n     cd /path/to/fabric-api-gateway-modular\\n     ```\\n\\n2. **Identify the Entry Point:**\\n   - Look for common entry point files such as `main.py`, `index.js`, `app.js`, or similar, depending on the programming language.\\n   - Use the `ls` command to list files and directories, and identify key files:\\n     ```bash\\n     ls -l\\n     ```\\n\\n3. **Directory Structure Mapping:**\\n   - Create a map of the directory structure to understand organization:\\n     ```bash\\n     tree -L 2\\n     ```\\n   - This will provide a two-level view of the directory, helping identify core folders and files.\\n\\n4. **Core Components Identification:**\\n   - Identify core components such as services, controllers, models, and utilities.\\n   - Look for directories like `src`, `lib`, `services`, `controllers`, or `models`.\\n\\n5. **Configuration Files:**\\n   - Check for configuration files like `config.json`, `config.yaml`, `.env`, or similar.\\n   - These files often contain important settings and environment variables.\\n\\n6. **Dependencies and Packages:**\\n   - Check for dependency management files such as `package.json` for Node.js, `requirements.txt` for Python, or `pom.xml` for Java.\\n   - Review the dependencies listed to understand external libraries and frameworks used.\\n\\n7. **Version Control:**\\n   - Identify if the project uses version control by checking for a `.git` directory.\\n   - Review the `.gitignore` file to see what files are excluded from versioning.\\n\\n8. **Documentation:**\\n   - Look for README files (`README.md`, `README.txt`) which often contain important project documentation and instructions.\\n\\n9. **Code Quality and Style:**\\n   - If linter configuration files are present (e.g., `.eslintrc`, `.pylintrc`), these indicate coding standards and style guides.\\n\\n10. **Security Considerations:**\\n    - Check for security-related files and practices, such as `Dockerfile` for containerization, or `.env` for environment variable management.\\n\\n11. **Logging and Error Handling:**\\n    - Identify how logging is implemented. Check for logging configuration files or logging libraries used in the code.\\n\\nBy following these steps, you can effectively analyze and understand the architecture, dependencies, and functionality of the `fabric-api-gateway-modular` directory on your Ubuntu server. If you need further assistance with specific files or configurations, feel free to ask!\\n\\n\u2705 **REMOTE ANALYSIS EXECUTED**\\nServer: 13.38.102.28\\nPath: fabric-api-gateway-modular\\n\\n=== fabric-api-gateway-modular ===\\ntotal 652\\ndrwxr-x---  12 ubuntu backend-agent  12288 Jul 11 07:55 .\\ndrwxr-x---  28 ubuntu ubuntu          4096 Sep  9 06:50 ..\\n-rw-rw-r--   1 ubuntu ubuntu           299 Jul 11 05:55 .env\\n-rwxr-x---   1 ubuntu backend-agent     66 Jun 21 04:28 .env.backup\\n0\\nNode.js Project\\n137M\\tfabric-api-gateway-modular', 'agent': 'system_architect', 'knowledge_items_used': 5, 'task': 'analyze fabric-api-gateway-modular directory on my ubuntu server', 'agent_role': 'custom', 'action_executed': 'enterprise_analysis', 'action_success': True}",
+    "source": "interaction",
+    "timestamp": "2025-09-12T15:16:29.315282",
+    "metadata": {
+      "task_id": "e71fa1aa-e0b9-46a8-ade7-192088a009ac",
+      "timestamp": "2025-09-12T15:16:29.315188",
+      "confidence": 0.9
+    },
+    "usage_count": 0,
+    "relevance_score": 1.0
+  }
+]

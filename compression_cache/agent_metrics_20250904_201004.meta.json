@@ -1,0 +1,9 @@
+{
+  "bucket": "agent_metrics",
+  "timestamp": "2025-09-04T20:10:04.808992",
+  "algorithm": "gzip",
+  "original_size": 82866,
+  "compressed_size": 6362,
+  "compression_ratio": 13.025149324111915,
+  "file": "agent_metrics_20250904_201004.gzip"
+}

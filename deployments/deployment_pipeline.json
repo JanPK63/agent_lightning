@@ -1,0 +1,179 @@
+{
+  "program_id": "1986946f-39ce-4bf7-a4cc-720b273842f7",
+  "name": "Container Deployment Pipeline",
+  "description": "",
+  "blocks": [
+    {
+      "block_id": "1d66f9eb-b9a7-49f0-806c-3390d0db26f8",
+      "block_type": "expression",
+      "title": "Dockerfile Generator",
+      "position": [
+        100,
+        100
+      ],
+      "properties": {
+        "base_image": "python:3.9-slim",
+        "workdir": "/app",
+        "copy_files": [
+          ".",
+          "/app"
+        ],
+        "run_commands": [
+          "pip install -r requirements.txt"
+        ],
+        "expose_ports": [
+          8000
+        ],
+        "cmd": [
+          "python",
+          "app.py"
+        ],
+        "env_vars": {},
+        "labels": {},
+        "user": null,
+        "healthcheck": null,
+        "deployment_type": "docker",
+        "generates": "Dockerfile"
+      },
+      "input_ports": [],
+      "output_ports": []
+    },
+    {
+      "block_id": "d2100ad0-705c-4ba0-ab5d-c141e32833f3",
+      "block_type": "expression",
+      "title": "Docker Build",
+      "position": [
+        300,
+        100
+      ],
+      "properties": {
+        "dockerfile_path": "./Dockerfile",
+        "context_path": ".",
+        "image_name": "myapp",
+        "tag": "latest",
+        "build_args": {},
+        "target": null,
+        "cache": true,
+        "push": false,
+        "registry": null,
+        "deployment_type": "docker",
+        "action": "build"
+      },
+      "input_ports": [],
+      "output_ports": []
+    },
+    {
+      "block_id": "f56689a1-0276-4ed8-835e-bf53ed425990",
+      "block_type": "expression",
+      "title": "K8s Deployment",
+      "position": [
+        500,
+        100
+      ],
+      "properties": {
+        "name": "app-deployment",
+        "namespace": "default",
+        "replicas": 3,
+        "image": "myapp:latest",
+        "ports": [
+          {
+            "containerPort": 8080
+          }
+        ],
+        "env": [],
+        "resources": {
+          "requests": {
+            "memory": "128Mi",
+            "cpu": "250m"
+          },
+          "limits": {
+            "memory": "256Mi",
+            "cpu": "500m"
+          }
+        },
+        "strategy": {
+          "type": "RollingUpdate",
+          "rollingUpdate": {
+            "maxSurge": 1,
+            "maxUnavailable": 0
+          }
+        },
+        "livenessProbe": null,
+        "readinessProbe": null,
+        "deployment_type": "kubernetes",
+        "resource_type": "Deployment"
+      },
+      "input_ports": [],
+      "output_ports": []
+    },
+    {
+      "block_id": "d68e705b-33ee-431e-ad2b-79af86c4867e",
+      "block_type": "expression",
+      "title": "K8s Service",
+      "position": [
+        700,
+        100
+      ],
+      "properties": {
+        "name": "app-service",
+        "namespace": "default",
+        "type": "ClusterIP",
+        "ports": [
+          {
+            "port": 80,
+            "targetPort": 8080,
+            "protocol": "TCP"
+          }
+        ],
+        "selector": {
+          "app": "myapp"
+        },
+        "sessionAffinity": "None",
+        "deployment_type": "kubernetes",
+        "resource_type": "Service"
+      },
+      "input_ports": [],
+      "output_ports": []
+    },
+    {
+      "block_id": "3d7265a3-b739-42fb-ac78-e4113adad632",
+      "block_type": "expression",
+      "title": "K8s Ingress",
+      "position": [
+        900,
+        100
+      ],
+      "properties": {
+        "name": "app-ingress",
+        "namespace": "default",
+        "ingressClassName": "nginx",
+        "rules": [
+          {
+            "host": "app.example.com",
+            "paths": [
+              {
+                "path": "/",
+                "pathType": "Prefix",
+                "backend": {
+                  "service": "app-service",
+                  "port": 80
+                }
+              }
+            ]
+          }
+        ],
+        "tls": [],
+        "annotations": {
+          "nginx.ingress.kubernetes.io/rewrite-target": "/"
+        },
+        "deployment_type": "kubernetes",
+        "resource_type": "Ingress"
+      },
+      "input_ports": [],
+      "output_ports": []
+    }
+  ],
+  "connections": [],
+  "target_language": "python",
+  "version": "1.0.0"
+}

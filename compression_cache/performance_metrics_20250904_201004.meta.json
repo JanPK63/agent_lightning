@@ -1,0 +1,9 @@
+{
+  "bucket": "performance_metrics",
+  "timestamp": "2025-09-04T20:10:04.791097",
+  "algorithm": "lz4",
+  "original_size": 458988,
+  "compressed_size": 72324,
+  "compression_ratio": 6.346275095404016,
+  "file": "performance_metrics_20250904_201004.lz4"
+}

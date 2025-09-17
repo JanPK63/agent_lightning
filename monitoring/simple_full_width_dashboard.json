@@ -1,0 +1,64 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Agent Lightning - Full Width Layout",
+    "tags": ["agent-lightning"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "System CPU Usage",
+        "type": "stat",
+        "targets": [{"expr": "system_cpu_percent", "refId": "A"}],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "red", "value": 80}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 6, "w": 24, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Memory Usage",
+        "type": "stat", 
+        "targets": [{"expr": "system_memory_percent", "refId": "A"}],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "red", "value": 80}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 6, "w": 24, "x": 0, "y": 6}
+      },
+      {
+        "id": 3,
+        "title": "Agent Tasks Total",
+        "type": "stat",
+        "targets": [{"expr": "agent_tasks_total", "refId": "A"}],
+        "fieldConfig": {"defaults": {"unit": "short"}},
+        "gridPos": {"h": 6, "w": 24, "x": 0, "y": 12}
+      },
+      {
+        "id": 4,
+        "title": "RL Training Sessions",
+        "type": "stat",
+        "targets": [{"expr": "rl_sessions_total", "refId": "A"}],
+        "fieldConfig": {"defaults": {"unit": "short"}},
+        "gridPos": {"h": 6, "w": 24, "x": 0, "y": 18}
+      }
+    ],
+    "time": {"from": "now-1h", "to": "now"},
+    "refresh": "10s"
+  }
+}

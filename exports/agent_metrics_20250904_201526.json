@@ -1,0 +1,5042 @@
+[
+  {
+    "time":"2025-09-04 16:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8154123629,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":537.6451298057,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1169.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":5.0,
+    "result":"_result",
+    "table":54,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8076323848,
+    "result":"_result",
+    "table":53,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1075.0,
+    "result":"_result",
+    "table":55,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1309.6311364949,
+    "result":"_result",
+    "table":52,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1405.0,
+    "result":"_result",
+    "table":23,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1701.6630812848,
+    "result":"_result",
+    "table":20,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9725901244,
+    "result":"_result",
+    "table":21,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":22,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":42,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2132.0,
+    "result":"_result",
+    "table":43,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9337818449,
+    "result":"_result",
+    "table":41,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":460.981718452,
+    "result":"_result",
+    "table":40,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8948195418,
+    "result":"_result",
+    "table":37,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":583.8272225793,
+    "result":"_result",
+    "table":36,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2483.0,
+    "result":"_result",
+    "table":39,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":5.0,
+    "result":"_result",
+    "table":38,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":536.0,
+    "result":"_result",
+    "table":11,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":667.3850905624,
+    "result":"_result",
+    "table":8,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":10,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8232620425,
+    "result":"_result",
+    "table":9,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:15:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4922.0,
+    "result":"_result",
+    "table":27,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:15:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":26,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:15:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8598510854,
+    "result":"_result",
+    "table":25,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:15:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":678.4621147654,
+    "result":"_result",
+    "table":24,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:16:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9834835264,
+    "result":"_result",
+    "table":13,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:16:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":14,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:16:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2030.0,
+    "result":"_result",
+    "table":15,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:16:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1926.1915106013,
+    "result":"_result",
+    "table":12,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:17:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1830.4799876801,
+    "result":"_result",
+    "table":36,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:17:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9551834244,
+    "result":"_result",
+    "table":37,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:17:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2262.0,
+    "result":"_result",
+    "table":39,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:17:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":38,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:18:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":947.0,
+    "result":"_result",
+    "table":51,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:18:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8921160059,
+    "result":"_result",
+    "table":49,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:18:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":50,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:18:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1711.7954526318,
+    "result":"_result",
+    "table":48,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:19:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":4.0,
+    "result":"_result",
+    "table":6,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:19:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3123.0,
+    "result":"_result",
+    "table":7,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:19:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8058279361,
+    "result":"_result",
+    "table":5,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:19:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":384.4672345712,
+    "result":"_result",
+    "table":4,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:20:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1029.2480514803,
+    "result":"_result",
+    "table":28,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:20:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":5.0,
+    "result":"_result",
+    "table":30,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:20:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4976.0,
+    "result":"_result",
+    "table":31,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:20:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8761942866,
+    "result":"_result",
+    "table":29,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:21:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8320579249,
+    "result":"_result",
+    "table":53,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:21:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":54,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:21:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":752.6361541515,
+    "result":"_result",
+    "table":52,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:21:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":634.0,
+    "result":"_result",
+    "table":55,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:22:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9211551075,
+    "result":"_result",
+    "table":5,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:22:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4161.0,
+    "result":"_result",
+    "table":7,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:22:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1222.050565394,
+    "result":"_result",
+    "table":4,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:22:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":6,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:23:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8589048433,
+    "result":"_result",
+    "table":49,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:23:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1504.8542525182,
+    "result":"_result",
+    "table":48,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:23:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":50,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:23:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3065.0,
+    "result":"_result",
+    "table":51,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:24:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":4.0,
+    "result":"_result",
+    "table":14,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:24:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9961942027,
+    "result":"_result",
+    "table":13,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:24:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1411.9792584243,
+    "result":"_result",
+    "table":12,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:24:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3922.0,
+    "result":"_result",
+    "table":15,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:25:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":14,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:25:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8748619077,
+    "result":"_result",
+    "table":13,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:25:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":749.0,
+    "result":"_result",
+    "table":15,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:25:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1258.7396572072,
+    "result":"_result",
+    "table":12,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:26:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":6,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:26:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1158.0,
+    "result":"_result",
+    "table":7,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:26:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.852987775,
+    "result":"_result",
+    "table":5,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:26:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1805.7433405808,
+    "result":"_result",
+    "table":4,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:27:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":18,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:27:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8919737923,
+    "result":"_result",
+    "table":17,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:27:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":272.0,
+    "result":"_result",
+    "table":19,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:27:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":386.9805500659,
+    "result":"_result",
+    "table":16,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:28:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1016.5418335426,
+    "result":"_result",
+    "table":48,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:28:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3309.0,
+    "result":"_result",
+    "table":51,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:28:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8552726119,
+    "result":"_result",
+    "table":49,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:28:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":50,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:29:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1363.7497027709,
+    "result":"_result",
+    "table":0,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:29:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1440.0,
+    "result":"_result",
+    "table":3,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:29:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":2,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:29:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8648369463,
+    "result":"_result",
+    "table":1,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:30:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":38,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:30:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":897.0,
+    "result":"_result",
+    "table":39,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:30:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":213.800603028,
+    "result":"_result",
+    "table":36,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:30:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8476127274,
+    "result":"_result",
+    "table":37,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:31:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":818.4419758139,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:31:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8127353559,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:31:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:31:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2415.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:32:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:32:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2969.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:32:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.976306167,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:32:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":799.7831986474,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:33:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9475680174,
+    "result":"_result",
+    "table":1,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:33:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1770.0218535462,
+    "result":"_result",
+    "table":0,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:33:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":2,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:33:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4811.0,
+    "result":"_result",
+    "table":3,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:34:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9615336962,
+    "result":"_result",
+    "table":57,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:34:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3492.0,
+    "result":"_result",
+    "table":59,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:34:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":58,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:34:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":444.6156816332,
+    "result":"_result",
+    "table":56,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:35:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9606287589,
+    "result":"_result",
+    "table":37,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:35:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4820.0,
+    "result":"_result",
+    "table":39,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:35:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":38,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:35:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1517.3593639419,
+    "result":"_result",
+    "table":36,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:36:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:36:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2484.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:36:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1017.2069907145,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:36:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8023320409,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:37:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1844.8225446651,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:37:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:37:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1141.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:37:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9518654306,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:38:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":4.0,
+    "result":"_result",
+    "table":34,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:38:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1201.0,
+    "result":"_result",
+    "table":35,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:38:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8399608903,
+    "result":"_result",
+    "table":33,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:38:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1184.3150486551,
+    "result":"_result",
+    "table":32,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:39:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":636.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:39:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1834.3674134314,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:39:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9131474438,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:39:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:40:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":26,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:40:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":195.5393258898,
+    "result":"_result",
+    "table":24,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:40:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":246.0,
+    "result":"_result",
+    "table":27,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:40:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8999632696,
+    "result":"_result",
+    "table":25,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:41:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8563802807,
+    "result":"_result",
+    "table":57,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:41:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":674.4419956976,
+    "result":"_result",
+    "table":56,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:41:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1511.0,
+    "result":"_result",
+    "table":59,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:41:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":58,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:42:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3395.0,
+    "result":"_result",
+    "table":19,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:42:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8154653196,
+    "result":"_result",
+    "table":17,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:42:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":18,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:42:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":975.3586997736,
+    "result":"_result",
+    "table":16,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:43:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":393.211507329,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:43:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:43:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1485.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:43:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9403104356,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:44:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.883555093,
+    "result":"_result",
+    "table":33,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:44:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1643.0,
+    "result":"_result",
+    "table":35,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:44:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1482.3748079131,
+    "result":"_result",
+    "table":32,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:44:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":10.0,
+    "result":"_result",
+    "table":34,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:45:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9788499678,
+    "result":"_result",
+    "table":41,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:45:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1775.7011104663,
+    "result":"_result",
+    "table":40,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:45:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":42,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:45:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2130.0,
+    "result":"_result",
+    "table":43,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:46:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":30,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:46:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":792.0,
+    "result":"_result",
+    "table":31,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:46:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9308093591,
+    "result":"_result",
+    "table":29,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:46:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1610.4584336477,
+    "result":"_result",
+    "table":28,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:47:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3715.0,
+    "result":"_result",
+    "table":59,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:47:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":4.0,
+    "result":"_result",
+    "table":58,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:47:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9976482246,
+    "result":"_result",
+    "table":57,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:47:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":881.8842561467,
+    "result":"_result",
+    "table":56,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:48:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3306.0,
+    "result":"_result",
+    "table":59,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:48:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1861.3784414535,
+    "result":"_result",
+    "table":56,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:48:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9494332074,
+    "result":"_result",
+    "table":57,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:48:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":58,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:49:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":10.0,
+    "result":"_result",
+    "table":42,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:49:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":977.7744609302,
+    "result":"_result",
+    "table":40,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:49:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8716919268,
+    "result":"_result",
+    "table":41,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:49:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1789.0,
+    "result":"_result",
+    "table":43,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:50:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3132.0,
+    "result":"_result",
+    "table":19,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:50:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1101.2081343811,
+    "result":"_result",
+    "table":16,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:50:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":18,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:50:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9665374621,
+    "result":"_result",
+    "table":17,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:51:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.919918645,
+    "result":"_result",
+    "table":17,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:51:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":462.3673487857,
+    "result":"_result",
+    "table":16,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:51:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":18,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:51:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":357.0,
+    "result":"_result",
+    "table":19,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:52:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":459.0878099311,
+    "result":"_result",
+    "table":36,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:52:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4025.0,
+    "result":"_result",
+    "table":39,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:52:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":38,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:52:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9579347776,
+    "result":"_result",
+    "table":37,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:53:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1909.7365253317,
+    "result":"_result",
+    "table":12,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:53:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":14,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:53:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":497.0,
+    "result":"_result",
+    "table":15,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:53:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9379085128,
+    "result":"_result",
+    "table":13,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:54:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.893016193,
+    "result":"_result",
+    "table":49,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:54:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":378.3349554135,
+    "result":"_result",
+    "table":48,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:54:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":50,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:54:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4585.0,
+    "result":"_result",
+    "table":51,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:55:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1444.0952305191,
+    "result":"_result",
+    "table":0,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:55:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8220090705,
+    "result":"_result",
+    "table":1,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:55:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":5.0,
+    "result":"_result",
+    "table":2,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:55:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3547.0,
+    "result":"_result",
+    "table":3,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:56:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8214485368,
+    "result":"_result",
+    "table":1,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:56:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":2,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:56:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":541.0936868788,
+    "result":"_result",
+    "table":0,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:56:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3096.0,
+    "result":"_result",
+    "table":3,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 16:57:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4584.0,
+    "result":"_result",
+    "table":7,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:57:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1713.3189364797,
+    "result":"_result",
+    "table":4,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:57:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8167270641,
+    "result":"_result",
+    "table":5,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:57:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":6,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 16:58:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2819.0,
+    "result":"_result",
+    "table":15,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:58:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":14,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:58:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1116.3233531197,
+    "result":"_result",
+    "table":12,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:58:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9850802086,
+    "result":"_result",
+    "table":13,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 16:59:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1195.2344358612,
+    "result":"_result",
+    "table":40,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:59:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2668.0,
+    "result":"_result",
+    "table":43,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:59:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8609770537,
+    "result":"_result",
+    "table":41,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 16:59:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":42,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:00:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9597144566,
+    "result":"_result",
+    "table":25,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:00:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1814.6670693496,
+    "result":"_result",
+    "table":24,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:00:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":26,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:00:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1892.0,
+    "result":"_result",
+    "table":27,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:01:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2822.0,
+    "result":"_result",
+    "table":19,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:01:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1619.3786120023,
+    "result":"_result",
+    "table":16,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:01:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":18,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:01:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9533516233,
+    "result":"_result",
+    "table":17,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:02:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":486.1077875966,
+    "result":"_result",
+    "table":28,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:02:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9752395324,
+    "result":"_result",
+    "table":29,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:02:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2887.0,
+    "result":"_result",
+    "table":31,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:02:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":30,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:03:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8384389298,
+    "result":"_result",
+    "table":9,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:03:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1187.0702055565,
+    "result":"_result",
+    "table":8,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:03:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3335.0,
+    "result":"_result",
+    "table":11,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:03:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":10,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:04:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.858946183,
+    "result":"_result",
+    "table":49,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:04:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":50,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:04:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":382.4574384182,
+    "result":"_result",
+    "table":48,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:04:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1195.0,
+    "result":"_result",
+    "table":51,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:05:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":207.0,
+    "result":"_result",
+    "table":23,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:05:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":22,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:05:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8327516229,
+    "result":"_result",
+    "table":21,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:05:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":976.2417864686,
+    "result":"_result",
+    "table":20,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:06:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":815.0,
+    "result":"_result",
+    "table":19,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:06:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":18,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:06:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.872635199,
+    "result":"_result",
+    "table":17,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:06:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1041.8123231991,
+    "result":"_result",
+    "table":16,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:07:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8815775192,
+    "result":"_result",
+    "table":5,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:07:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":337.0,
+    "result":"_result",
+    "table":7,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:07:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":6,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:07:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1821.3897689941,
+    "result":"_result",
+    "table":4,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:08:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":745.3260262521,
+    "result":"_result",
+    "table":8,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:08:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":10,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:08:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9187591278,
+    "result":"_result",
+    "table":9,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:08:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1527.0,
+    "result":"_result",
+    "table":11,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":2,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1084.0,
+    "result":"_result",
+    "table":3,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8273895392,
+    "result":"_result",
+    "table":1,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":780.479340079,
+    "result":"_result",
+    "table":0,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":22,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8888356384,
+    "result":"_result",
+    "table":21,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1127.2841467201,
+    "result":"_result",
+    "table":20,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3897.0,
+    "result":"_result",
+    "table":23,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":50,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9894417915,
+    "result":"_result",
+    "table":49,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1301.0,
+    "result":"_result",
+    "table":51,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":301.8219487433,
+    "result":"_result",
+    "table":48,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1744.4795895104,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":541.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8979452232,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":42,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9667607488,
+    "result":"_result",
+    "table":41,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":417.4641385008,
+    "result":"_result",
+    "table":40,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3869.0,
+    "result":"_result",
+    "table":43,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2018.0,
+    "result":"_result",
+    "table":3,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1658.8414942102,
+    "result":"_result",
+    "table":0,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":2,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9558324768,
+    "result":"_result",
+    "table":1,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:15:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":149.6904231157,
+    "result":"_result",
+    "table":52,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:15:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":676.0,
+    "result":"_result",
+    "table":55,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:15:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":54,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:15:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9751999409,
+    "result":"_result",
+    "table":53,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:16:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":10,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:16:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.929455241,
+    "result":"_result",
+    "table":9,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:16:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":942.579011734,
+    "result":"_result",
+    "table":8,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:16:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":127.0,
+    "result":"_result",
+    "table":11,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:17:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2633.0,
+    "result":"_result",
+    "table":11,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:17:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":500.4807857247,
+    "result":"_result",
+    "table":8,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:17:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":10,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:17:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9248625184,
+    "result":"_result",
+    "table":9,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:18:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2968.0,
+    "result":"_result",
+    "table":31,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:18:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":10.0,
+    "result":"_result",
+    "table":30,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:18:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1381.8719061504,
+    "result":"_result",
+    "table":28,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:18:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9502115895,
+    "result":"_result",
+    "table":29,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:19:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9064021059,
+    "result":"_result",
+    "table":37,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:19:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":38,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:19:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2870.0,
+    "result":"_result",
+    "table":39,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:19:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1192.3778806707,
+    "result":"_result",
+    "table":36,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:20:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":2,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:20:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1217.9916486935,
+    "result":"_result",
+    "table":0,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:20:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1056.0,
+    "result":"_result",
+    "table":3,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:20:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8428453494,
+    "result":"_result",
+    "table":1,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:21:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8998997013,
+    "result":"_result",
+    "table":33,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:21:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4335.0,
+    "result":"_result",
+    "table":35,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:21:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1588.6169285813,
+    "result":"_result",
+    "table":32,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:21:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":34,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:22:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":10.0,
+    "result":"_result",
+    "table":54,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:22:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":970.1414452243,
+    "result":"_result",
+    "table":52,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:22:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":273.0,
+    "result":"_result",
+    "table":55,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:22:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8047434262,
+    "result":"_result",
+    "table":53,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:23:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9442310574,
+    "result":"_result",
+    "table":9,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:23:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":10,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:23:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":584.0,
+    "result":"_result",
+    "table":11,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:23:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1439.7912967762,
+    "result":"_result",
+    "table":8,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:24:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":275.36891668,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:24:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.881213127,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:24:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2082.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:24:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:25:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2957.0,
+    "result":"_result",
+    "table":19,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:25:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":884.0740386431,
+    "result":"_result",
+    "table":16,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:25:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":18,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:25:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8798116827,
+    "result":"_result",
+    "table":17,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:26:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4715.0,
+    "result":"_result",
+    "table":39,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:26:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":231.1496529376,
+    "result":"_result",
+    "table":36,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:26:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9882443109,
+    "result":"_result",
+    "table":37,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:26:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":38,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:27:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":125.249328316,
+    "result":"_result",
+    "table":52,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:27:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9604484077,
+    "result":"_result",
+    "table":53,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:27:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":848.0,
+    "result":"_result",
+    "table":55,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:27:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":4.0,
+    "result":"_result",
+    "table":54,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:28:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":545.0727183862,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:28:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4006.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:28:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:28:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8737781764,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:29:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3760.0,
+    "result":"_result",
+    "table":63,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:29:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":62,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:29:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8341522786,
+    "result":"_result",
+    "table":61,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:29:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1786.436238687,
+    "result":"_result",
+    "table":60,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:30:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1988.3062196251,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:30:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:30:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9950217285,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:30:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3897.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:31:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1342.5279210368,
+    "result":"_result",
+    "table":28,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:31:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4753.0,
+    "result":"_result",
+    "table":31,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:31:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9956821693,
+    "result":"_result",
+    "table":29,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:31:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":30,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:32:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1508.3067344052,
+    "result":"_result",
+    "table":24,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:32:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8407567743,
+    "result":"_result",
+    "table":25,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:32:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":10.0,
+    "result":"_result",
+    "table":26,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:32:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4118.0,
+    "result":"_result",
+    "table":27,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:33:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1130.7648521885,
+    "result":"_result",
+    "table":12,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:33:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.801009116,
+    "result":"_result",
+    "table":13,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:33:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":14,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:33:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":728.0,
+    "result":"_result",
+    "table":15,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:34:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":295.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:34:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1902.3036612018,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:34:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":5.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:34:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8306240779,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:35:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9742858501,
+    "result":"_result",
+    "table":37,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:35:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":38,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:35:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2998.0,
+    "result":"_result",
+    "table":39,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:35:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":420.7038103195,
+    "result":"_result",
+    "table":36,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:36:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":4.0,
+    "result":"_result",
+    "table":62,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:36:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":533.6247595784,
+    "result":"_result",
+    "table":60,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:36:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3374.0,
+    "result":"_result",
+    "table":63,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:36:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.979923149,
+    "result":"_result",
+    "table":61,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:37:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9095829691,
+    "result":"_result",
+    "table":49,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:37:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":50,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:37:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":947.0130564443,
+    "result":"_result",
+    "table":48,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:37:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1913.0,
+    "result":"_result",
+    "table":51,
+    "agent":"writer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:38:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1393.513187198,
+    "result":"_result",
+    "table":20,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:38:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4045.0,
+    "result":"_result",
+    "table":23,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:38:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":10.0,
+    "result":"_result",
+    "table":22,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:38:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8723279992,
+    "result":"_result",
+    "table":21,
+    "agent":"researcher",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:39:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":14,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:39:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.953155635,
+    "result":"_result",
+    "table":13,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:39:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1464.8679983297,
+    "result":"_result",
+    "table":12,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:39:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1667.0,
+    "result":"_result",
+    "table":15,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:40:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2828.0,
+    "result":"_result",
+    "table":31,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:40:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8858534055,
+    "result":"_result",
+    "table":29,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:40:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":202.5641872011,
+    "result":"_result",
+    "table":28,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:40:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":30,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:41:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":10.0,
+    "result":"_result",
+    "table":6,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:41:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":798.0762173322,
+    "result":"_result",
+    "table":4,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:41:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":142.0,
+    "result":"_result",
+    "table":7,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:41:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8194148478,
+    "result":"_result",
+    "table":5,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:42:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4732.0,
+    "result":"_result",
+    "table":63,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:42:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":926.4454689888,
+    "result":"_result",
+    "table":60,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:42:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":62,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:42:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9189405491,
+    "result":"_result",
+    "table":61,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:43:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1527.0,
+    "result":"_result",
+    "table":7,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:43:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":386.0074646008,
+    "result":"_result",
+    "table":4,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:43:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":5.0,
+    "result":"_result",
+    "table":6,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:43:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8933543066,
+    "result":"_result",
+    "table":5,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:44:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4532.0,
+    "result":"_result",
+    "table":11,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:44:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":10,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:44:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9786289848,
+    "result":"_result",
+    "table":9,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:44:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1348.5123455286,
+    "result":"_result",
+    "table":8,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:45:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8370282732,
+    "result":"_result",
+    "table":57,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:45:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1919.5790670965,
+    "result":"_result",
+    "table":56,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:45:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":58,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:45:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1863.0,
+    "result":"_result",
+    "table":59,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:46:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4941.0,
+    "result":"_result",
+    "table":31,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:46:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8649501845,
+    "result":"_result",
+    "table":29,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:46:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":418.8961030332,
+    "result":"_result",
+    "table":28,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:46:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":10.0,
+    "result":"_result",
+    "table":30,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:47:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1572.5658049972,
+    "result":"_result",
+    "table":60,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:47:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":62,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:47:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3971.0,
+    "result":"_result",
+    "table":63,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:47:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9906655002,
+    "result":"_result",
+    "table":61,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:48:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":2,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:48:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9380049818,
+    "result":"_result",
+    "table":1,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:48:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1568.5704957416,
+    "result":"_result",
+    "table":0,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:48:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1452.0,
+    "result":"_result",
+    "table":3,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:49:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9134822239,
+    "result":"_result",
+    "table":61,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:49:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":808.2804186158,
+    "result":"_result",
+    "table":60,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:49:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":62,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:49:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2728.0,
+    "result":"_result",
+    "table":63,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:50:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8269200916,
+    "result":"_result",
+    "table":29,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:50:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":832.910642838,
+    "result":"_result",
+    "table":28,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:50:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":30,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:50:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4672.0,
+    "result":"_result",
+    "table":31,
+    "agent":"researcher",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:51:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1190.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:51:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1548.6264375271,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:51:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:51:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8867738815,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:52:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2725.0,
+    "result":"_result",
+    "table":39,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:52:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9072232252,
+    "result":"_result",
+    "table":37,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:52:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1120.0032505415,
+    "result":"_result",
+    "table":36,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:52:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":38,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 17:53:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9775376205,
+    "result":"_result",
+    "table":41,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:53:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":4801.0,
+    "result":"_result",
+    "table":43,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:53:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1787.8984499291,
+    "result":"_result",
+    "table":40,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:53:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":42,
+    "agent":"reviewer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:54:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":711.9882661535,
+    "result":"_result",
+    "table":44,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:54:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9281054541,
+    "result":"_result",
+    "table":45,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:54:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":46,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:54:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1476.0,
+    "result":"_result",
+    "table":47,
+    "agent":"reviewer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:55:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":62,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:55:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1538.0524677642,
+    "result":"_result",
+    "table":60,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:55:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2129.0,
+    "result":"_result",
+    "table":63,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:55:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9540472771,
+    "result":"_result",
+    "table":61,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:56:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":296.1041676676,
+    "result":"_result",
+    "table":32,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:56:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":985.0,
+    "result":"_result",
+    "table":35,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:56:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":34,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:56:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9069582835,
+    "result":"_result",
+    "table":33,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:57:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9129220334,
+    "result":"_result",
+    "table":13,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:57:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":14,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:57:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3400.0,
+    "result":"_result",
+    "table":15,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:57:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1959.2450142437,
+    "result":"_result",
+    "table":12,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 17:58:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1054.8667212322,
+    "result":"_result",
+    "table":0,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:58:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9247706312,
+    "result":"_result",
+    "table":1,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:58:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":5.0,
+    "result":"_result",
+    "table":2,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:58:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1725.0,
+    "result":"_result",
+    "table":3,
+    "agent":"optimizer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 17:59:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2070.0,
+    "result":"_result",
+    "table":59,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:59:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":8.0,
+    "result":"_result",
+    "table":58,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:59:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1566.0646337091,
+    "result":"_result",
+    "table":56,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 17:59:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9982036016,
+    "result":"_result",
+    "table":57,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:00:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1578.9784342246,
+    "result":"_result",
+    "table":24,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:00:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9912389812,
+    "result":"_result",
+    "table":25,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:00:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3640.0,
+    "result":"_result",
+    "table":27,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:00:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":26,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:01:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1437.0,
+    "result":"_result",
+    "table":55,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:01:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":925.2967192564,
+    "result":"_result",
+    "table":52,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:01:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9779314156,
+    "result":"_result",
+    "table":53,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:01:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":54,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:02:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2600.0,
+    "result":"_result",
+    "table":19,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:02:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9924160276,
+    "result":"_result",
+    "table":17,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:02:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1216.1280401185,
+    "result":"_result",
+    "table":16,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:02:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":1.0,
+    "result":"_result",
+    "table":18,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:03:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9968393599,
+    "result":"_result",
+    "table":9,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:03:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":7.0,
+    "result":"_result",
+    "table":10,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:03:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1192.0,
+    "result":"_result",
+    "table":11,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:03:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1793.3052482216,
+    "result":"_result",
+    "table":8,
+    "agent":"optimizer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:04:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":557.0,
+    "result":"_result",
+    "table":15,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 18:04:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1116.3682461391,
+    "result":"_result",
+    "table":12,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 18:04:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9786272414,
+    "result":"_result",
+    "table":13,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 18:04:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":3.0,
+    "result":"_result",
+    "table":14,
+    "agent":"optimizer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 18:05:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2317.0,
+    "result":"_result",
+    "table":35,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:05:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":4.0,
+    "result":"_result",
+    "table":34,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:05:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1932.0887371668,
+    "result":"_result",
+    "table":32,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:05:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9672640987,
+    "result":"_result",
+    "table":33,
+    "agent":"reviewer",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:06:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9483143161,
+    "result":"_result",
+    "table":5,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:06:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":3712.0,
+    "result":"_result",
+    "table":7,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:06:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":6.0,
+    "result":"_result",
+    "table":6,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:06:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1495.1414812938,
+    "result":"_result",
+    "table":4,
+    "agent":"optimizer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:07:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2520.0,
+    "result":"_result",
+    "table":59,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:07:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":5.0,
+    "result":"_result",
+    "table":58,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:07:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9261995017,
+    "result":"_result",
+    "table":57,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:07:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":290.1498142864,
+    "result":"_result",
+    "table":56,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:08:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8653601091,
+    "result":"_result",
+    "table":17,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:08:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1102.1725393941,
+    "result":"_result",
+    "table":16,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:08:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":18,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:08:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2382.0,
+    "result":"_result",
+    "table":19,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8883351382,
+    "result":"_result",
+    "table":17,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1002.4927674967,
+    "result":"_result",
+    "table":16,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1370.0,
+    "result":"_result",
+    "table":19,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:09:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":10.0,
+    "result":"_result",
+    "table":18,
+    "agent":"researcher",
+    "task_type":"analysis"
+  },
+  {
+    "time":"2025-09-04 18:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8471823492,
+    "result":"_result",
+    "table":61,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 18:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":4.0,
+    "result":"_result",
+    "table":62,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 18:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2413.0,
+    "result":"_result",
+    "table":63,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 18:10:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1393.9016654762,
+    "result":"_result",
+    "table":60,
+    "agent":"writer",
+    "task_type":"review"
+  },
+  {
+    "time":"2025-09-04 18:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":2035.0,
+    "result":"_result",
+    "table":55,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1258.8904534434,
+    "result":"_result",
+    "table":52,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":9.0,
+    "result":"_result",
+    "table":54,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:11:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8978237419,
+    "result":"_result",
+    "table":53,
+    "agent":"writer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":4.0,
+    "result":"_result",
+    "table":26,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1867.0,
+    "result":"_result",
+    "table":27,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1777.06682017,
+    "result":"_result",
+    "table":24,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:12:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8386052632,
+    "result":"_result",
+    "table":25,
+    "agent":"researcher",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":583.5708433556,
+    "result":"_result",
+    "table":56,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.8956844897,
+    "result":"_result",
+    "table":57,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":5.0,
+    "result":"_result",
+    "table":58,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:13:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":1317.0,
+    "result":"_result",
+    "table":59,
+    "agent":"writer",
+    "task_type":"optimization"
+  },
+  {
+    "time":"2025-09-04 18:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"response_time_ms",
+    "value":1942.6660688345,
+    "result":"_result",
+    "table":36,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"success_rate",
+    "value":0.9554309996,
+    "result":"_result",
+    "table":37,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tasks_completed",
+    "value":2.0,
+    "result":"_result",
+    "table":38,
+    "agent":"reviewer",
+    "task_type":"generation"
+  },
+  {
+    "time":"2025-09-04 18:14:29.046290+00:00",
+    "measurement":"agent_activity",
+    "field":"tokens_used",
+    "value":470.0,
+    "result":"_result",
+    "table":39,
+    "agent":"reviewer",
+    "task_type":"generation"
+  }
+]

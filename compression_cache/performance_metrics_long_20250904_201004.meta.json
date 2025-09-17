@@ -1,0 +1,9 @@
+{
+  "bucket": "performance_metrics_long",
+  "timestamp": "2025-09-04T20:10:04.797514",
+  "algorithm": "brotli",
+  "original_size": 0,
+  "compressed_size": 1,
+  "compression_ratio": 0.0,
+  "file": "performance_metrics_long_20250904_201004.brotli"
+}

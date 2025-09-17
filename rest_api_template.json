@@ -1,0 +1,19 @@
+{
+  "template_id": "fbde3787-ef3f-48b0-9aa1-9c7aba7856a6",
+  "name": "REST API Endpoint",
+  "description": "Basic REST API endpoint with validation and database query",
+  "category": "web_api",
+  "tags": [
+    "api",
+    "rest",
+    "endpoint",
+    "http"
+  ],
+  "difficulty": "beginner",
+  "program": "{\n  \"program_id\": \"3527f91f-a7f2-4258-9c72-813b89ce5c09\",\n  \"name\": \"REST API Endpoint\",\n  \"description\": \"\",\n  \"blocks\": [\n    {\n      \"block_id\": \"ec5d8ee0-c3e8-4ee6-b24d-f76d5195962e\",\n      \"block_type\": \"function_def\",\n      \"title\": \"Function\",\n      \"position\": [\n        0,\n        0\n      ],\n      \"properties\": {\n        \"function_name\": \"handle_request\",\n        \"parameters\": [\n          \"request\",\n          \"response\"\n        ],\n        \"return_type\": \"any\"\n      },\n      \"input_ports\": [],\n      \"output_ports\": [\n        {\n          \"name\": \"body\",\n          \"type\": \"control_flow\"\n        },\n        {\n          \"name\": \"return\",\n          \"type\": \"any\"\n        }\n      ]\n    },\n    {\n      \"block_id\": \"4b74065e-344b-47a1-8ab7-d75b44ed14d0\",\n      \"block_type\": \"if_condition\",\n      \"title\": \"If Condition\",\n      \"position\": [\n        0,\n        0\n      ],\n      \"properties\": {\n        \"condition_expression\": \"validate_input(request)\"\n      },\n      \"input_ports\": [\n        {\n          \"name\": \"condition\",\n          \"type\": \"boolean\",\n          \"value\": null\n        }\n      ],\n      \"output_ports\": [\n        {\n          \"name\": \"true_branch\",\n          \"type\": \"control_flow\"\n        },\n        {\n          \"name\": \"false_branch\",\n          \"type\": \"control_flow\"\n        }\n      ]\n    },\n    {\n      \"block_id\": \"753e2935-1595-417c-9209-04a327bb2116\",\n      \"block_type\": \"database_query\",\n      \"title\": \"Database Query\",\n      \"position\": [\n        0,\n        0\n      ],\n      \"properties\": {\n        \"query_type\": \"SELECT\",\n        \"connection\": \"\"\n      },\n      \"input_ports\": [\n        {\n          \"name\": \"query\",\n          \"type\": \"string\",\n          \"value\": null\n        },\n        {\n          \"name\": \"params\",\n          \"type\": \"object\",\n          \"value\": null\n        }\n      ],\n      \"output_ports\": [\n        {\n          \"name\": \"result\",\n          \"type\": \"any\"\n        }\n      ]\n    },\n    {\n      \"block_id\": \"de7e1aef-852a-42be-bfb6-4cb036b6d9ef\",\n      \"block_type\": \"expression\",\n      \"title\": \"Expression\",\n      \"position\": [\n        0,\n        0\n      ],\n      \"properties\": {\n        \"expression\": \"transform_response(data)\"\n      },\n      \"input_ports\": [],\n      \"output_ports\": [\n        {\n          \"name\": \"result\",\n          \"type\": \"any\"\n        }\n      ]\n    },\n    {\n      \"block_id\": \"74224c64-5f44-470d-ab7f-6c2896ba113e\",\n      \"block_type\": \"return\",\n      \"title\": \"Return\",\n      \"position\": [\n        0,\n        0\n      ],\n      \"properties\": {\n        \"value\": \"response\"\n      },\n      \"input_ports\": [\n        {\n          \"name\": \"value\",\n          \"type\": \"any\",\n          \"value\": null\n        }\n      ],\n      \"output_ports\": []\n    }\n  ],\n  \"connections\": [\n    {\n      \"from_block\": \"de7e1aef-852a-42be-bfb6-4cb036b6d9ef\",\n      \"from_port\": \"result\",\n      \"to_block\": \"74224c64-5f44-470d-ab7f-6c2896ba113e\",\n      \"to_port\": \"value\",\n      \"type\": \"data_flow\"\n    }\n  ],\n  \"target_language\": \"python\",\n  \"version\": \"1.0.0\"\n}",
+  "documentation": "Creates a REST API endpoint with input validation, database query, and response transformation.",
+  "requirements": [
+    "fastapi",
+    "sqlalchemy"
+  ]
+}

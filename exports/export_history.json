@@ -1,0 +1,47 @@
+[
+  {
+    "timestamp": "2025-09-04T20:13:40.823376",
+    "file": "performance_metrics_20250904_201340.csv",
+    "bucket": "performance_metrics",
+    "format": "csv",
+    "records": 3009,
+    "size": 324878,
+    "path": "exports/performance_metrics_20250904_201340.csv"
+  },
+  {
+    "timestamp": "2025-09-04T20:15:26.586626",
+    "file": "agent_metrics_20250904_201526.json",
+    "bucket": "agent_metrics",
+    "format": "json",
+    "records": 504,
+    "size": 119018,
+    "path": "exports/agent_metrics_20250904_201526.json"
+  },
+  {
+    "timestamp": "2025-09-04T20:15:58.127259",
+    "file": "test_metrics_20250904_201557.xlsx",
+    "bucket": "test_metrics",
+    "format": "excel",
+    "records": 104,
+    "size": 9622,
+    "path": "exports/test_metrics_20250904_201557.xlsx"
+  },
+  {
+    "timestamp": "2025-09-04T20:16:08.424251",
+    "file": "alerts_20250904_201608.html",
+    "bucket": "alerts",
+    "format": "html",
+    "records": 39,
+    "size": 11087,
+    "path": "exports/alerts_20250904_201608.html"
+  },
+  {
+    "timestamp": "2025-09-04T20:16:08.912700",
+    "file": "deployment_metrics_20250904_201608.sql",
+    "bucket": "deployment_metrics",
+    "format": "sql",
+    "records": 60,
+    "size": 14609,
+    "path": "exports/deployment_metrics_20250904_201608.sql"
+  }
+]

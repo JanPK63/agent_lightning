@@ -1,0 +1,18 @@
+[
+  {
+    "timestamp": "2025-09-04T19:54:17.875837",
+    "file": "influxdb_backup_manual_20250904_195416.tar.gz",
+    "size": 2584,
+    "type": "manual",
+    "buckets": [
+      "performance_metrics",
+      "debug_metrics",
+      "deployment_metrics",
+      "agent_metrics",
+      "test_metrics",
+      "performance_metrics_long",
+      "alerts"
+    ],
+    "path": "backups/influxdb/influxdb_backup_manual_20250904_195416.tar.gz"
+  }
+]

@@ -1,0 +1,31 @@
+apiVersion: 1
+
+datasources:
+  - name: Agent Lightning Metrics
+    type: simplejson
+    access: proxy
+    url: http://localhost:8031/metrics
+    isDefault: true
+    editable: true
+    jsonData:
+      tlsSkipVerify: true
+      httpMethod: GET
+    
+  - name: Agent Lightning Prometheus
+    type: prometheus
+    access: proxy
+    url: http://localhost:8031/metrics/prometheus
+    editable: true
+    
+  - name: PostgreSQL
+    type: postgres
+    access: proxy
+    url: localhost:5432
+    database: agent_lightning
+    user: agent_user
+    secureJsonData:
+      password: agent_password
+    jsonData:
+      sslmode: disable
+      postgresVersion: 1400
+      timescaledb: false

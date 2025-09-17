@@ -1,0 +1,9 @@
+{
+  "bucket": "test_metrics",
+  "timestamp": "2025-09-04T20:10:04.836472",
+  "algorithm": "zlib",
+  "original_size": 17946,
+  "compressed_size": 1514,
+  "compression_ratio": 11.85336856010568,
+  "file": "test_metrics_20250904_201004.zlib"
+}

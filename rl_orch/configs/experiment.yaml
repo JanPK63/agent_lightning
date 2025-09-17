@@ -1,0 +1,45 @@
+# Charter-compliant experiment configuration example
+# Based on rl_orchestrator_charter.md example
+
+name: "ppo_cartpole_mvp"
+
+env:
+  id: "CartPole-v1"
+  num_envs: 16
+  seed: 123
+
+policy:
+  algo: "ppo"
+  network:
+    hidden_sizes: [128, 128]
+    activation: "tanh"
+  discrete: true
+
+train:
+  epochs: 50
+  steps_per_epoch: 4096
+  off_policy: false
+  batch_size: 2048
+  lr: 0.0003
+  gamma: 0.99
+
+buffer:
+  size: 100000
+  batch_size: 32
+
+eval:
+  frequency: 10
+  episodes: 5
+  render: false
+
+gates:
+  min_reward: 180.0
+  max_episodes_without_improvement: 20
+
+resources:
+  num_workers: 4
+  gpu: false
+
+ckpt:
+  frequency: 25
+  keep_last: 3

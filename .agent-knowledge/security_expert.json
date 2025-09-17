@@ -1,0 +1,40 @@
+[
+  {
+    "id": "best_practices_a34d4a18_20250902130927",
+    "category": "best_practices",
+    "content": "SQL Injection Prevention:\n1. Use parameterized queries/prepared statements\n2. Validate and sanitize all input\n3. Use stored procedures where appropriate\n4. Apply least privilege principle to database users\n5. Escape special characters\n6. Use whitelisting for input validation",
+    "source": "owasp_guide",
+    "timestamp": "2025-09-02T13:09:27.755407",
+    "metadata": {},
+    "usage_count": 2,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "troubleshooting_c023f1cb_20250902152845",
+    "category": "troubleshooting",
+    "content": "Problem: What are the latest security vulnerabilities?\nSolution: {'response': 'Task processed successfully by security_expert', 'agent': 'security_expert', 'knowledge_items_used': 0, 'task': 'What are the latest security vulnerabilities?'}",
+    "source": "interaction",
+    "timestamp": "2025-09-02T15:28:45.784816",
+    "metadata": {
+      "task_id": "bb9aacd0-dbc3-42c8-93b6-8d903accb914",
+      "timestamp": "2025-09-02T15:28:45.784718",
+      "confidence": 0.9
+    },
+    "usage_count": 1,
+    "relevance_score": 1.0
+  },
+  {
+    "id": "troubleshooting_c023f1cb_20250902160127",
+    "category": "troubleshooting",
+    "content": "Problem: What are the latest security vulnerabilities?\nSolution: {'response': 'Task processed successfully by security_expert', 'agent': 'security_expert', 'knowledge_items_used': 0, 'task': 'What are the latest security vulnerabilities?'}",
+    "source": "interaction",
+    "timestamp": "2025-09-02T16:01:27.710236",
+    "metadata": {
+      "task_id": "7eed1a24-2b0c-4282-84ea-c5fdaac1a065",
+      "timestamp": "2025-09-02T16:01:27.710136",
+      "confidence": 0.9
+    },
+    "usage_count": 0,
+    "relevance_score": 1.0
+  }
+]

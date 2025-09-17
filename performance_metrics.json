@@ -1,0 +1,148 @@
+{
+  "timestamp": "2025-09-03T23:04:21.351561",
+  "system_info": {
+    "platform": "macOS-15.6.1-arm64-arm-64bit",
+    "processor": "arm",
+    "cpu_count": 10,
+    "cpu_count_logical": 10,
+    "memory_total_gb": 16.0,
+    "boot_time": "2025-08-24T09:28:00",
+    "hostname": "MacBook-Pro-van-Jan.local",
+    "python_version": "3.11.13"
+  },
+  "current_stats": {
+    "cpu_usage": {
+      "metric_type": "cpu_usage",
+      "current": 0.0,
+      "average": 15.68888888888889,
+      "minimum": 0.0,
+      "maximum": 26.0,
+      "std_dev": 7.503573222879291,
+      "percentile_50": 17.6,
+      "percentile_95": 26.0,
+      "percentile_99": 26.0,
+      "sample_count": 9,
+      "window_seconds": 60
+    },
+    "memory_usage": {
+      "metric_type": "memory_usage",
+      "current": 81.7,
+      "average": 83.54545454545455,
+      "minimum": 81.7,
+      "maximum": 84.2,
+      "std_dev": 0.9245146146639706,
+      "percentile_50": 83.9,
+      "percentile_95": 84.2,
+      "percentile_99": 84.2,
+      "sample_count": 11,
+      "window_seconds": 60
+    },
+    "disk_usage": {
+      "metric_type": "disk_usage",
+      "current": 97.5,
+      "average": 97.5,
+      "minimum": 97.5,
+      "maximum": 97.5,
+      "std_dev": 0.0,
+      "percentile_50": 97.5,
+      "percentile_95": 97.5,
+      "percentile_99": 97.5,
+      "sample_count": 2,
+      "window_seconds": 60
+    },
+    "network_io": {
+      "metric_type": "network_io",
+      "current": 0.0,
+      "average": 0.0,
+      "minimum": 0.0,
+      "maximum": 0.0,
+      "std_dev": 0.0,
+      "percentile_50": 0.0,
+      "percentile_95": 0.0,
+      "percentile_99": 0.0,
+      "sample_count": 0,
+      "window_seconds": 60
+    },
+    "process_count": {
+      "metric_type": "process_count",
+      "current": 0.0,
+      "average": 0.0,
+      "minimum": 0.0,
+      "maximum": 0.0,
+      "std_dev": 0.0,
+      "percentile_50": 0.0,
+      "percentile_95": 0.0,
+      "percentile_99": 0.0,
+      "sample_count": 0,
+      "window_seconds": 60
+    }
+  },
+  "recent_alerts": [
+    {
+      "timestamp": "2025-09-03T23:04:11.297552",
+      "level": "critical",
+      "metric_type": "memory_usage",
+      "message": "Memory usage is critically high: 83.7",
+      "value": 83.7,
+      "threshold": 80.0,
+      "duration": null,
+      "resolved": false
+    },
+    {
+      "timestamp": "2025-09-03T23:04:16.302814",
+      "level": "critical",
+      "metric_type": "memory_usage",
+      "message": "Memory usage is critically high: 84.1",
+      "value": 84.1,
+      "threshold": 80.0,
+      "duration": null,
+      "resolved": false
+    },
+    {
+      "timestamp": "2025-09-03T23:04:16.302833",
+      "level": "critical",
+      "metric_type": "disk_usage",
+      "message": "Disk usage is critically high: 97.5",
+      "value": 97.5,
+      "threshold": 95.0,
+      "duration": null,
+      "resolved": false
+    },
+    {
+      "timestamp": "2025-09-03T23:04:21.306950",
+      "level": "critical",
+      "metric_type": "memory_usage",
+      "message": "Memory usage is critically high: 81.7",
+      "value": 81.7,
+      "threshold": 80.0,
+      "duration": null,
+      "resolved": false
+    },
+    {
+      "timestamp": "2025-09-03T23:04:21.306986",
+      "level": "critical",
+      "metric_type": "disk_usage",
+      "message": "Disk usage is critically high: 97.5",
+      "value": 97.5,
+      "threshold": 95.0,
+      "duration": null,
+      "resolved": false
+    }
+  ],
+  "thresholds": {
+    "cpu_warning": 50.0,
+    "cpu_critical": 70.0,
+    "memory_warning": 60.0,
+    "memory_critical": 80.0,
+    "disk_warning": 80.0,
+    "disk_critical": 95.0,
+    "network_warning_mbps": 800.0,
+    "network_critical_mbps": 950.0,
+    "load_warning": 2.0,
+    "load_critical": 4.0,
+    "process_warning": 500,
+    "process_critical": 1000,
+    "response_time_warning_ms": 1000.0,
+    "response_time_critical_ms": 3000.0
+  }
+}

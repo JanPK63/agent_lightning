@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-09-17T05:30:10.020407",
+  "environment": "staging",
+  "dry_run": true,
+  "success": false,
+  "status": "rolled_back",
+  "records_processed": 0,
+  "records_failed": 0,
+  "duration_seconds": 0.000317,
+  "new_data_key_id": null,
+  "new_field_key_id": null,
+  "error_message": "Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')",
+  "rollback_available": false
+}

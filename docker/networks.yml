@@ -1,0 +1,21 @@
+networks:
+  frontend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.31.0.0/24
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.32.0.0/24
+  database:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.33.0.0/24
+  monitoring:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.34.0.0/24

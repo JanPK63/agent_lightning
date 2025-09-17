@@ -1,0 +1,37 @@
+[
+  {
+    "timestamp": "2025-09-04T20:26:32.031466",
+    "source_bucket": "performance_metrics",
+    "target_type": "csv",
+    "target_config": {
+      "filename": "performance_metrics_migration.csv"
+    },
+    "time_range": [
+      "-2h",
+      "now()"
+    ],
+    "records_read": 1770,
+    "records_written": 1770,
+    "errors": 0,
+    "duration_seconds": 0.045157,
+    "rate": 39196.580818034854
+  },
+  {
+    "timestamp": "2025-09-04T20:26:43.980547",
+    "source_bucket": "agent_metrics",
+    "target_type": "sqlite",
+    "target_config": {
+      "path": "migrations/agent_metrics.db",
+      "table": "agent_data"
+    },
+    "time_range": [
+      "-24h",
+      "now()"
+    ],
+    "records_read": 552,
+    "records_written": 552,
+    "errors": 0,
+    "duration_seconds": 0.031804,
+    "rate": 17356.307382719155
+  }
+]
