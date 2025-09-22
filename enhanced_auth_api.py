@@ -7,13 +7,18 @@ from fastapi import FastAPI, HTTPException, Depends, status
 from pydantic import BaseModel
 from typing import Optional
 from jwt_auth import jwt_auth, get_current_user, require_admin
-from database_connection import get_db_session
+from monitoring.http_metrics_middleware import add_http_metrics_middleware
+from shared.database import db_manager
 from shared.models import User
 import uuid
 import logging
 
 logger = logging.getLogger(__name__)
 
+app = FastAPI(title="Enhanced Auth API", version="2.0")
+
+# Add HTTP metrics middleware for automatic request/response monitoring
+app = add_http_metrics_middleware(app, service_name="auth_api")
 app = FastAPI(title="Enhanced Auth API", version="2.0")
 
 class LoginRequest(BaseModel):
@@ -36,7 +41,7 @@ class TokenResponse(BaseModel):
 async def register(request: RegisterRequest):
     """Register new user"""
     try:
-        with get_db_session() as session:
+        with db_manager.get_db() as session:
             # Check if user exists
             existing = session.query(User).filter(
                 (User.username == request.username) | (User.email == request.email)
@@ -83,7 +88,7 @@ async def register(request: RegisterRequest):
 async def login(request: LoginRequest):
     """User login"""
     try:
-        with get_db_session() as session:
+        with db_manager.get_db() as session:
             user = session.query(User).filter(User.username == request.username).first()
             
             if not user or not user.is_active:
@@ -134,7 +139,7 @@ async def get_current_user_info(current_user: dict = Depends(get_current_user)):
 async def list_users(current_user: dict = Depends(require_admin)):
     """List all users (admin only)"""
     try:
-        with get_db_session() as session:
+        with db_manager.get_db() as session:
             users = session.query(User).all()
             return {"users": [user.to_dict() for user in users]}
     except Exception as e:

@@ -184,7 +184,7 @@ class AgentCapabilityMatcher:
         
         return TaskCategory.GENERAL, 0.5
     
-    def find_best_agent(self, task_description: str) -> Tuple[str, float, str]:
+    def find_best_agent(self, task_description: str, force_execute: bool = False) -> Tuple[str, float, str]:
         """
         Find the best agent for a task
         Returns: (agent_id, confidence_score, reason)
@@ -226,6 +226,12 @@ class AgentCapabilityMatcher:
         # Log warning if low confidence
         if best_agent[1] < 0.6:
             logger.warning(f"Low confidence match: {best_agent[0]} for task: {task_description[:100]}")
+            # Check if force_execute is enabled (passed from RL Orchestrator)
+            if force_execute:
+                logger.info(f"Force executing despite low confidence {best_agent[1]:.2f}: {best_agent[0]} for task: {task_description[:100]}")
+            else:
+                # Return special response indicating low confidence for user decision
+                return best_agent[0], best_agent[1], f"LOW_CONFIDENCE: {reason} (confidence: {best_agent[1]:.2f})"
         
         return best_agent[0], best_agent[1], reason
     

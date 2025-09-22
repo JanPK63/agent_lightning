@@ -22,6 +22,7 @@ from agentlightning.types import (
     Task,
     GenericResponse,
 )
+from shared.event_store import event_store, create_event
 
 
 class SpecService:
@@ -65,6 +66,27 @@ class SpecService:
         spec_file = self.specs_dir / f"{spec.id}.json"
         with open(spec_file, 'w') as f:
             f.write(spec.model_dump_json(indent=2))
+
+        # Event: Spec created/updated
+        try:
+            event_type = "created" if spec.created_at == spec.updated_at else "updated"
+            spec_event = create_event(
+                aggregate_id=spec.id,
+                aggregate_type="spec",
+                event_type=event_type,
+                event_data={
+                    "name": spec.name,
+                    "description": spec.description,
+                    "version": spec.version,
+                    "workflow_steps": len(spec.workflow),
+                    "created_at": spec.created_at,
+                    "updated_at": spec.updated_at
+                },
+                service_name="spec_service"
+            )
+            event_store.save_event(spec_event)
+        except Exception as e:
+            print(f"Failed to publish spec {event_type} event: {e}")
 
     def get_spec(self, spec_id: str) -> Optional[Spec]:
         """
@@ -138,14 +160,67 @@ class SpecService:
 
         self.executions[execution_id] = execution
 
+        # Event: Execution started
+        try:
+            execution_started_event = create_event(
+                aggregate_id=execution_id,
+                aggregate_type="execution",
+                event_type="started",
+                event_data={
+                    "spec_id": plan.spec_id,
+                    "task_count": len(plan.tasks),
+                    "started_at": execution.started_at
+                },
+                service_name="spec_service"
+            )
+            event_store.save_event(execution_started_event)
+        except Exception as e:
+            print(f"Failed to publish execution started event: {e}")
+
         # For MVP, execute using DevTaskLoader and AgentRunner
         try:
             # This would be done asynchronously in production
             self._execute_plan_sync(plan, execution)
+
+            # Event: Execution completed
+            try:
+                execution_completed_event = create_event(
+                    aggregate_id=execution_id,
+                    aggregate_type="execution",
+                    event_type="completed",
+                    event_data={
+                        "spec_id": plan.spec_id,
+                        "status": execution.status,
+                        "completed_at": execution.completed_at,
+                        "rollout_count": len(execution.rollouts) if execution.rollouts else 0
+                    },
+                    service_name="spec_service"
+                )
+                event_store.save_event(execution_completed_event)
+            except Exception as e:
+                print(f"Failed to publish execution completed event: {e}")
+
         except Exception as e:
             execution.status = "failed"
             execution.errors.append(str(e))
             execution.completed_at = time.time()
+
+            # Event: Execution failed
+            try:
+                execution_failed_event = create_event(
+                    aggregate_id=execution_id,
+                    aggregate_type="execution",
+                    event_type="failed",
+                    event_data={
+                        "spec_id": plan.spec_id,
+                        "error": str(e),
+                        "completed_at": execution.completed_at
+                    },
+                    service_name="spec_service"
+                )
+                event_store.save_event(execution_failed_event)
+            except Exception as event_error:
+                print(f"Failed to publish execution failed event: {event_error}")
 
         return execution_id
 

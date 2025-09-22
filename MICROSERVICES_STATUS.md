@@ -15,6 +15,7 @@ We are successfully transitioning from a monolithic architecture to microservice
 | **AI Model Orchestration** | 8005 | ✅ Running | AI model routing and load balancing |
 | **Auth Service** | 8006 | ✅ Running | OAuth2/OIDC authentication with RBAC |
 | **Enhanced API** | 8002 | ✅ Running | Legacy monolithic service |
+| **RL Orchestrator** | 8008 | ✅ Running | Reinforcement learning orchestration and agent assignment |
 | **Monitoring Dashboard** | 8051 | ✅ Running | System monitoring and metrics |
 
 ### 📊 Services Overview
@@ -92,7 +93,7 @@ curl -X POST http://localhost:8003/api/v1/workflows/execute \
 
 ### 📈 Metrics
 
-- **Total Services**: 5 (2 microservices + 3 legacy)
+- **Total Services**: 6 (3 microservices + 3 legacy)
 - **API Gateway Routes**: 3 configured
 - **Active Workflows**: 2 templates
 - **Service Health**: All services healthy
@@ -108,4 +109,4 @@ curl -X POST http://localhost:8003/api/v1/workflows/execute \
 
 ---
 
-*Last Updated: 2025-09-05 06:15:00*
+*Last Updated: 2025-09-19 15:35:00*

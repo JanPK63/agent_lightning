@@ -9,7 +9,7 @@ from typing import Optional, Dict, Any
 import hashlib
 import time
 from redis_manager import redis_manager
-from database_connection import get_db_session
+from shared.database import db_manager
 from shared.models import Agent, Knowledge, Task
 import logging
 
@@ -69,7 +69,7 @@ async def list_agents():
     
     # Get from database
     try:
-        with get_db_session() as session:
+        with db_manager.get_db() as session:
             agents = session.query(Agent).all()
             agent_list = [agent.to_dict() for agent in agents]
             
@@ -136,7 +136,7 @@ async def execute_task(request: TaskRequest):
         
         # Store in database
         try:
-            with get_db_session() as session:
+            with db_manager.get_db() as session:
                 task = Task(
                     id=task_id,
                     agent_id=request.agent_id,

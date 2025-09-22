@@ -12,6 +12,9 @@ import logging
 
 from enterprise_workflow_engine import EnterpriseWorkflowEngine, ENTERPRISE_WORKFLOWS
 
+from monitoring.http_metrics_middleware import add_http_metrics_middleware
+from enterprise_workflow_engine import EnterpriseWorkflowEngine, ENTERPRISE_WORKFLOWS
+
 logger = logging.getLogger(__name__)
 
 
@@ -25,6 +28,10 @@ class WorkflowCreateRequest(BaseModel):
 class WorkflowExecuteRequest(BaseModel):
     workflow_id: str
     async_execution: bool = True
+app = FastAPI(title="Enterprise Workflow API", version="1.0.0")
+
+# Add HTTP metrics middleware for automatic request/response monitoring
+app = add_http_metrics_middleware(app, service_name="workflow_api")
 
 
 app = FastAPI(title="Enterprise Workflow API", version="1.0.0")

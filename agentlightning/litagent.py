@@ -4,7 +4,8 @@ import logging
 import weakref
 from typing import Any, List, Dict, Union, Optional, TYPE_CHECKING
 
-from .types import NamedResources, Rollout, Task, TaskInput, Triplet, RolloutRawResult
+from .types import NamedResources, Rollout, Task, TaskInput, Triplet, RolloutRawResult, AgentAddress
+from .communication import AgentCommunicator
 
 if TYPE_CHECKING:
     from .trainer import Trainer
@@ -24,17 +25,25 @@ class LitAgent:
     infrastructure.
     """
 
-    def __init__(self, *, trained_agents: Optional[str] = None) -> None:  # FIXME: str | None won't work for cli
+    def __init__(self, *, trained_agents: Optional[str] = None, agent_id: Optional[str] = None) -> None:  # FIXME: str | None won't work for cli
         """
         Initialize the LitAgent.
 
         Args:
             trained_agents: Optional string representing the trained agents.
-                            This can be used to track which agents have been trained by this instance.
+                             This can be used to track which agents have been trained by this instance.
+            agent_id: Optional unique identifier for this agent. If not provided,
+                     a default ID will be generated.
         """
         self.trained_agents = trained_agents
         self._trainer_ref: weakref.ReferenceType[Trainer] | None = None
         self._runner_ref: weakref.ReferenceType[AgentRunner] | None = None
+
+        # Communication setup
+        import uuid
+        self.agent_id = agent_id or f"agent_{uuid.uuid4().hex[:8]}"
+        self.agent_address = AgentAddress(agent_id=self.agent_id, agent_type=self.__class__.__name__)
+        self.communicator = AgentCommunicator(self.agent_address)
 
     def set_trainer(self, trainer: Trainer) -> None:
         """
@@ -202,3 +211,64 @@ class LitAgent:
             The result of the asynchronous validation rollout.
         """
         return await self.training_rollout_async(task, rollout_id, resources)
+
+    def setup_communication(self):
+        """Set up agent communication capabilities"""
+        self.communicator.register()
+        self.communicator.set_message_handler(self.handle_message)
+
+    def teardown_communication(self):
+        """Clean up agent communication"""
+        self.communicator.unregister()
+
+    async def handle_message(self, message):
+        """Handle incoming messages from other agents
+
+        Args:
+            message: The incoming AgentMessage
+
+        Subclasses can override this method to implement custom message handling.
+        By default, this logs the message and ignores it.
+        """
+        logger.info(f"Agent {self.agent_id} received message: {message.subject} from {message.sender.agent_id}")
+
+    async def send_message(self, recipient_id: str, subject: str, content: Any, **kwargs):
+        """Send a message to another agent
+
+        Args:
+            recipient_id: ID of the recipient agent
+            subject: Brief description of the message
+            content: The message content
+            **kwargs: Additional arguments for the message
+
+        Returns:
+            bool: True if message was sent successfully
+        """
+        return await self.communicator.send_message(recipient_id, subject, content, **kwargs)
+
+    async def broadcast_message(self, subject: str, content: Any, **kwargs):
+        """Broadcast a message to all other agents
+
+        Args:
+            subject: Brief description of the message
+            content: The message content
+            **kwargs: Additional arguments for the broadcast
+
+        Returns:
+            List[bool]: Success status for each recipient
+        """
+        return await self.communicator.broadcast(subject, content, **kwargs)
+
+    async def request_response(self, recipient_id: str, subject: str, content: Any, timeout: float = 30.0):
+        """Send a request to another agent and wait for response
+
+        Args:
+            recipient_id: ID of the recipient agent
+            subject: Brief description of the request
+            content: The request content
+            timeout: Maximum time to wait for response
+
+        Returns:
+            The response content or None if timeout/no response
+        """
+        return await self.communicator.request_response(recipient_id, subject, content, timeout)

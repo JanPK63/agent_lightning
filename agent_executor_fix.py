@@ -15,6 +15,59 @@ from datetime import datetime
 from anthropic import Anthropic
 import requests
 from bs4 import BeautifulSoup
+# Add Prometheus metrics import
+from prometheus_client import Counter, Histogram, Gauge, Info
+
+# Agent Performance Metrics
+AGENT_TASKS_TOTAL = Counter(
+    'agent_tasks_total',
+    'Total number of tasks executed by agents',
+    ['agent_type', 'model', 'status']
+)
+
+AGENT_TASK_EXECUTION_TIME = Histogram(
+    'agent_task_execution_time_seconds',
+    'Time taken to execute agent tasks',
+    ['agent_type', 'model'],
+    buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 30.0, 60.0, 120.0]
+)
+
+AGENT_API_CALLS_TOTAL = Counter(
+    'agent_api_calls_total',
+    'Total number of API calls made by agents',
+    ['provider', 'model', 'status']
+)
+
+AGENT_RESPONSE_QUALITY = Gauge(
+    'agent_response_quality_score',
+    'Quality score of agent responses (0-1)',
+    ['agent_type', 'model']
+)
+
+AGENT_ACTIVE_SESSIONS = Gauge(
+    'agent_active_sessions',
+    'Number of currently active agent sessions',
+    ['agent_type']
+)
+
+AGENT_MEMORY_USAGE = Gauge(
+    'agent_memory_usage_bytes',
+    'Memory usage of agent processes',
+    ['agent_type']
+)
+
+AGENT_TOKEN_USAGE = Counter(
+    'agent_token_usage_total',
+    'Total tokens used by agents',
+    ['agent_type', 'model', 'token_type']
+)
+
+AGENT_SPECIALIZATION_PERFORMANCE = Histogram(
+    'agent_specialization_performance_score',
+    'Performance scores by agent specialization',
+    ['specialization', 'task_type'],
+    buckets=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -338,6 +391,43 @@ The requested task has been completed successfully.
 
 # Integration with existing system
 class TaskExecutionBridge:
+
+    def _prepare_execution_environment(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """Prepare execution environment based on task context"""
+        import os
+
+        env_config = {
+            "working_directory": context.get("working_directory") or os.getcwd(),
+            "target_environment": context.get("target_environment", "local"),
+            "search_scope": context.get("search_scope", "local"),
+            "platform": context.get("platform") or self._detect_platform(),
+            "environment_vars": context.get("environment_vars", {}),
+            "execution_mode": context.get("execution_mode", "standard")
+        }
+
+        # Validate working directory
+        working_dir = env_config["working_directory"]
+        if working_dir and not os.path.exists(working_dir):
+            try:
+                os.makedirs(working_dir, exist_ok=True)
+                logger.info(f"Created working directory: {working_dir}")
+            except Exception as e:
+                logger.warning(f"Could not create working directory {working_dir}: {e}")
+                env_config["working_directory"] = os.getcwd()
+
+        return env_config
+
+    def _detect_platform(self) -> str:
+        """Detect current platform"""
+        import platform
+        system = platform.system().lower()
+        if system == "darwin":
+            return "macos"
+        elif system == "linux":
+            return "linux"
+        elif system == "windows":
+            return "windows"
+        return "unknown"
     """Bridge between task assignment and actual execution"""
     
     def __init__(self):

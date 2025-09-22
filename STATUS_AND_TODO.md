@@ -1,6 +1,6 @@
 # Agent Lightning — Python Implementation Status and TODO
 
-Last updated: 2025-09-16
+Last updated: 2025-09-19
 
 ## Scope
 This document summarizes the current status of the Python implementation (excluding Docker) and provides a prioritized TODO list. It incorporates known non-working areas: Spec-driven development, Agent knowledge, and Visual code builder.

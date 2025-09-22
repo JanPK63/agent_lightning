@@ -13,6 +13,12 @@ from fastapi.responses import RedirectResponse
 import logging
 from datetime import datetime
 
+# Add parent directory to path for imports
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from monitoring.metrics import MetricsCollector
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -23,9 +29,12 @@ class MonitoringDashboardAPI:
     def __init__(self):
         self.app = FastAPI(title="Monitoring Dashboard API", version="1.0.0")
         self.streamlit_url = "http://localhost:8051"
-        
+
+        # Initialize metrics collector
+        self.metrics_collector = MetricsCollector()
+
         logger.info("✅ Monitoring Dashboard API initialized")
-        
+
         self._setup_middleware()
         self._setup_routes()
     
@@ -51,9 +60,13 @@ class MonitoringDashboardAPI:
                 async with aiohttp.ClientSession() as session:
                     async with session.get(self.streamlit_url, timeout=2) as response:
                         streamlit_healthy = response.status == 200
-            except:
-                pass
-            
+            except Exception as e:
+                logger.error(f"Health check failed: {e}")
+                self.metrics_collector.increment_error("health", type(e).__name__)
+
+            status_code = "200" if streamlit_healthy else "503"
+            self.metrics_collector.increment_request("health", "GET", status_code)
+
             return {
                 "service": "monitoring_dashboard",
                 "status": "healthy" if streamlit_healthy else "degraded",
@@ -66,55 +79,64 @@ class MonitoringDashboardAPI:
         @self.app.get("/")
         async def root():
             """Redirect to Streamlit dashboard"""
+            self.metrics_collector.increment_request("root", "GET", "302")
             return RedirectResponse(url=self.streamlit_url)
-        
+
         @self.app.get("/dashboard")
         async def dashboard():
             """Redirect to Streamlit dashboard"""
+            self.metrics_collector.increment_request("dashboard", "GET", "302")
             return RedirectResponse(url=self.streamlit_url)
-        
+
         @self.app.get("/metrics")
         async def get_metrics():
             """Get dashboard metrics"""
-            # Check various services and return aggregated metrics
-            metrics = {
-                "services_monitored": 16,
-                "services_healthy": 0,
-                "services_unhealthy": 0,
-                "last_update": datetime.utcnow().isoformat()
-            }
-            
-            # Check each service
-            services = [
-                ("API Gateway", 8000),
-                ("Auth Service", 8001),
-                ("Agent Designer", 8002),
-                ("Workflow Engine", 8003),
-                ("AI Model Service", 8004),
-                ("Service Discovery", 8005),
-                ("Integration Hub", 8006),
-                ("Monitoring Service", 8007),
-                ("WebSocket Service", 8008),
-                ("RL Server", 8010),
-                ("RL Orchestrator", 8011),
-                ("Memory Service", 8012),
-                ("Checkpoint Service", 8013),
-                ("Batch Accumulator", 8014),
-                ("AutoGen Integration", 8015),
-            ]
-            
-            async with aiohttp.ClientSession() as session:
-                for name, port in services:
-                    try:
-                        async with session.get(f"http://localhost:{port}/health", timeout=1) as response:
-                            if response.status == 200:
-                                metrics["services_healthy"] += 1
-                            else:
-                                metrics["services_unhealthy"] += 1
-                    except:
-                        metrics["services_unhealthy"] += 1
-            
-            return metrics
+            try:
+                # Check various services and return aggregated metrics
+                metrics = {
+                    "services_monitored": 16,
+                    "services_healthy": 0,
+                    "services_unhealthy": 0,
+                    "last_update": datetime.utcnow().isoformat()
+                }
+
+                # Check each service
+                services = [
+                    ("API Gateway", 8000),
+                    ("Auth Service", 8001),
+                    ("Agent Designer", 8002),
+                    ("Workflow Engine", 8003),
+                    ("AI Model Service", 8004),
+                    ("Service Discovery", 8005),
+                    ("Integration Hub", 8006),
+                    ("Monitoring Service", 8007),
+                    ("WebSocket Service", 8008),
+                    ("RL Server", 8010),
+                    ("RL Orchestrator", 8011),
+                    ("Memory Service", 8012),
+                    ("Checkpoint Service", 8013),
+                    ("Batch Accumulator", 8014),
+                    ("AutoGen Integration", 8015),
+                ]
+
+                async with aiohttp.ClientSession() as session:
+                    for name, port in services:
+                        try:
+                            async with session.get(f"http://localhost:{port}/health", timeout=1) as response:
+                                if response.status == 200:
+                                    metrics["services_healthy"] += 1
+                                else:
+                                    metrics["services_unhealthy"] += 1
+                        except Exception as e:
+                            metrics["services_unhealthy"] += 1
+                            logger.error(f"Failed to check {name}: {e}")
+
+                self.metrics_collector.increment_request("get_metrics", "GET", "200")
+                return metrics
+            except Exception as e:
+                logger.error(f"Failed to get metrics: {e}")
+                self.metrics_collector.increment_error("get_metrics", type(e).__name__)
+                raise HTTPException(status_code=500, detail=str(e))
     
     async def startup(self):
         """Startup tasks"""

@@ -1,14 +1,26 @@
 """
 Database connection management for Agent Lightning
 Handles PostgreSQL connections with connection pooling
+
+DEPRECATED: This module is deprecated. Use shared.database instead,
+which supports both SQLite and PostgreSQL based on DATABASE_URL environment variable.
 """
 
 import os
+import warnings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import QueuePool
 from contextlib import contextmanager
 import logging
+
+# Issue deprecation warning
+warnings.warn(
+    "database_connection module is deprecated. Use shared.database instead, "
+    "which supports both SQLite and PostgreSQL based on DATABASE_URL.",
+    DeprecationWarning,
+    stacklevel=2
+)
 
 logger = logging.getLogger(__name__)
 

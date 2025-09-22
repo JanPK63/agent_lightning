@@ -4,37 +4,84 @@ Overzicht van systeemarchitectuur en belangrijkste componenten.
 
 Architectuurcomponenten:
 
-1. Training server
-   - Beheert datasets, batches en RL-trainloops.
-   - Implementatievoorbeelden: [`agent_client.py`](agent_client.py:1), server scaffolding in documentatie.
+ze1. Agent Lightning Core Framework (`agentlightning/`)
+   - Stateful AI agent framework met ReAct patroon
+   - Kerncomponenten: [`litagent.py`](agentlightning/litagent.py:1), [`client.py`](agentlightning/client.py:1), [`server.py`](agentlightning/server.py:1), [`trainer.py`](agentlightning/trainer.py:1), [`runner.py`](agentlightning/runner.py:1)
 
-2. Agents
-   - Lichtgewicht agentclients die samples verwerken en trajecten terugsturen.
-   - Relevante modules: [`agent_executor_fix.py`](agent_executor_fix.py:1), [`agent_communication_protocol.py`](agent_communication_protocol.py:1)
+2. Agent Communicatie & Orchestratie
+   - Inter-agent communicatie: [`communication.py`](agentlightning/communication.py:1)
+   - Saga transacties: [`saga_client.py`](agentlightning/saga_client.py:1)
+   - Workflow orchestratie via LangGraph integratie
 
-3. Memory & Context
-   - Episodic en semantic memory met retrieval en prune-logica.
-   - Implementatie: [`memory_manager.py`](memory_manager.py:1), [`shared_memory_system.py`](shared_memory_system.py:1)
+3. Authentication & Authorization
+   - OAuth2/OIDC: [`oauth.py`](agentlightning/oauth.py:1), [`oidc_providers.py`](agentlightning/oidc_providers.py:1)
+   - RBAC systeem: [`rbac.py`](agentlightning/rbac.py:1)
+   - API key management: [`auth.py`](agentlightning/auth.py:1)
 
-4. Reward & Evaluation
-   - Centraliseer reward calculation en quality metrics.
-   - Codevoorbeeld: [`reward_functions.py`](reward_functions.py:1)
+4. LLM Providers & Integraties
+   - Multi-provider LLM support: [`llm_providers.py`](agentlightning/llm_providers.py:1)
+   - OpenAI, Anthropic, Grok integratie
+   - Multi-modal content support: [`types.py`](agentlightning/types.py:1)
 
-5. Orchestration / Workflows
-   - Stateful workflows via LangGraph; werkflows gedefinieerd in [`orchestration_workflows.py`](orchestration_workflows.py:1) en documentatie.
+5. Evaluation & Metrics
+   - Uitgebreide evaluatie metrics: [`evaluation_metrics.py`](agentlightning/evaluation_metrics.py:1)
+   - Model versioning: [`model_versioning.py`](agentlightning/model_versioning.py:1)
+   - A/B testing framework: [`agent_ab_testing.py`](agentlightning/agent_ab_testing.py:1)
 
-6. Distributed Compute
-   - Ray voor schaalbare training; configuratie in [`ray_distributed_config.py`](ray_distributed_config.py:1)
+6. Meta-Learning & Adaptatie
+   - Dynamische prompt engineering: [`prompt_engineering.py`](agentlightning/prompt_engineering.py:1)
+   - Meta-learning capabilities: [`meta_learning.py`](agentlightning/meta_learning.py:1)
+   - Context-aware agent adaptatie
 
-7. Observability & Monitoring
-   - Metrics via InfluxDB / Grafana; dashboards in [`grafana/dashboards/`](grafana/dashboards/:1) en backend in [`monitoring_dashboard.py`](monitoring_dashboard.py:1)
+7. Distributed Training
+   - Ray/PyTorch DDP support: [`distributed_training.py`](agentlightning/distributed_training.py:1)
+   - Schaalbare training infrastructuur
 
-8. Deployment & CI
-   - Container images, compose en Helm charts in [`deployments/`](deployments/:1)
-   - CI workflows live onder [`.github/workflows/`](.github/workflows/:1)
+8. Knowledge Management
+   - Knowledge client: [`knowledge_client.py`](agentlightning/knowledge_client.py:1)
+   - Context retrieval voor tasks
+
+9. Observability & Monitoring
+   - Tracing: `tracer/` directory
+   - Instrumentation: `instrumentation/` directory
+   - Metrics en logging: [`logging.py`](agentlightning/logging.py:1), [`reward.py`](agentlightning/reward.py:1)
+
+10. Configuration & CLI
+    - Config management: [`config.py`](agentlightning/config.py:1)
+    - CLI tools: `cli/` directory
 
 Dataflow (hoog niveau):
 - Dataset (JSONL) -> Server batching -> Agents (LLM calls) -> Trajecten -> Reward calculation -> RL update -> Checkpoint.
+
+## Kritieke Problemen Geïdentificeerd
+
+### Agent Discovery Issues
+**Probleem**: Agents worden gedefinieerd in `agent_capability_matcher.py` maar de daadwerkelijke agent services draaien niet.
+- Health URLs (localhost:9001-9006) retourneren "unreachable"
+- Geen automatische service discovery of registratie
+- RL Orchestrator verwacht externe agent services maar deze bestaan niet
+
+**Impact**: Agent discovery tests falen, agents worden als "unreachable" gemarkeerd.
+
+### Task Execution Issues
+**Probleem**: Tasks worden assigned maar executie faalt omdat agents niet beschikbaar zijn.
+- `TaskExecutionBridge` valt terug op mock responses
+- Geen echte agent services voor task execution
+- Background task scheduling werkt niet betrouwbaar
+
+**Impact**: Tasks blijven in "assigned" status, geen automatische executie.
+
+### Architecture Gaps
+**Ontbrekende Componenten**:
+- Agent service orchestration layer
+- Automatische agent startup/discovery
+- Health monitoring en failover
+- Service mesh voor agent communicatie
+
+**Huidige Workarounds**:
+- Mock agents voor testing (`services/mock_agent.py`)
+- Handmatige agent registratie via `/agents/register`
+- Fallback naar mock execution in `agent_executor_fix.py`
 
 Integratiepunten:
 - LLM providers: OpenAI, Anthropic (API-keys via `.env`; zie [`.env.example`](.env.example:1))
@@ -43,6 +90,8 @@ Integratiepunten:
 Falen en mitigaties:
 - OOM bij grote LLMs: use smaller test datasets, checkpointing, gradient accumulation.
 - Network timeouts: set timeouts and retries.
+- **NIEUW**: Agent discovery failures: implement service discovery, health monitoring.
+- **NIEUW**: Task execution failures: implement agent service orchestration, fallback mechanisms.
 
 Best practices & opmerkingen:
 - Houd core interfaces klein en testbaar (dependency injection).

@@ -7,10 +7,90 @@ Supports OpenAI, Anthropic, and Grok models
 import os
 import asyncio
 import logging
+import base64
 from typing import Dict, List, Any, Optional, Union
 from abc import ABC, abstractmethod
+from io import BytesIO
+
+from .types import MultiModalContent, TextContent, ImageContent, AudioContent, VideoContent, ContentType
 
 logger = logging.getLogger(__name__)
+
+
+def convert_multimodal_to_messages(content: Union[str, List[MultiModalContent], MultiModalContent]) -> List[Dict[str, Any]]:
+    """
+    Convert multi-modal content to OpenAI/Anthropic message format.
+
+    Args:
+        content: Text string, single MultiModalContent, or list of MultiModalContent
+
+    Returns:
+        List of message dictionaries compatible with LLM APIs
+    """
+    messages = []
+
+    if isinstance(content, str):
+        # Simple text input
+        messages.append({"role": "user", "content": content})
+    elif isinstance(content, MultiModalContent):
+        # Single multi-modal content
+        content_list = [content]
+    elif isinstance(content, list):
+        # List of multi-modal content
+        content_list = content
+    else:
+        raise ValueError(f"Unsupported content type: {type(content)}")
+
+    if 'content_list' in locals():
+        # Build multi-modal message
+        message_content = []
+
+        for item in content_list:
+            if isinstance(item, TextContent):
+                message_content.append({"type": "text", "text": item.text})
+            elif isinstance(item, ImageContent):
+                # Handle image data
+                if isinstance(item.image_data, str):
+                    # Assume it's base64 or URL
+                    if item.image_data.startswith('data:'):
+                        # Already data URL
+                        image_url = item.image_data
+                    elif item.image_data.startswith('http'):
+                        # URL
+                        image_url = item.image_data
+                    else:
+                        # Assume base64
+                        format_str = f"data:image/{item.format or 'png'};base64,"
+                        image_url = format_str + item.image_data
+                else:
+                    # Bytes - convert to base64
+                    import base64
+                    b64_data = base64.b64encode(item.image_data).decode('utf-8')
+                    format_str = f"data:image/{item.format or 'png'};base64,"
+                    image_url = format_str + b64_data
+
+                message_content.append({
+                    "type": "image_url",
+                    "image_url": {"url": image_url}
+                })
+            elif isinstance(item, AudioContent):
+                # For now, convert audio to text description
+                # TODO: Implement proper audio handling when supported
+                message_content.append({
+                    "type": "text",
+                    "text": f"[Audio content: {item.format or 'unknown format'}, duration: {item.duration or 'unknown'}s]"
+                })
+            elif isinstance(item, VideoContent):
+                # For now, convert video to text description
+                # TODO: Implement proper video handling when supported
+                message_content.append({
+                    "type": "text",
+                    "text": f"[Video content: {item.format or 'unknown format'}, duration: {item.duration or 'unknown'}s]"
+                })
+
+        messages.append({"role": "user", "content": message_content})
+
+    return messages
 
 
 class LLMProvider(ABC):
@@ -238,11 +318,15 @@ class LLMProviderManager:
             for name, provider in self.providers.items()
         }
 
-    async def generate(self, model_name: str, messages: List[Dict[str, str]], **kwargs) -> Dict[str, Any]:
+    async def generate(self, model_name: str, messages: Union[List[Dict[str, Any]], str, List[MultiModalContent], MultiModalContent], **kwargs) -> Dict[str, Any]:
         """Generate response using appropriate provider"""
         provider = self.get_provider(model_name)
         if not provider:
             raise Exception(f"No available provider for model: {model_name}")
+
+        # Convert multi-modal content to message format if needed
+        if isinstance(messages, (str, list)) and (not messages or (isinstance(messages, list) and not isinstance(messages[0], dict))):
+            messages = convert_multimodal_to_messages(messages)
 
         # Update kwargs with model name
         kwargs['model'] = model_name
@@ -253,7 +337,15 @@ class LLMProviderManager:
         return {
             'openai': ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo'],
             'anthropic': ['claude-3-5-sonnet-20241022', 'claude-3-5-haiku-20241022', 'claude-3-opus-20240229'],
-            'grok': ['grok-code-fast-1', 'grok-beta']
+            'grok': ['grok-code-fast-1', 'grok-beta', 'grok-2-vision']
+        }
+
+    def list_vision_supported_models(self) -> Dict[str, List[str]]:
+        """List vision-capable models by provider"""
+        return {
+            'openai': ['gpt-4o', 'gpt-4-turbo'],
+            'anthropic': ['claude-3-5-sonnet-20241022', 'claude-3-opus-20240229'],
+            'grok': ['grok-2-vision']
         }
 
 
@@ -261,7 +353,7 @@ class LLMProviderManager:
 llm_manager = LLMProviderManager()
 
 
-async def generate_with_model(model_name: str, messages: List[Dict[str, str]], **kwargs) -> Dict[str, Any]:
+async def generate_with_model(model_name: str, messages: Union[List[Dict[str, Any]], str, List[MultiModalContent], MultiModalContent], **kwargs) -> Dict[str, Any]:
     """Convenience function to generate with any supported model"""
     return await llm_manager.generate(model_name, messages, **kwargs)
 

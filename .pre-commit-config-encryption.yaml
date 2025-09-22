@@ -18,7 +18,6 @@ repos:
     hooks:
       - id: mypy
         files: ^(shared/encrypted_fields\.py|shared/encryption_middleware\.py|services/key_management_service\.py|services/key_rotation_service\.py)$
-        additional_dependencies: [types-all]
         args: [--ignore-missing-imports, --no-strict-optional]
 
   - repo: https://github.com/PyCQA/bandit

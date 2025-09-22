@@ -34,6 +34,9 @@ from shared.cache import get_cache
 # Import memory modules
 from memory_retrieval import MemoryRetriever, RetrievalContext, RetrievalStrategy
 from memory_consolidation import MemoryConsolidator, ConsolidationConfig, ConsolidationType
+from memory_consolidation import MemoryConsolidator, ConsolidationConfig, ConsolidationType
+
+from monitoring.database_metrics import get_database_metrics
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -122,6 +125,11 @@ class MemoryService:
         self.retriever = MemoryRetriever(self.db_pool, self.cache)
         self.consolidator = MemoryConsolidator(self.db_pool, self.cache, self.retriever)
         
+        logger.info("✅ Memory Service initialized with pgvector support and advanced retrieval/consolidation")
+        
+        # Initialize database metrics
+        self.db_metrics = get_database_metrics("memory_service")
+        self.db_metrics.set_connection_pool_info(pool_size=20, min_conn=1, max_conn=20)
         # Service URLs
         self.embedding_service_url = os.getenv("EMBEDDING_SERVICE_URL", "http://localhost:8015")
         
@@ -131,6 +139,47 @@ class MemoryService:
         self._setup_routes()
         # Background tasks will be started on app startup
     
+        self._setup_middleware()
+        self._setup_routes()
+
+    def _get_query_type(self, query: str) -> str:
+        """Determine the type of SQL query for metrics"""
+        query_upper = query.strip().upper()
+        if query_upper.startswith("SELECT"):
+            return "SELECT"
+        elif query_upper.startswith("INSERT"):
+            return "INSERT"
+        elif query_upper.startswith("UPDATE"):
+            return "UPDATE"
+        elif query_upper.startswith("DELETE"):
+            return "DELETE"
+        else:
+            return "OTHER"
+
+    def execute_query(self, query: str, params: tuple = None) -> List[Dict]:
+        """Execute a database query and return results"""
+        with self.db_metrics.monitor_connection("memory_pool"):
+            conn = self.db_pool.getconn()
+            try:
+                with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                    # Determine query type for metrics
+                    query_type = self._get_query_type(query)
+
+                    with self.db_metrics.monitor_query(query_type, "agent_memories"):
+                        cur.execute(query, params)
+                        if cur.description:  # Query returns results
+                            result = cur.fetchall()
+                            conn.commit()
+                            # Record rows affected for SELECT queries
+                            if result:
+                                self.db_metrics.record_query_execution(
+                                    query_type, "agent_memories", 0.0, len(result)
+                                )
+                            return result
+                        conn.commit()
+                        return []
+            finally:
+                self.db_pool.putconn(conn)
     def execute_query(self, query: str, params: tuple = None) -> List[Dict]:
         """Execute a database query and return results"""
         conn = self.db_pool.getconn()

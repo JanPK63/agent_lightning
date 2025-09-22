@@ -32,6 +32,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from shared.data_access import DataAccessLayer
 from shared.cache import get_cache
 from shared.events import EventChannel, EventBus
+from monitoring.metrics import MetricsCollector
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -96,6 +97,7 @@ class PerformanceMetricsService:
         self.dal = DataAccessLayer("performance_metrics")
         self.cache = get_cache()
         self.event_bus = EventBus("performance_metrics")
+        self.metrics_collector = MetricsCollector()
         
         # Database connection
         self.db_config = {
@@ -661,22 +663,42 @@ class PerformanceMetricsService:
         @self.app.get("/health")
         async def health():
             """Health check endpoint"""
-            return {
-                "service": "performance_metrics",
-                "status": "healthy",
-                "metrics_collected": len(self.metrics_buffer),
-                "timestamp": datetime.utcnow().isoformat()
-            }
+            try:
+                self.metrics_collector.increment_request("health", "GET", "200")
+                return {
+                    "service": "performance_metrics",
+                    "status": "healthy",
+                    "metrics_collected": len(self.metrics_buffer),
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            except Exception as e:
+                logger.error(f"Health check failed: {e}")
+                self.metrics_collector.increment_error("health", type(e).__name__)
+                raise HTTPException(status_code=500, detail=str(e))
         
         @self.app.post("/record")
         async def record_metric(metric: MetricData):
             """Record a new metric"""
-            return await self.record_metric(metric)
+            try:
+                result = await self.record_metric(metric)
+                self.metrics_collector.increment_request("record_metric", "POST", "200")
+                return result
+            except Exception as e:
+                logger.error(f"Failed to record metric: {e}")
+                self.metrics_collector.increment_error("record_metric", type(e).__name__)
+                raise
         
         @self.app.get("/metrics/agent/{agent_id}")
         async def get_agent_metrics(agent_id: str):
             """Get metrics for a specific agent"""
-            return await self.get_agent_metrics(agent_id)
+            try:
+                result = await self.get_agent_metrics(agent_id)
+                self.metrics_collector.increment_request("get_agent_metrics", "GET", "200")
+                return result
+            except Exception as e:
+                logger.error(f"Failed to get agent metrics: {e}")
+                self.metrics_collector.increment_error("get_agent_metrics", type(e).__name__)
+                raise
         
         @self.app.get("/metrics/system")
         async def get_system_metrics():

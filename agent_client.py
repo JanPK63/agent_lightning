@@ -10,50 +10,34 @@ import time
 from typing import Dict, Any, Optional
 
 class AgentLightningClient:
-    """Client for interacting with Agent Lightning API"""
-    
-    def __init__(self, base_url: str = "http://localhost:8001"):
+    """Client for interacting with Agent Lightning RL Orchestrator"""
+
+    def __init__(self, base_url: str = "http://localhost:8025"):
         self.base_url = base_url
-        self.token = None
         self.headers = {"Content-Type": "application/json"}
     
-    def authenticate(self, username: str = "admin", password: str = "admin123"):
-        """Authenticate with the API"""
-        response = requests.post(
-            f"{self.base_url}/auth/login",
-            json={"username": username, "password": password}
-        )
-        if response.status_code == 200:
-            data = response.json()
-            self.token = data["access_token"]
-            self.headers["Authorization"] = f"Bearer {self.token}"
-            print("✅ Authenticated successfully!")
-            return True
-        else:
-            print(f"❌ Authentication failed: {response.text}")
-            return False
-    
-    def create_task(self, task_description: str, agent_type: str = "auto", context: Dict = None):
-        """Create a new task for an agent"""
+    def assign_task(self, task_description: str, priority: int = 5, metadata: Dict = None):
+        """Assign a task to an agent via RL Orchestrator"""
         task_data = {
+            "task_id": f"task_{int(time.time())}",
             "description": task_description,
-            "agent_type": agent_type,
-            "context": context or {},
-            "priority": "normal"
+            "priority": priority,
+            "metadata": metadata or {}
         }
-        
+
         response = requests.post(
-            f"{self.base_url}/tasks",
+            f"{self.base_url}/assign-task",
             json=task_data,
             headers=self.headers
         )
-        
+
         if response.status_code == 200:
-            task = response.json()
-            print(f"✅ Task created: {task['task_id']}")
-            return task
+            result = response.json()
+            print(f"✅ Task assigned: {result['task_id']} to {result['assigned_agent']}")
+            print(f"   Confidence: {result['confidence']:.2f}")
+            return result
         else:
-            print(f"❌ Failed to create task: {response.text}")
+            print(f"❌ Failed to assign task: {response.text}")
             return None
     
     def execute_task(self, task_id: str):
@@ -124,21 +108,17 @@ class AgentLightningClient:
 
 
 def main():
-    """Example usage of Agent Lightning Client"""
-    
+    """Example usage of Agent Lightning RL Orchestrator Client"""
+
     # Initialize client
     client = AgentLightningClient()
-    
+
     print("=" * 60)
-    print("⚡ AGENT LIGHTNING CLIENT")
+    print("⚡ AGENT LIGHTNING RL ORCHESTRATOR CLIENT")
     print("=" * 60)
-    
-    # Authenticate
-    if not client.authenticate():
-        return
-    
-    # List available agents
-    client.list_available_agents()
+
+    print("Connected to RL Orchestrator (no authentication required)")
+    print("RL Orchestrator will automatically select the best agent for each task")
     
     print("\n" + "=" * 60)
     print("EXAMPLE TASKS YOU CAN ASSIGN TO AGENTS:")
@@ -196,13 +176,10 @@ def main():
         
         elif command.startswith('task '):
             task_desc = command[5:]
-            print(f"\n📝 Creating task: {task_desc}")
-            task = client.create_task(task_desc)
-            if task:
-                print("⏳ Executing task...")
-                result = client.execute_task(task['task_id'])
-                if result:
-                    print(f"\n📊 Result:\n{json.dumps(result, indent=2)}")
+            print(f"\n📝 Assigning task: {task_desc}")
+            result = client.assign_task(task_desc)
+            if result:
+                print(f"\n📊 Assignment Result:\n{json.dumps(result, indent=2)}")
         
         elif command.startswith('chat '):
             parts = command[5:].split(' ', 1)
@@ -229,11 +206,9 @@ def main():
                 if 0 <= idx < len(examples):
                     example = examples[idx]
                     print(f"\n🚀 Running example: {example['type']}")
-                    task = client.create_task(example['description'], example['agent'])
-                    if task:
-                        result = client.execute_task(task['task_id'])
-                        if result:
-                            print(f"\n📊 Result:\n{json.dumps(result, indent=2)}")
+                    result = client.assign_task(example['description'])
+                    if result:
+                        print(f"\n📊 Assignment Result:\n{json.dumps(result, indent=2)}")
             except (ValueError, IndexError):
                 print("Invalid example number. Use 1-4.")
         

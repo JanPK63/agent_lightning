@@ -21,7 +21,7 @@ from .types import (
 from .auth import get_current_user, require_read, require_write, auth_manager
 from .auth import require_task_read, require_task_write, require_resource_read, require_resource_write, require_rollout_write
 from .oauth import oauth_manager, get_current_user as oauth_get_current_user
-from shared.data_access import DataAccessLayer
+from shared.data_access import create_data_access_layer
 from shared.models import ServerTask, ServerResource, ServerRollout
 
 logger = logging.getLogger(__name__)
@@ -51,7 +51,7 @@ class ServerDataStore:
         if self.use_persistence:
             from shared.database import init_database
             init_database()  # Create tables if they don't exist
-            self.dal = DataAccessLayer("server")
+            self.dal = create_data_access_layer("server")
         else:
             self.dal = None
 
@@ -277,6 +277,11 @@ class AgentLightningServer:
         logger.info("Server is starting up...")
         self.loop = asyncio.get_running_loop()
         self._store = ServerDataStore(use_persistence=self._use_persistence)  # Initialize data store here
+
+        # Initialize health check service
+        from shared.health_check import init_health_checks
+        init_health_checks("agent-lightning-server")
+
         self.startup_event.set()  # Signal that the server is ready
 
         yield
@@ -415,8 +420,21 @@ class AgentLightningServer:
 
         @self._app.get("/health")
         async def health_check():
-            """Health check endpoint."""
-            return {"status": "healthy", "service": "agent-lightning-server"}
+            """Basic health check endpoint (liveness probe)."""
+            from shared.health_check import health_check_service
+            return await health_check_service.liveness_check()
+
+        @self._app.get("/health/ready")
+        async def readiness_check():
+            """Readiness check endpoint."""
+            from shared.health_check import health_check_service
+            return await health_check_service.readiness_check()
+
+        @self._app.get("/health/deep")
+        async def deep_health_check():
+            """Deep health check endpoint with detailed information."""
+            from shared.health_check import health_check_service
+            return await health_check_service.deep_health_check()
 
         # OAuth2 endpoints
         @self._app.get("/auth/oauth/login")

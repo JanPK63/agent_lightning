@@ -34,6 +34,7 @@ from memory_manager import MemoryManager
 from curriculum_learning import CurriculumLearning
 from meta_learning import MetaLearner
 from prompt_optimization import PromptOptimizer
+from monitoring.http_metrics_middleware import add_http_metrics_middleware
 
 
 # Configure logging
@@ -101,6 +102,9 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redoc"
 )
+
+# Add HTTP metrics middleware for automatic request/response monitoring
+app = add_http_metrics_middleware(app, service_name="production_api")
 
 # Add CORS middleware
 app.add_middleware(

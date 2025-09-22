@@ -1,15 +1,25 @@
 import logging
+from shared.pii_masker import PIIMaskingFilter
 
 
-def configure_logger(level: int = logging.INFO, name: str = "agentlightning") -> logging.Logger:
+def configure_logger(level: int = logging.INFO,
+                     name: str = "agentlightning") -> logging.Logger:
     logger = logging.getLogger(name)
     logger.handlers.clear()  # clear existing handlers
 
     # log to stdout
     handler = logging.StreamHandler()
     handler.setLevel(level)
-    formatter = logging.Formatter("%(asctime)s [%(levelname)s] (Process-%(process)d %(name)s)   %(message)s")
+    formatter = logging.Formatter(
+        "%(asctime)s [%(levelname)s] (Process-%(process)d %(name)s)   "
+        "%(message)s"
+    )
     handler.setFormatter(formatter)
+
+    # Add PII masking filter by default
+    pii_filter = PIIMaskingFilter()
+    handler.addFilter(pii_filter)
+
     logger.addHandler(handler)
     logger.setLevel(level)
     logger.propagate = False  # prevent double logging

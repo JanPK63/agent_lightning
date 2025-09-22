@@ -4,23 +4,20 @@ Handles generation, storage, rotation, and lifecycle management of encryption ke
 """
 
 import os
-import hmac
 import hashlib
 import secrets
 import logging
-from typing import Optional, Dict, List, Any, Tuple
+from typing import Optional, Dict, List, Any
 from datetime import datetime, timedelta
 from dataclasses import dataclass
-import base64
 
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
-from cryptography.exceptions import InvalidKey
 
 from shared.database import db_manager
-from shared.models import EncryptionKey, KeyUsageLog, KeyRotationHistory, KeyAccessAudit
+from shared.models import EncryptionKey, KeyRotationHistory, KeyAccessAudit
 from shared.events import EventBus, EventChannel
 
 logger = logging.getLogger(__name__)
@@ -29,6 +26,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class KeyMetadata:
     """Metadata for an encryption key"""
+
     key_id: str
     key_type: str
     name: str
@@ -42,6 +40,7 @@ class KeyMetadata:
 @dataclass
 class KeyRotationResult:
     """Result of a key rotation operation"""
+
     success: bool
     old_key_id: str
     new_key_id: str
@@ -63,8 +62,12 @@ class KeyManagementService:
         self.master_key_passphrase = os.getenv("ENCRYPTION_MASTER_PASSPHRASE")
 
         if not self.master_key_passphrase:
-            logger.warning("ENCRYPTION_MASTER_PASSPHRASE not set - using default (not secure for production)")
-            self.master_key_passphrase = "default_master_passphrase_change_in_production"
+            logger.warning(
+                "ENCRYPTION_MASTER_PASSPHRASE not set - using default (not secure for production)"
+            )
+            self.master_key_passphrase = (
+                "default_master_passphrase_change_in_production"
+            )
 
         logger.info("KeyManagementService initialized")
 
@@ -75,15 +78,21 @@ class KeyManagementService:
             master_key = secrets.token_bytes(32)
 
             # Encrypt the master key with the passphrase for storage
-            encrypted_master_key = self._encrypt_with_passphrase(master_key, self.master_key_passphrase)
+            encrypted_master_key = self._encrypt_with_passphrase(
+                master_key, self.master_key_passphrase
+            )
 
             # Store the encrypted master key
             with db_manager.get_db() as session:
                 # Check if master key already exists
-                existing = session.query(EncryptionKey).filter(
-                    EncryptionKey.key_id == self.master_key_id,
-                    EncryptionKey.key_type == 'master'
-                ).first()
+                existing = (
+                    session.query(EncryptionKey)
+                    .filter(
+                        EncryptionKey.key_id == self.master_key_id,
+                        EncryptionKey.key_type == "master",
+                    )
+                    .first()
+                )
 
                 if existing:
                     # Update existing master key
@@ -97,23 +106,25 @@ class KeyManagementService:
                     # Create new master key
                     master_key_record = EncryptionKey(
                         key_id=self.master_key_id,
-                        key_type='master',
-                        name='Master Encryption Key',
-                        description='Primary master key for encrypting data encryption keys',
+                        key_type="master",
+                        name="Master Encryption Key",
+                        description="Primary master key for encrypting data encryption keys",
                         encrypted_key=encrypted_master_key,
                         key_hash=self._calculate_key_hash(master_key),
-                        algorithm='aes-256-gcm',
-                        status='active',
-                        security_level='critical',
+                        algorithm="aes-256-gcm",
+                        status="active",
+                        security_level="critical",
                         expires_at=None,  # Master key doesn't expire
-                        created_by='system'
+                        created_by="system",
                     )
                     session.add(master_key_record)
                     session.commit()
                     logger.info(f"Created new master key: {self.master_key_id}")
 
             # Audit the key generation
-            self._audit_key_access(self.master_key_id, 'store', 'system', 'Master key generated/updated')
+            self._audit_key_access(
+                self.master_key_id, "store", "system", "Master key generated/updated"
+            )
 
             return self.master_key_id
 
@@ -125,19 +136,22 @@ class KeyManagementService:
         """Retrieve and decrypt the master key"""
         try:
             with db_manager.get_db() as session:
-                master_key_record = session.query(EncryptionKey).filter(
-                    EncryptionKey.key_id == self.master_key_id,
-                    EncryptionKey.key_type == 'master',
-                    EncryptionKey.status == 'active'
-                ).first()
+                master_key_record = (
+                    session.query(EncryptionKey)
+                    .filter(
+                        EncryptionKey.key_id == self.master_key_id,
+                        EncryptionKey.key_type == "master",
+                        EncryptionKey.status == "active",
+                    )
+                    .first()
+                )
 
                 if not master_key_record:
                     raise ValueError(f"Master key not found: {self.master_key_id}")
 
                 # Decrypt the master key
                 master_key = self._decrypt_with_passphrase(
-                    master_key_record.encrypted_key,
-                    self.master_key_passphrase
+                    master_key_record.encrypted_key, self.master_key_passphrase
                 )
 
                 # Verify integrity
@@ -145,7 +159,9 @@ class KeyManagementService:
                     raise ValueError("Master key integrity check failed")
 
                 # Audit the access
-                self._audit_key_access(self.master_key_id, 'retrieve', 'system', 'Master key retrieved')
+                self._audit_key_access(
+                    self.master_key_id, "retrieve", "system", "Master key retrieved"
+                )
 
                 return master_key
 
@@ -177,25 +193,27 @@ class KeyManagementService:
             with db_manager.get_db() as session:
                 data_key_record = EncryptionKey(
                     key_id=key_id,
-                    key_type='data',
+                    key_type="data",
                     name=f"Data Key for {table_name}",
                     description=f"Data encryption key for table: {table_name}",
                     encrypted_key=encrypted_data_key,
                     key_hash=self._calculate_key_hash(data_key),
-                    algorithm='aes-256-gcm',
+                    algorithm="aes-256-gcm",
                     parent_key_id=self._get_master_key_record_id(),
                     derived_from=f"master_key:{self.master_key_id}",
-                    status='active',
-                    security_level='high',
+                    status="active",
+                    security_level="high",
                     expires_at=expires_at,
                     next_rotation_at=next_rotation_at,
-                    created_by='system'
+                    created_by="system",
                 )
                 session.add(data_key_record)
                 session.commit()
 
             # Audit the key generation
-            self._audit_key_access(key_id, 'store', 'system', f'Data key generated for table: {table_name}')
+            self._audit_key_access(
+                key_id, "store", "system", f"Data key generated for table: {table_name}"
+            )
 
             logger.info(f"Generated data key: {key_id} for table: {table_name}")
             return key_id
@@ -227,25 +245,30 @@ class KeyManagementService:
             with db_manager.get_db() as session:
                 field_key_record = EncryptionKey(
                     key_id=key_id,
-                    key_type='field',
+                    key_type="field",
                     name=f"Field Key for {field_name}",
                     description=f"Field encryption key for field: {field_name} in table: {table_key_id}",
                     encrypted_key=encrypted_field_key,
                     key_hash=self._calculate_key_hash(field_key),
-                    algorithm='aes-256-gcm',
+                    algorithm="aes-256-gcm",
                     parent_key_id=self._get_key_record_id(table_key_id),
                     derived_from=f"data_key:{table_key_id}",
-                    status='active',
-                    security_level='standard',
+                    status="active",
+                    security_level="standard",
                     expires_at=expires_at,
                     next_rotation_at=next_rotation_at,
-                    created_by='system'
+                    created_by="system",
                 )
                 session.add(field_key_record)
                 session.commit()
 
             # Audit the key generation
-            self._audit_key_access(key_id, 'store', 'system', f'Field key generated for field: {field_name}')
+            self._audit_key_access(
+                key_id,
+                "store",
+                "system",
+                f"Field key generated for field: {field_name}",
+            )
 
             logger.info(f"Generated field key: {key_id} for field: {field_name}")
             return key_id
@@ -260,11 +283,15 @@ class KeyManagementService:
             master_key = self.get_master_key()
 
             with db_manager.get_db() as session:
-                key_record = session.query(EncryptionKey).filter(
-                    EncryptionKey.key_id == key_id,
-                    EncryptionKey.key_type == 'data',
-                    EncryptionKey.status == 'active'
-                ).first()
+                key_record = (
+                    session.query(EncryptionKey)
+                    .filter(
+                        EncryptionKey.key_id == key_id,
+                        EncryptionKey.key_type == "data",
+                        EncryptionKey.status == "active",
+                    )
+                    .first()
+                )
 
                 if not key_record:
                     raise ValueError(f"Data key not found: {key_id}")
@@ -281,7 +308,9 @@ class KeyManagementService:
                     raise ValueError("Data key integrity check failed")
 
                 # Audit the access
-                self._audit_key_access(key_id, 'retrieve', 'system', 'Data key retrieved')
+                self._audit_key_access(
+                    key_id, "retrieve", "system", "Data key retrieved"
+                )
 
                 return data_key
 
@@ -294,11 +323,15 @@ class KeyManagementService:
         try:
             # Get the parent data key
             with db_manager.get_db() as session:
-                key_record = session.query(EncryptionKey).filter(
-                    EncryptionKey.key_id == key_id,
-                    EncryptionKey.key_type == 'field',
-                    EncryptionKey.status == 'active'
-                ).first()
+                key_record = (
+                    session.query(EncryptionKey)
+                    .filter(
+                        EncryptionKey.key_id == key_id,
+                        EncryptionKey.key_type == "field",
+                        EncryptionKey.status == "active",
+                    )
+                    .first()
+                )
 
                 if not key_record:
                     raise ValueError(f"Field key not found: {key_id}")
@@ -308,7 +341,7 @@ class KeyManagementService:
                     raise ValueError(f"Field key expired: {key_id}")
 
                 # Get parent data key
-                parent_key_id = key_record.derived_from.replace('data_key:', '')
+                parent_key_id = key_record.derived_from.replace("data_key:", "")
                 data_key = self.get_data_key(parent_key_id)
 
                 # Decrypt the field key
@@ -319,7 +352,9 @@ class KeyManagementService:
                     raise ValueError("Field key integrity check failed")
 
                 # Audit the access
-                self._audit_key_access(key_id, 'retrieve', 'system', 'Field key retrieved')
+                self._audit_key_access(
+                    key_id, "retrieve", "system", "Field key retrieved"
+                )
 
                 return field_key
 
@@ -334,10 +369,13 @@ class KeyManagementService:
         try:
             with db_manager.get_db() as session:
                 # Get the current key
-                key_record = session.query(EncryptionKey).filter(
-                    EncryptionKey.key_id == key_id,
-                    EncryptionKey.status == 'active'
-                ).first()
+                key_record = (
+                    session.query(EncryptionKey)
+                    .filter(
+                        EncryptionKey.key_id == key_id, EncryptionKey.status == "active"
+                    )
+                    .first()
+                )
 
                 if not key_record:
                     raise ValueError(f"Key not found for rotation: {key_id}")
@@ -345,22 +383,26 @@ class KeyManagementService:
                 old_key_hash = key_record.key_hash
 
                 # Generate new key based on type
-                if key_record.key_type == 'master':
+                if key_record.key_type == "master":
                     new_key = secrets.token_bytes(32)
-                    encrypted_new_key = self._encrypt_with_passphrase(new_key, self.master_key_passphrase)
-                elif key_record.key_type == 'data':
+                    encrypted_new_key = self._encrypt_with_passphrase(
+                        new_key, self.master_key_passphrase
+                    )
+                elif key_record.key_type == "data":
                     master_key = self.get_master_key()
-                    table_name = key_record.key_id.replace('data_', '').split('_')[0]
+                    table_name = key_record.key_id.replace("data_", "").split("_")[0]
                     new_key = self._derive_key(master_key, f"data_key_{table_name}", 32)
                     encrypted_new_key = self._encrypt_data(new_key, master_key)
-                elif key_record.key_type == 'field':
-                    parent_key_id = key_record.derived_from.replace('data_key:', '')
+                elif key_record.key_type == "field":
+                    parent_key_id = key_record.derived_from.replace("data_key:", "")
                     data_key = self.get_data_key(parent_key_id)
-                    field_name = key_record.key_id.split('_')[-1]
+                    field_name = key_record.key_id.split("_")[-1]
                     new_key = self._derive_key(data_key, f"field_key_{field_name}", 32)
                     encrypted_new_key = self._encrypt_data(new_key, data_key)
                 else:
-                    raise ValueError(f"Unsupported key type for rotation: {key_record.key_type}")
+                    raise ValueError(
+                        f"Unsupported key type for rotation: {key_record.key_type}"
+                    )
 
                 # Generate new key ID
                 new_key_id = f"{key_record.key_id}_rotated_{secrets.token_hex(4)}"
@@ -376,15 +418,15 @@ class KeyManagementService:
                     algorithm=key_record.algorithm,
                     parent_key_id=key_record.parent_key_id,
                     derived_from=key_record.derived_from,
-                    status='active',
+                    status="active",
                     security_level=key_record.security_level,
                     expires_at=key_record.expires_at,
                     next_rotation_at=key_record.next_rotation_at,
-                    created_by='system'
+                    created_by="system",
                 )
 
                 # Update old key
-                key_record.status = 'deprecated'
+                key_record.status = "deprecated"
                 key_record.last_rotated_at = datetime.utcnow()
                 key_record.rotation_count += 1
                 key_record.updated_at = datetime.utcnow()
@@ -400,17 +442,19 @@ class KeyManagementService:
                     old_key_hash=old_key_hash,
                     new_key_hash=new_key_record.key_hash,
                     rotation_reason=reason,
-                    rotated_by='system',
+                    rotated_by="system",
                     rotation_time_ms=int(rotation_time),
                     success=True,
                     old_expires_at=key_record.expires_at,
-                    new_expires_at=new_key_record.expires_at
+                    new_expires_at=new_key_record.expires_at,
                 )
                 session.add(rotation_history)
                 session.commit()
 
                 # Audit the rotation
-                self._audit_key_access(key_id, 'rotate', 'system', f'Key rotated: {reason}')
+                self._audit_key_access(
+                    key_id, "rotate", "system", f"Key rotated: {reason}"
+                )
 
                 # Emit event
                 self.event_bus.emit(
@@ -420,8 +464,8 @@ class KeyManagementService:
                         "old_key_id": key_id,
                         "new_key_id": new_key_id,
                         "key_type": key_record.key_type,
-                        "reason": reason
-                    }
+                        "reason": reason,
+                    },
                 )
 
                 logger.info(f"Successfully rotated key {key_id} to {new_key_id}")
@@ -430,7 +474,7 @@ class KeyManagementService:
                     success=True,
                     old_key_id=key_id,
                     new_key_id=new_key_id,
-                    rotation_time_ms=int(rotation_time)
+                    rotation_time_ms=int(rotation_time),
                 )
 
         except Exception as e:
@@ -442,33 +486,42 @@ class KeyManagementService:
                     rotation_history = KeyRotationHistory(
                         key_id=self._get_key_record_id(key_id),
                         rotation_reason=reason,
-                        rotated_by='system',
-                        rotation_time_ms=int((datetime.utcnow() - start_time).total_seconds() * 1000),
+                        rotated_by="system",
+                        rotation_time_ms=int(
+                            (datetime.utcnow() - start_time).total_seconds() * 1000
+                        ),
                         success=False,
-                        error_message=str(e)
+                        error_message=str(e),
                     )
                     session.add(rotation_history)
                     session.commit()
-            except:
+            except Exception as e:
+                logger.warning(f"Audit logging failed: {e}")
                 pass  # Don't let audit failure break the main error
 
             return KeyRotationResult(
                 success=False,
                 old_key_id=key_id,
                 new_key_id="",
-                rotation_time_ms=int((datetime.utcnow() - start_time).total_seconds() * 1000),
-                error_message=str(e)
+                rotation_time_ms=int(
+                    (datetime.utcnow() - start_time).total_seconds() * 1000
+                ),
+                error_message=str(e),
             )
 
     def get_keys_due_for_rotation(self) -> List[Dict[str, Any]]:
         """Get all keys that are due for rotation"""
         try:
             with db_manager.get_db() as session:
-                keys = session.query(EncryptionKey).filter(
-                    EncryptionKey.status == 'active',
-                    EncryptionKey.next_rotation_at.isnot(None),
-                    EncryptionKey.next_rotation_at <= datetime.utcnow()
-                ).all()
+                keys = (
+                    session.query(EncryptionKey)
+                    .filter(
+                        EncryptionKey.status == "active",
+                        EncryptionKey.next_rotation_at.isnot(None),
+                        EncryptionKey.next_rotation_at <= datetime.utcnow(),
+                    )
+                    .all()
+                )
 
                 result = []
                 for key in keys:
@@ -476,15 +529,19 @@ class KeyManagementService:
                     if key.next_rotation_at:
                         days_until = (key.next_rotation_at - datetime.utcnow()).days
 
-                    result.append({
-                        'id': str(key.id),
-                        'key_id': key.key_id,
-                        'key_type': key.key_type,
-                        'name': key.name,
-                        'next_rotation_at': key.next_rotation_at.isoformat() if key.next_rotation_at else None,
-                        'days_until_rotation': max(0, days_until),
-                        'rotation_count': key.rotation_count
-                    })
+                    result.append(
+                        {
+                            "id": str(key.id),
+                            "key_id": key.key_id,
+                            "key_type": key.key_type,
+                            "name": key.name,
+                            "next_rotation_at": key.next_rotation_at.isoformat()
+                            if key.next_rotation_at
+                            else None,
+                            "days_until_rotation": max(0, days_until),
+                            "rotation_count": key.rotation_count,
+                        }
+                    )
 
                 return result
 
@@ -521,7 +578,9 @@ class KeyManagementService:
         key = self._derive_key_from_passphrase(passphrase, salt, 32)
 
         # Decrypt
-        cipher = Cipher(algorithms.AES(key), modes.GCM(nonce, tag), backend=self.backend)
+        cipher = Cipher(
+            algorithms.AES(key), modes.GCM(nonce, tag), backend=self.backend
+        )
         decryptor = cipher.decryptor()
         return decryptor.update(ciphertext) + decryptor.finalize()
 
@@ -538,7 +597,9 @@ class KeyManagementService:
         nonce = encrypted_data[:12]
         tag = encrypted_data[12:28]
         ciphertext = encrypted_data[28:]
-        cipher = Cipher(algorithms.AES(key), modes.GCM(nonce, tag), backend=self.backend)
+        cipher = Cipher(
+            algorithms.AES(key), modes.GCM(nonce, tag), backend=self.backend
+        )
         decryptor = cipher.decryptor()
         return decryptor.update(ciphertext) + decryptor.finalize()
 
@@ -549,11 +610,13 @@ class KeyManagementService:
             length=length,
             salt=None,
             info=info.encode(),
-            backend=self.backend
+            backend=self.backend,
         )
         return hkdf.derive(master_key)
 
-    def _derive_key_from_passphrase(self, passphrase: str, salt: bytes, length: int = 32) -> bytes:
+    def _derive_key_from_passphrase(
+        self, passphrase: str, salt: bytes, length: int = 32
+    ) -> bytes:
         """Derive a key from a passphrase using PBKDF2"""
         from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
@@ -562,7 +625,7 @@ class KeyManagementService:
             length=length,
             salt=salt,
             iterations=100000,
-            backend=self.backend
+            backend=self.backend,
         )
         return kdf.derive(passphrase.encode())
 
@@ -574,27 +637,42 @@ class KeyManagementService:
         """Get the database ID of the master key record"""
         try:
             with db_manager.get_db() as session:
-                master_key = session.query(EncryptionKey).filter(
-                    EncryptionKey.key_id == self.master_key_id,
-                    EncryptionKey.key_type == 'master'
-                ).first()
+                master_key = (
+                    session.query(EncryptionKey)
+                    .filter(
+                        EncryptionKey.key_id == self.master_key_id,
+                        EncryptionKey.key_type == "master",
+                    )
+                    .first()
+                )
                 return str(master_key.id) if master_key else None
-        except:
+        except Exception as e:
+            logger.warning(f"Failed to get master key record ID: {e}")
             return None
 
     def _get_key_record_id(self, key_id: str) -> Optional[str]:
         """Get the database ID of a key record"""
         try:
             with db_manager.get_db() as session:
-                key = session.query(EncryptionKey).filter(
-                    EncryptionKey.key_id == key_id
-                ).first()
+                key = (
+                    session.query(EncryptionKey)
+                    .filter(EncryptionKey.key_id == key_id)
+                    .first()
+                )
                 return str(key.id) if key else None
-        except:
+        except Exception as e:
+            logger.warning(f"Failed to get key record ID for {key_id}: {e}")
             return None
 
-    def _audit_key_access(self, key_id: str, access_type: str, accessor_type: str,
-                         details: str = "", success: bool = True, error_message: str = ""):
+    def _audit_key_access(
+        self,
+        key_id: str,
+        access_type: str,
+        accessor_type: str,
+        details: str = "",
+        success: bool = True,
+        error_message: str = "",
+    ):
         """Audit key access operations"""
         try:
             with db_manager.get_db() as session:
@@ -604,7 +682,7 @@ class KeyManagementService:
                     accessor_type=accessor_type,
                     success=success,
                     error_message=error_message if not success else None,
-                    metadata={"details": details}
+                    metadata={"details": details},
                 )
                 session.add(audit_record)
                 session.commit()
@@ -614,9 +692,10 @@ class KeyManagementService:
     def __del__(self):
         """Cleanup event bus on destruction"""
         try:
-            if hasattr(self, 'event_bus'):
+            if hasattr(self, "event_bus"):
                 self.event_bus.stop()
-        except:
+        except Exception as e:
+            logger.warning(f"Event bus cleanup failed: {e}")
             pass
 
 

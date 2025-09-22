@@ -40,18 +40,29 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-import ray
-from ray import tune
+# Optional Ray imports - only load if available and compatible
+RAY_AVAILABLE = False
 try:
-    from ray.rllib.algorithms import ppo, dqn, a3c
+    import ray
+    from ray import tune
+    # Note: Ray RLlib imports are disabled due to TensorFlow compatibility issues
+    # RLlib requires TensorFlow which has AVX compatibility issues on older CPUs
+    ppo = dqn = a3c = None
+    RAY_AVAILABLE = True
+    logger.info("Ray core available - basic distributed computing enabled")
 except ImportError:
-    # Fallback for older Ray versions
-    try:
-        from ray.rllib.agents import ppo, dqn, a3c
-    except ImportError:
-        ppo = dqn = a3c = None
-        logger.warning("Ray RLlib not fully installed - distributed training disabled")
-import wandb
+    ray = None
+    ppo = dqn = a3c = None
+    logger.warning("Ray not available - distributed training disabled")
+
+# Optional wandb import
+try:
+    import wandb
+    WANDB_AVAILABLE = True
+except ImportError:
+    wandb = None
+    WANDB_AVAILABLE = False
+    logger.warning("Weights & Biases not available - experiment tracking disabled")
 
 # Import shared data access layer
 from shared.data_access import DataAccessLayer
@@ -352,24 +363,34 @@ class RLServer:
         self.reward_shaper = RewardShaper()
         self.curriculum = CurriculumLearning()
         
-        # Initialize Ray for distributed training with resource limits
-        if not ray.is_initialized():
-            ray.init(
-                ignore_reinit_error=True, 
-                num_cpus=4,
-                object_store_memory=1_000_000_000,  # 1GB object store
-                _memory=2_000_000_000,  # 2GB total memory
-                _temp_dir="/tmp/ray",  # Use /tmp for Ray files
-                dashboard_host="127.0.0.1",  # Bind dashboard to localhost
-                include_dashboard=True,
-                configure_logging=False,  # Disable Ray's verbose logging
-                log_to_driver=False
-            )
-            
-        # Initialize Weights & Biases for experiment tracking
-        self.use_wandb = os.getenv("USE_WANDB", "false").lower() == "true"
+        # Initialize Ray for distributed training with resource limits (if available)
+        global RAY_AVAILABLE
+        if RAY_AVAILABLE and not ray.is_initialized():
+            try:
+                ray.init(
+                    ignore_reinit_error=True,
+                    num_cpus=4,
+                    object_store_memory=1_000_000_000,  # 1GB object store
+                    _temp_dir="/tmp/ray",  # Use /tmp for Ray files
+                    dashboard_host="127.0.0.1",  # Bind dashboard to localhost
+                    include_dashboard=True,
+                    configure_logging=False,  # Disable Ray's verbose logging
+                    log_to_driver=False
+                )
+                logger.info("Ray initialized successfully")
+            except Exception as e:
+                logger.warning(f"Failed to initialize Ray: {e}")
+                RAY_AVAILABLE = False
+
+        # Initialize Weights & Biases for experiment tracking (if available)
+        self.use_wandb = WANDB_AVAILABLE and os.getenv("USE_WANDB", "false").lower() == "true"
         if self.use_wandb:
-            wandb.init(project="agent-lightning", entity="rl-team")
+            try:
+                wandb.init(project="agent-lightning", entity="rl-team")
+                logger.info("Weights & Biases initialized successfully")
+            except Exception as e:
+                logger.warning(f"Failed to initialize Weights & Biases: {e}")
+                self.use_wandb = False
             
         logger.info("✅ RL Server initialized")
         
@@ -401,7 +422,9 @@ class RLServer:
                 "cache": health_status['cache'],
                 "active_agents": len(self.agents),
                 "training_jobs": len(self.training_jobs),
-                "ray_initialized": ray.is_initialized(),
+                "ray_available": RAY_AVAILABLE,
+                "ray_initialized": RAY_AVAILABLE and ray.is_initialized() if RAY_AVAILABLE else False,
+                "wandb_available": WANDB_AVAILABLE,
                 "timestamp": datetime.utcnow().isoformat()
             }
             
@@ -550,9 +573,14 @@ class RLServer:
                 }
                 
                 # Start training in background
-                if config.distributed:
+                if config.distributed and RAY_AVAILABLE:
                     background_tasks.add_task(
                         self._distributed_training, job_id, config
+                    )
+                elif config.distributed and not RAY_AVAILABLE:
+                    logger.warning(f"Distributed training requested but Ray not available - falling back to local training")
+                    background_tasks.add_task(
+                        self._train_agent, job_id, config
                     )
                 else:
                     background_tasks.add_task(
@@ -745,14 +773,17 @@ class RLServer:
                     self.training_jobs[job_id]["metrics"]["total_reward"] / (episode + 1)
                 )
                 
-                # Log to Weights & Biases
-                if self.use_wandb:
-                    wandb.log({
-                        "episode": episode,
-                        "loss": loss.item(),
-                        "epsilon": agent.epsilon,
-                        "avg_reward": self.training_jobs[job_id]["metrics"]["avg_reward"]
-                    })
+                # Log to Weights & Biases (if available)
+                if self.use_wandb and WANDB_AVAILABLE:
+                    try:
+                        wandb.log({
+                            "episode": episode,
+                            "loss": loss.item(),
+                            "epsilon": agent.epsilon,
+                            "avg_reward": self.training_jobs[job_id]["metrics"]["avg_reward"]
+                        })
+                    except Exception as e:
+                        logger.warning(f"Failed to log to Weights & Biases: {e}")
                     
                 # Checkpoint periodically
                 if episode % 100 == 0:

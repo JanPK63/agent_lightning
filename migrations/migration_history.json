@@ -1,37 +1,31 @@
 [
   {
-    "timestamp": "2025-09-04T20:26:32.031466",
-    "source_bucket": "performance_metrics",
-    "target_type": "csv",
-    "target_config": {
-      "filename": "performance_metrics_migration.csv"
-    },
-    "time_range": [
-      "-2h",
-      "now()"
-    ],
-    "records_read": 1770,
-    "records_written": 1770,
-    "errors": 0,
-    "duration_seconds": 0.045157,
-    "rate": 39196.580818034854
+    "migration_id": "010_add_event_sourcing_tables",
+    "description": "Create events and event_snapshots tables for event sourcing functionality",
+    "applied_at": "2025-09-18T07:31:15.000Z",
+    "status": "completed",
+    "database_type": "sqlite"
   },
   {
-    "timestamp": "2025-09-04T20:26:43.980547",
-    "source_bucket": "agent_metrics",
-    "target_type": "sqlite",
-    "target_config": {
-      "path": "migrations/agent_metrics.db",
-      "table": "agent_data"
-    },
-    "time_range": [
-      "-24h",
-      "now()"
-    ],
-    "records_read": 552,
-    "records_written": 552,
-    "errors": 0,
-    "duration_seconds": 0.031804,
-    "rate": 17356.307382719155
+    "migration_id": "009_add_encrypted_columns",
+    "description": "Add encrypted columns to existing tables (users, conversations, agents, workflows)",
+    "applied_at": "2025-09-18T04:08:00.000Z",
+    "status": "completed",
+    "database_type": "sqlite"
+  },
+  {
+    "migration_id": "007_encryption_keys",
+    "description": "Create encryption keys management system tables",
+    "applied_at": "2025-09-18T04:09:17.000Z",
+    "status": "completed",
+    "database_type": "sqlite"
+  },
+  {
+    "migration_id": "008_encrypt_existing_data",
+    "description": "Encrypt existing sensitive data in database",
+    "applied_at": null,
+    "status": "pending",
+    "database_type": "sqlite",
+    "notes": "Will be applied when data exists in the database"
   }
 ]

@@ -40,6 +40,12 @@ from shared.data_access import DataAccessLayer
 from shared.events import EventChannel
 from shared.cache import get_cache
 
+# Import input sanitization utilities
+from shared.sanitization import InputSanitizer, sanitize_user_input
+
+# Import Prometheus metrics
+from monitoring.metrics import get_metrics_collector, Timer
+
 # Import OAuth2/OIDC system
 try:
     from agentlightning.oauth import oauth_manager, OAuth2Manager
@@ -480,6 +486,9 @@ class AuthService:
         self.audit_logger = AuditLogger(self.dal)
         self.security_manager = SecurityManager(self.cache, self.audit_logger)
 
+        # Initialize input sanitizer
+        self.sanitizer = InputSanitizer()
+
         # OAuth2 scheme
         self.oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
@@ -624,26 +633,31 @@ class AuthService:
         async def register(user: UserCreate, request: Request):
             """Register new user"""
             try:
+                # Sanitize user input
+                sanitized_email = self.sanitizer.sanitize_text(user.email.lower().strip())
+                sanitized_full_name = self.sanitizer.sanitize_text(user.full_name.strip())
+                sanitized_password = user.password  # Don't sanitize password, just validate
+
                 # Check rate limit
                 if not self.security_manager.check_rate_limit(request.client.host):
                     raise HTTPException(status_code=429, detail="Rate limit exceeded")
-                
+
                 # Check if user exists
-                if self._get_user_by_email(user.email):
+                if self._get_user_by_email(sanitized_email):
                     self.audit_logger.log_security_event(
                         'registration_attempt_duplicate_email',
-                        user_id=user.email,
-                        details={'email': user.email},
+                        user_id=sanitized_email,
+                        details={'email': sanitized_email},
                         ip_address=request.client.host
                     )
                     raise HTTPException(status_code=400, detail="Email already registered")
 
                 # Check password strength
-                strength = self.password_manager.check_password_strength(user.password)
+                strength = self.password_manager.check_password_strength(sanitized_password)
                 if not strength['strong']:
                     self.audit_logger.log_security_event(
                         'registration_weak_password',
-                        user_id=user.email,
+                        user_id=sanitized_email,
                         details={'issues': strength['issues']},
                         ip_address=request.client.host
                     )
@@ -658,9 +672,9 @@ class AuthService:
                     from shared.models import User
                     new_user = User(
                         id=user_id,
-                        username=user.full_name,
-                        email=user.email,
-                        password_hash=self.password_manager.hash_password(user.password),
+                        username=sanitized_full_name,
+                        email=sanitized_email,
+                        password_hash=self.password_manager.hash_password(sanitized_password),
                         role=user.role.value,
                         is_active=False  # Require email verification
                     )
@@ -672,7 +686,7 @@ class AuthService:
                     user_id=user_id,
                     action='user_registration',
                     details={
-                        'email': user.email,
+                        'email': sanitized_email,
                         'role': user.role.value,
                         'method': 'password'
                     },
@@ -681,16 +695,16 @@ class AuthService:
                 )
 
                 self.dal.record_metric('user_registration', 1, {
-                    'email': user.email,
+                    'email': sanitized_email,
                     'role': user.role.value
                 })
 
-                logger.info(f"User registered: {user.email}")
+                logger.info(f"User registered: {sanitized_email}")
 
                 return {
                     "message": "User registered successfully",
                     "user_id": user_id,
-                    "email": user.email
+                    "email": sanitized_email
                 }
                 
             except HTTPException:
@@ -703,24 +717,27 @@ class AuthService:
         async def login(form_data: OAuth2PasswordRequestForm = Depends(), request: Request = None):
             """Login and get tokens"""
             try:
+                # Sanitize input
+                sanitized_username = self.sanitizer.sanitize_text(form_data.username.lower().strip())
+
                 # Check if account is locked
-                if self.security_manager.is_locked(form_data.username):
+                if self.security_manager.is_locked(sanitized_username):
                     raise HTTPException(
                         status_code=403,
                         detail="Account locked due to too many failed attempts"
                     )
-                
+
                 # Get user
-                user = self._get_user_by_email(form_data.username)
+                user = self._get_user_by_email(sanitized_username)
                 if not user:
                     self.audit_logger.log_auth_attempt(
-                        username=form_data.username,
+                        username=sanitized_username,
                         success=False,
                         ip_address=request.client.host if request else "unknown",
                         user_agent=request.headers.get("user-agent") if request else "unknown",
                         method="password"
                     )
-                    self.security_manager.record_failed_attempt(form_data.username)
+                    self.security_manager.record_failed_attempt(sanitized_username)
                     raise HTTPException(
                         status_code=401,
                         detail="Invalid email or password"
@@ -729,13 +746,13 @@ class AuthService:
                 # Verify password
                 if not self.password_manager.verify_password(form_data.password, user['password_hash']):
                     self.audit_logger.log_auth_attempt(
-                        username=form_data.username,
+                        username=sanitized_username,
                         success=False,
                         ip_address=request.client.host if request else "unknown",
                         user_agent=request.headers.get("user-agent") if request else "unknown",
                         method="password"
                     )
-                    self.security_manager.record_failed_attempt(form_data.username)
+                    self.security_manager.record_failed_attempt(sanitized_username)
                     raise HTTPException(
                         status_code=401,
                         detail="Invalid email or password"
@@ -755,7 +772,7 @@ class AuthService:
                     )
 
                 # Clear failed attempts
-                self.security_manager.clear_failed_attempts(form_data.username)
+                self.security_manager.clear_failed_attempts(sanitized_username)
 
                 # Generate tokens
                 tokens = self.jwt_manager.generate_tokens(
@@ -772,7 +789,7 @@ class AuthService:
 
                 # Log successful login
                 self.audit_logger.log_auth_attempt(
-                    username=form_data.username,
+                    username=sanitized_username,
                     success=True,
                     ip_address=request.client.host if request else "unknown",
                     user_agent=request.headers.get("user-agent") if request else "unknown",
@@ -1048,22 +1065,29 @@ class AuthService:
         ):
             """Create API key"""
             try:
+                # Sanitize input
+                sanitized_name = self.sanitizer.sanitize_text(api_key_req.name.strip())
+                sanitized_service_name = (
+                    self.sanitizer.sanitize_text(api_key_req.service_name.strip())
+                    if api_key_req.service_name else None
+                )
+
                 # Check permission
                 if not self.rbac_engine.check_permission(
                     current_user['roles'], "api_keys", "create"
                 ):
                     raise HTTPException(status_code=403, detail="Permission denied")
-                
+
                 # Generate API key
                 api_key = self.jwt_manager.generate_api_key()
                 key_id = str(uuid.uuid4())
-                
+
                 # Store API key (hash it in production)
                 self.api_keys[key_id] = {
                     "id": key_id,
-                    "name": api_key_req.name,
+                    "name": sanitized_name,
                     "key_hash": hashlib.sha256(api_key.encode()).hexdigest(),
-                    "service_name": api_key_req.service_name,
+                    "service_name": sanitized_service_name,
                     "permissions": api_key_req.permissions,
                     "created_by": current_user['id'],
                     "created_at": datetime.utcnow().isoformat(),
@@ -1072,13 +1096,13 @@ class AuthService:
                     ).isoformat() if api_key_req.expires_in_days else None,
                     "active": True
                 }
-                
-                logger.info(f"API key created: {api_key_req.name} by {current_user['email']}")
-                
+
+                logger.info(f"API key created: {sanitized_name} by {current_user['email']}")
+
                 return {
                     "api_key": api_key,  # Only return once, user must save it
                     "key_id": key_id,
-                    "name": api_key_req.name
+                    "name": sanitized_name
                 }
                 
             except HTTPException:

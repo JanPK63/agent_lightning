@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any
 from jwt_auth import get_current_user, require_admin, require_developer
 from cached_agent_api import TaskRequest, TaskResponse, generate_cache_key, get_cached_response, cache_response
-from database_connection import get_db_session
+from shared.database import db_manager
 from shared.models import Agent, Task
 import time
 import uuid
@@ -27,7 +27,7 @@ async def health_check():
 async def list_agents(current_user: dict = Depends(get_current_user)):
     """List agents (authenticated users only)"""
     try:
-        with get_db_session() as session:
+        with db_manager.get_db() as session:
             agents = session.query(Agent).all()
             return {
                 "agents": [agent.to_dict() for agent in agents],
@@ -97,7 +97,7 @@ async def execute_task(
         
         # Store in database with user context
         try:
-            with get_db_session() as session:
+            with db_manager.get_db() as session:
                 task = Task(
                     id=uuid.uuid4(),
                     agent_id=request.agent_id,
@@ -121,7 +121,7 @@ async def execute_task(
 async def list_user_tasks(current_user: dict = Depends(get_current_user)):
     """List user's tasks"""
     try:
-        with get_db_session() as session:
+        with db_manager.get_db() as session:
             # Users see only their tasks, admins see all
             if current_user["role"] == "admin":
                 tasks = session.query(Task).limit(50).all()
@@ -142,7 +142,7 @@ async def list_user_tasks(current_user: dict = Depends(get_current_user)):
 async def create_agent(agent_data: dict, current_user: dict = Depends(require_admin)):
     """Create new agent (admin only)"""
     try:
-        with get_db_session() as session:
+        with db_manager.get_db() as session:
             agent = Agent(
                 id=agent_data["id"],
                 name=agent_data["name"],
@@ -162,7 +162,7 @@ async def create_agent(agent_data: dict, current_user: dict = Depends(require_ad
 async def admin_stats(current_user: dict = Depends(require_admin)):
     """Admin statistics"""
     try:
-        with get_db_session() as session:
+        with db_manager.get_db() as session:
             agent_count = session.query(Agent).count()
             task_count = session.query(Task).count()
             

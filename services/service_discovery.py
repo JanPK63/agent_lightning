@@ -156,6 +156,13 @@ class ServiceRegistry:
                 description="Real-time WebSocket communication",
                 required_tags=["realtime", "websocket"],
                 health_check_interval=5
+            ),
+            "rl-orchestrator": ServiceDefinition(
+                name="rl-orchestrator",
+                description="Reinforcement learning orchestration and agent assignment",
+                required_tags=["rl", "orchestrator", "core"],
+                health_check_interval=15,
+                dependencies=["agent-designer"]
             )
         }
     
@@ -481,6 +488,7 @@ async def auto_register_services(registry: ServiceRegistry):
     
     services_to_register = [
         ("api-gateway", "localhost", 8000, {"tags": ["gateway", "public"]}),
+        ("rl-orchestrator", "localhost", 8008, {"tags": ["rl", "orchestrator", "core"]}),
         ("auth-service", "localhost", 8006, {"tags": ["auth", "security"]}),
         ("agent-designer", "localhost", 8001, {"tags": ["agent", "core"]}),
         ("workflow-engine", "localhost", 8003, {"tags": ["workflow", "core"]}),

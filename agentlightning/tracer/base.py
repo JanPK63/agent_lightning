@@ -1,7 +1,20 @@
 from contextlib import contextmanager
 from typing import Iterator, List, Optional, Callable, Any, Awaitable
 
-from opentelemetry.sdk.trace import ReadableSpan
+# Optional import for OpenTelemetry - use mock if not available
+try:
+    from opentelemetry.sdk.trace import ReadableSpan
+except ImportError:
+    # Mock ReadableSpan for environments without OpenTelemetry
+    class ReadableSpan:
+        """Mock ReadableSpan for environments without OpenTelemetry."""
+        def __init__(self, span_id=None, trace_id=None, name="", start_time=None, end_time=None):
+            self.span_id = span_id or "mock_span_id"
+            self.trace_id = trace_id or "mock_trace_id"
+            self.name = name
+            self.start_time = start_time
+            self.end_time = end_time
+
 from agentlightning.types import ParallelWorkerBase
 
 

@@ -1,8 +1,139 @@
 global:
   scrape_interval: 15s
+  evaluation_interval: 15s
+
+# Rule files for alerting
+rule_files:
+  - "alert_rules.yml"
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
 
 scrape_configs:
-  - job_name: 'agent-lightning'
+  # Agent Coordination Services
+  - job_name: 'agent-coordinator'
+    static_configs:
+      - targets: ['host.docker.internal:8001']
+        labels:
+          service: 'agent-coordinator'
+          component: 'coordination'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  - job_name: 'agent-designer'
+    static_configs:
+      - targets: ['host.docker.internal:8002']
+        labels:
+          service: 'agent-designer'
+          component: 'coordination'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  # AI Model Services
+  - job_name: 'ai-model-service'
+    static_configs:
+      - targets: ['host.docker.internal:8003']
+        labels:
+          service: 'ai-model-service'
+          component: 'ai'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  - job_name: 'langchain-integration'
+    static_configs:
+      - targets: ['host.docker.internal:8004']
+        labels:
+          service: 'langchain-integration'
+          component: 'ai'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  # Memory & Knowledge Services
+  - job_name: 'memory-manager'
+    static_configs:
+      - targets: ['host.docker.internal:8005']
+        labels:
+          service: 'memory-manager'
+          component: 'memory'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  - job_name: 'knowledge-manager'
+    static_configs:
+      - targets: ['host.docker.internal:8006']
+        labels:
+          service: 'knowledge-manager'
+          component: 'memory'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  # Workflow & Orchestration Services
+  - job_name: 'workflow-engine'
+    static_configs:
+      - targets: ['host.docker.internal:8007']
+        labels:
+          service: 'workflow-engine'
+          component: 'orchestration'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  - job_name: 'rl-orchestrator'
+    static_configs:
+      - targets: ['host.docker.internal:8008']
+        labels:
+          service: 'rl-orchestrator'
+          component: 'orchestration'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  # Monitoring & Dashboard Services
+  - job_name: 'monitoring-dashboard'
+    static_configs:
+      - targets: ['host.docker.internal:8009']
+        labels:
+          service: 'monitoring-dashboard'
+          component: 'monitoring'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  - job_name: 'performance-metrics'
+    static_configs:
+      - targets: ['host.docker.internal:8010']
+        labels:
+          service: 'performance-metrics'
+          component: 'monitoring'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  # Communication Services
+  - job_name: 'websocket-service'
+    static_configs:
+      - targets: ['host.docker.internal:8011']
+        labels:
+          service: 'websocket-service'
+          component: 'communication'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  - job_name: 'event-replay-debugger'
+    static_configs:
+      - targets: ['host.docker.internal:8012']
+        labels:
+          service: 'event-replay-debugger'
+          component: 'communication'
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  # Legacy/Generic Agent Lightning service (if still needed)
+  - job_name: 'agent-lightning-legacy'
     static_configs:
       - targets: ['host.docker.internal:8000']
+        labels:
+          service: 'agent-lightning'
+          component: 'legacy'
     scrape_interval: 5s
+    metrics_path: /metrics

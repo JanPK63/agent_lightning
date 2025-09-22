@@ -11,6 +11,7 @@ from .types import ParallelWorkerBase
 from .tracer.base import BaseTracer
 from .tracer import TripletExporter
 from .knowledge_client import get_knowledge_client
+from shared.event_store import event_store, create_event
 
 logger = logging.getLogger(__name__)
 
@@ -230,6 +231,25 @@ class AgentRunner(ParallelWorkerBase):
             return False
         rollout_id = task.rollout_id
 
+        # Event: Task received
+        try:
+            task_received_event = create_event(
+                aggregate_id=task.rollout_id,
+                aggregate_type="task",
+                event_type="received",
+                event_data={
+                    "task_input": task.input,
+                    "mode": task.mode,
+                    "resources_id": task.resources_id,
+                    "worker_id": self.worker_id
+                },
+                user_id=getattr(self.agent, 'agent_id', None),
+                service_name="agent_runner"
+            )
+            event_store.save_event(task_received_event)
+        except Exception as e:
+            logger.warning(f"Failed to publish task received event: {e}")
+
         resources_id = task.resources_id
         resources_update = None
         if resources_id:
@@ -251,6 +271,26 @@ class AgentRunner(ParallelWorkerBase):
                 self.agent.on_rollout_start(task, self, self.tracer)
             except Exception:
                 logger.exception(f"{self._log_prefix(rollout_id)} Exception during on_rollout_start hook.")
+
+            # Event: Rollout started
+            try:
+                rollout_started_event = create_event(
+                    aggregate_id=task.rollout_id,
+                    aggregate_type="rollout",
+                    event_type="started",
+                    event_data={
+                        "task_input": task.input,
+                        "mode": task.mode,
+                        "resources_id": task.resources_id,
+                        "worker_id": self.worker_id,
+                        "agent_id": getattr(self.agent, 'agent_id', None)
+                    },
+                    user_id=getattr(self.agent, 'agent_id', None),
+                    service_name="agent_runner"
+                )
+                event_store.save_event(rollout_started_event)
+            except Exception as e:
+                logger.warning(f"Failed to publish rollout started event: {e}")
 
             with self.tracer.trace_context(name=f"rollout_{rollout_id}"):
                 start_time = time.time()
@@ -279,8 +319,47 @@ class AgentRunner(ParallelWorkerBase):
                     f"Reward: {rollout_obj.final_reward}"
                 )
 
-        except Exception:
+                # Event: Rollout completed
+                try:
+                    rollout_completed_event = create_event(
+                        aggregate_id=task.rollout_id,
+                        aggregate_type="rollout",
+                        event_type="completed",
+                        event_data={
+                            "final_reward": rollout_obj.final_reward,
+                            "triplet_count": len(rollout_obj.triplets) if rollout_obj.triplets else 0,
+                            "execution_time": end_time - start_time,
+                            "mode": task.mode,
+                            "worker_id": self.worker_id
+                        },
+                        user_id=getattr(self.agent, 'agent_id', None),
+                        service_name="agent_runner"
+                    )
+                    event_store.save_event(rollout_completed_event)
+                except Exception as e:
+                    logger.warning(f"Failed to publish rollout completed event: {e}")
+
+        except Exception as e:
             logger.exception(f"{self._log_prefix(rollout_id)} Exception during rollout.")
+
+            # Event: Rollout failed
+            try:
+                rollout_failed_event = create_event(
+                    aggregate_id=task.rollout_id,
+                    aggregate_type="rollout",
+                    event_type="failed",
+                    event_data={
+                        "error": str(e),
+                        "task_input": task.input,
+                        "mode": task.mode,
+                        "worker_id": self.worker_id
+                    },
+                    user_id=getattr(self.agent, 'agent_id', None),
+                    service_name="agent_runner"
+                )
+                event_store.save_event(rollout_failed_event)
+            except Exception as event_error:
+                logger.warning(f"Failed to publish rollout failed event: {event_error}")
         finally:
             try:
                 self.agent.on_rollout_end(task, rollout_obj, self, self.tracer)

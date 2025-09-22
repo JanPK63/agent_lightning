@@ -1,5 +1,8 @@
 __version__ = "0.1.2"
 
+# Apply AgentOps OpenTelemetry patch before any other imports
+from .agentops_patch import patch_opentelemetry_metrics
+
 from .client import AgentLightningClient, DevTaskLoader
 from .config import lightning_cli
 from .litagent import LitAgent
@@ -46,7 +49,7 @@ from .rbac import (
     get_user_role
 )
 from .reward import reward
-from .server import AgentLightningServer
+# from .server import AgentLightningServer  # Removed to avoid circular import
 from .trainer import Trainer
 from .types import *
 

@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-09-18T04:11:51.432201",
+  "sample_size": 0,
+  "tables": [
+    "users",
+    "agents",
+    "conversations",
+    "workflows"
+  ],
+  "backup_location": "/secure/backups/canary_rotation_backup.enc"
+}

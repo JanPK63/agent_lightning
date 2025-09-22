@@ -39,6 +39,12 @@ from shared.data_access import DataAccessLayer
 from shared.cache import get_cache
 from shared.events import EventChannel
 
+# Import input sanitization utilities
+from shared.sanitization import InputSanitizer, sanitize_user_input
+
+# Import Prometheus metrics
+from monitoring.metrics import get_metrics_collector
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -55,6 +61,9 @@ app = FastAPI(title="Knowledge Manager Service", version="2.0.0")
 # Initialize components
 dal = DataAccessLayer("knowledge_manager")
 cache = get_cache()
+
+# Initialize Prometheus metrics collector
+metrics_collector = get_metrics_collector("knowledge_manager")
 
 # Initialize embedding model (disabled for now)
 embedding_model = None
@@ -106,6 +115,9 @@ class KnowledgeManagerService:
         self.embedding_model = embedding_model
         self.embedding_dimension = 384 if embedding_model else 0
 
+        # Initialize input sanitizer
+        self.sanitizer = InputSanitizer()
+
     def generate_embedding(self, text: str) -> Optional[List[float]]:
         """Generate embedding for text using sentence transformer"""
         if not self.embedding_model:
@@ -131,32 +143,45 @@ class KnowledgeManagerService:
 
     def store_knowledge(self, item: KnowledgeItem) -> Dict[str, Any]:
         """Store knowledge item with embedding"""
+        # Sanitize user input
+        sanitized_agent_id = self.sanitizer.sanitize_text(item.agent_id.strip())
+        sanitized_category = self.sanitizer.sanitize_text(item.category.strip())
+        sanitized_content = self.sanitizer.sanitize_text(item.content.strip())
+        sanitized_source = (
+            self.sanitizer.sanitize_text(item.source.strip())
+            if item.source else None
+        )
+        sanitized_tags = [
+            self.sanitizer.sanitize_text(tag.strip())
+            for tag in item.tags if tag.strip()
+        ]
+
         # Generate ID if not provided
         if not item.id:
-            item.id = f"{item.agent_id}_{uuid.uuid4().hex[:16]}"
+            item.id = f"{sanitized_agent_id}_{uuid.uuid4().hex[:16]}"
 
         # Generate embedding
         embedding = None
-        if item.content and self.embedding_model:
-            embedding = self.generate_embedding(item.content)
+        if sanitized_content and self.embedding_model:
+            embedding = self.generate_embedding(sanitized_content)
 
         # Prepare data for database
         knowledge_data = {
             'id': item.id,
-            'agent_id': item.agent_id,
-            'category': item.category,
-            'content': item.content,
-            'source': item.source,
+            'agent_id': sanitized_agent_id,
+            'category': sanitized_category,
+            'content': sanitized_content,
+            'source': sanitized_source,
             'metadata': {
                 **item.metadata,
-                'tags': item.tags,
+                'tags': sanitized_tags,
                 'embedding': embedding,
                 'embedding_model': 'all-MiniLM-L6-v2' if embedding else None
             }
         }
 
         # Store in database
-        result = dal.add_knowledge(item.agent_id, knowledge_data)
+        result = dal.add_knowledge(sanitized_agent_id, knowledge_data)
 
         # Cache the result
         cache_key = f"knowledge:{item.agent_id}:{item.id}"
@@ -206,15 +231,29 @@ class KnowledgeManagerService:
 
     def search_knowledge(self, query: KnowledgeQuery) -> List[Dict]:
         """Search knowledge using semantic similarity"""
+        # Sanitize user input
+        sanitized_query = (
+            self.sanitizer.sanitize_text(query.query.strip())
+            if query.query else None
+        )
+        sanitized_agent_id = (
+            self.sanitizer.sanitize_text(query.agent_id.strip())
+            if query.agent_id else None
+        )
+        sanitized_category = (
+            self.sanitizer.sanitize_text(query.category.strip())
+            if query.category else None
+        )
+
         query_embedding = None
-        if self.embedding_model and query.query:
-            query_embedding = self.generate_embedding(query.query)
+        if self.embedding_model and sanitized_query:
+            query_embedding = self.generate_embedding(sanitized_query)
 
         results = []
 
-        if query.agent_id:
+        if sanitized_agent_id:
             # Search specific agent's knowledge
-            knowledge_items = dal.get_agent_knowledge(query.agent_id, query.category)
+            knowledge_items = dal.get_agent_knowledge(sanitized_agent_id, sanitized_category)
         else:
             # Search all knowledge (simplified - in production you'd need better indexing)
             # For now, we'll just return recent items
@@ -235,7 +274,7 @@ class KnowledgeManagerService:
                 score += similarity * 0.7
 
             # Text matching score
-            if query.query.lower() in item['content'].lower():
+            if sanitized_query and sanitized_query.lower() in item['content'].lower():
                 score += 0.3
 
             # Relevance score from database
@@ -339,9 +378,13 @@ class KnowledgeManagerService:
 
     def get_context_for_task(self, agent_id: str, task_description: str, limit: int = 5) -> List[Dict]:
         """Get relevant knowledge context for a task"""
+        # Sanitize user input
+        sanitized_agent_id = self.sanitizer.sanitize_text(agent_id.strip())
+        sanitized_task_description = self.sanitizer.sanitize_text(task_description.strip())
+
         query = KnowledgeQuery(
-            query=task_description,
-            agent_id=agent_id,
+            query=sanitized_task_description,
+            agent_id=sanitized_agent_id,
             limit=limit,
             min_relevance=0.1
         )
@@ -355,56 +398,89 @@ knowledge_service = KnowledgeManagerService()
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    health = dal.health_check()
-    return {
-        "status": "healthy" if all(health.values()) else "degraded",
-        "service": "knowledge-manager",
-        "components": health,
-        "embedding_model": embedding_model is not None
-    }
+    try:
+        health = dal.health_check()
+        metrics_collector.increment_request("health", "GET", "200")
+        return {
+            "status": "healthy" if all(health.values()) else "degraded",
+            "service": "knowledge-manager",
+            "components": health,
+            "embedding_model": embedding_model is not None
+        }
+    except Exception as e:
+        metrics_collector.increment_error("health", type(e).__name__)
+        raise
 
 @app.post("/knowledge")
 async def store_knowledge(item: KnowledgeItem):
     """Store a knowledge item"""
     try:
         result = knowledge_service.store_knowledge(item)
+        metrics_collector.increment_request("store_knowledge", "POST", "200")
         return {"status": "success", "data": result}
     except Exception as e:
         logger.error(f"Failed to store knowledge: {e}")
+        metrics_collector.increment_error("store_knowledge", type(e).__name__)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/knowledge/{knowledge_id}")
 async def get_knowledge(knowledge_id: str, agent_id: Optional[str] = Query(None)):
     """Retrieve a knowledge item"""
-    result = knowledge_service.get_knowledge(knowledge_id, agent_id)
-    if not result:
-        raise HTTPException(status_code=404, detail="Knowledge item not found")
-    return result
+    try:
+        result = knowledge_service.get_knowledge(knowledge_id, agent_id)
+        if not result:
+            metrics_collector.increment_request("get_knowledge", "GET", "404")
+            raise HTTPException(status_code=404, detail="Knowledge item not found")
+        metrics_collector.increment_request("get_knowledge", "GET", "200")
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        metrics_collector.increment_error("get_knowledge", type(e).__name__)
+        raise
 
 @app.put("/knowledge/{knowledge_id}")
 async def update_knowledge(knowledge_id: str, agent_id: str, updates: KnowledgeUpdate):
     """Update a knowledge item"""
-    result = knowledge_service.update_knowledge(knowledge_id, agent_id, updates)
-    if not result:
-        raise HTTPException(status_code=404, detail="Knowledge item not found")
-    return {"status": "success", "data": result}
+    try:
+        result = knowledge_service.update_knowledge(knowledge_id, agent_id, updates)
+        if not result:
+            metrics_collector.increment_request("update_knowledge", "PUT", "404")
+            raise HTTPException(status_code=404, detail="Knowledge item not found")
+        metrics_collector.increment_request("update_knowledge", "PUT", "200")
+        return {"status": "success", "data": result}
+    except HTTPException:
+        raise
+    except Exception as e:
+        metrics_collector.increment_error("update_knowledge", type(e).__name__)
+        raise
 
 @app.delete("/knowledge/{knowledge_id}")
 async def delete_knowledge(knowledge_id: str, agent_id: str):
     """Delete a knowledge item"""
-    success = knowledge_service.delete_knowledge(knowledge_id, agent_id)
-    if not success:
-        raise HTTPException(status_code=404, detail="Knowledge item not found")
-    return {"status": "deleted"}
+    try:
+        success = knowledge_service.delete_knowledge(knowledge_id, agent_id)
+        if not success:
+            metrics_collector.increment_request("delete_knowledge", "DELETE", "404")
+            raise HTTPException(status_code=404, detail="Knowledge item not found")
+        metrics_collector.increment_request("delete_knowledge", "DELETE", "200")
+        return {"status": "deleted"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        metrics_collector.increment_error("delete_knowledge", type(e).__name__)
+        raise
 
 @app.post("/knowledge/search")
 async def search_knowledge(query: KnowledgeQuery):
     """Search knowledge using semantic similarity"""
     try:
         results = knowledge_service.search_knowledge(query)
+        metrics_collector.increment_request("search_knowledge", "POST", "200")
         return {"status": "success", "results": results, "count": len(results)}
     except Exception as e:
         logger.error(f"Search failed: {e}")
+        metrics_collector.increment_error("search_knowledge", type(e).__name__)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/knowledge/bulk")
@@ -414,12 +490,15 @@ async def bulk_ingest(request: BulkIngestionRequest, background_tasks: Backgroun
         # Run in background for large ingests
         if len(request.items) > 10:
             background_tasks.add_task(knowledge_service.bulk_ingest, request)
+            metrics_collector.increment_request("bulk_ingest", "POST", "200")
             return {"status": "processing", "message": "Bulk ingestion started in background"}
         else:
             result = knowledge_service.bulk_ingest(request)
+            metrics_collector.increment_request("bulk_ingest", "POST", "200")
             return {"status": "completed", "data": result}
     except Exception as e:
         logger.error(f"Bulk ingestion failed: {e}")
+        metrics_collector.increment_error("bulk_ingest", type(e).__name__)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/knowledge")
@@ -432,12 +511,15 @@ async def list_knowledge(
     try:
         if agent_id:
             results = dal.get_agent_knowledge(agent_id, category)
+            metrics_collector.increment_request("list_knowledge", "GET", "200")
             return {"status": "success", "results": results[:limit], "count": len(results)}
         else:
             # Simplified - in production you'd need proper cross-agent listing
+            metrics_collector.increment_request("list_knowledge", "GET", "200")
             return {"status": "success", "results": [], "count": 0, "message": "Agent ID required"}
     except Exception as e:
         logger.error(f"List knowledge failed: {e}")
+        metrics_collector.increment_error("list_knowledge", type(e).__name__)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/context/task")
@@ -449,9 +531,11 @@ async def get_task_context(request: TaskContextRequest):
             request.task_description,
             request.limit
         )
+        metrics_collector.increment_request("get_task_context", "POST", "200")
         return {"status": "success", "context": context, "count": len(context)}
     except Exception as e:
         logger.error(f"Task context retrieval failed: {e}")
+        metrics_collector.increment_error("get_task_context", type(e).__name__)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/training/start")
@@ -462,6 +546,7 @@ async def start_training(request: TrainingRequest, background_tasks: BackgroundT
         background_tasks.add_task(simulate_training, request.agent_id, request.knowledge_items, request.epochs)
 
         session_id = f"training_{request.agent_id}_{uuid.uuid4().hex[:8]}"
+        metrics_collector.increment_request("start_training", "POST", "200")
         return {
             "status": "started",
             "session_id": session_id,
@@ -469,18 +554,24 @@ async def start_training(request: TrainingRequest, background_tasks: BackgroundT
         }
     except Exception as e:
         logger.error(f"Training start failed: {e}")
+        metrics_collector.increment_error("start_training", type(e).__name__)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/training/{session_id}")
 async def get_training_status(session_id: str):
     """Get training status (simplified)"""
-    # In production, this would track actual training sessions
-    return {
-        "session_id": session_id,
-        "status": "completed",
-        "progress": 100,
-        "message": "Training completed successfully"
-    }
+    try:
+        # In production, this would track actual training sessions
+        metrics_collector.increment_request("get_training_status", "GET", "200")
+        return {
+            "session_id": session_id,
+            "status": "completed",
+            "progress": 100,
+            "message": "Training completed successfully"
+        }
+    except Exception as e:
+        metrics_collector.increment_error("get_training_status", type(e).__name__)
+        raise
 
 async def simulate_training(agent_id: str, knowledge_items: List[str], epochs: int):
     """Simulate knowledge training process"""

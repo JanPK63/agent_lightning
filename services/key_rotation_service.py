@@ -4,16 +4,20 @@ Handles the safe rotation of encryption keys for database records.
 """
 
 import logging
-import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
 
 from shared.database import get_db_session
 from shared.models import (
-    EncryptionKey, KeyUsageLog, KeyRotationHistory,
-    User, Agent, Conversation, Workflow, ServerTask, ServerResource, ServerRollout
+    EncryptionKey,
+    KeyUsageLog,
+    KeyRotationHistory,
+    User,
+    Agent,
+    Conversation,
+    Workflow,
 )
 from services.key_management_service import KeyManagementService
 
@@ -22,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 class RotationStatus(Enum):
     """Status of key rotation operation"""
+
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -31,6 +36,7 @@ class RotationStatus(Enum):
 
 class RotationPhase(Enum):
     """Phase of key rotation"""
+
     PRE_VALIDATION = "pre_validation"
     KEY_GENERATION = "key_generation"
     DATA_ROTATION = "data_rotation"
@@ -41,6 +47,7 @@ class RotationPhase(Enum):
 @dataclass
 class RotationResult:
     """Result of a key rotation operation"""
+
     success: bool
     status: RotationStatus
     records_processed: int
@@ -55,6 +62,7 @@ class RotationResult:
 @dataclass
 class RotationProgress:
     """Progress tracking for rotation operation"""
+
     phase: RotationPhase
     records_processed: int
     records_total: int
@@ -84,7 +92,7 @@ class KeyRotationService:
         data_key_id: Optional[str] = None,
         field_key_id: Optional[str] = None,
         environment: str = "staging",
-        dry_run: bool = True
+        dry_run: bool = True,
     ) -> RotationResult:
         """
         Execute key rotation for all encrypted data.
@@ -108,7 +116,9 @@ class KeyRotationService:
 
             # Phase 2: Generate/activate keys
             new_data_key, new_field_key = self._prepare_keys(data_key_id, field_key_id)
-            logger.info(f"Keys prepared: data={new_data_key.id}, field={new_field_key.id}")
+            logger.info(
+                f"Keys prepared: data={new_data_key.id}, field={new_field_key.id}"
+            )
 
             if dry_run:
                 return RotationResult(
@@ -118,15 +128,19 @@ class KeyRotationService:
                     records_failed=0,
                     duration_seconds=(datetime.utcnow() - start_time).total_seconds(),
                     new_data_key_id=new_data_key.id,
-                    new_field_key_id=new_field_key.id
+                    new_field_key_id=new_field_key.id,
                 )
 
             # Phase 3: Rotate data
-            rotation_result = self._rotate_data(new_data_key, new_field_key, environment)
-            logger.info(f"Data rotation completed: {rotation_result.records_processed} records")
+            rotation_result = self._rotate_data(
+                new_data_key, new_field_key, environment
+            )
+            logger.info(
+                f"Data rotation completed: {rotation_result.records_processed} records"
+            )
 
             # Phase 4: Post-validation
-            validation_result = self._validate_post_rotation()
+            self._validate_post_rotation()
             logger.info("Post-rotation validation completed")
 
             # Phase 5: Cleanup and finalization
@@ -142,7 +156,7 @@ class KeyRotationService:
                 duration_seconds=total_duration,
                 new_data_key_id=new_data_key.id,
                 new_field_key_id=new_field_key.id,
-                rollback_available=True
+                rollback_available=True,
             )
 
         except Exception as e:
@@ -163,7 +177,7 @@ class KeyRotationService:
                 records_processed=0,
                 records_failed=0,
                 duration_seconds=total_duration,
-                error_message=str(e)
+                error_message=str(e),
             )
 
     def _validate_pre_rotation(self) -> None:
@@ -173,15 +187,20 @@ class KeyRotationService:
         try:
             # Check database connectivity
             from sqlalchemy import text
+
             session.execute(text("SELECT 1"))
 
             # Check for existing encryption keys
-            key_count = session.query(EncryptionKey).filter(
-                EncryptionKey.status == 'active'
-            ).count()
+            key_count = (
+                session.query(EncryptionKey)
+                .filter(EncryptionKey.status == "active")
+                .count()
+            )
 
             if key_count == 0:
-                logger.warning("No active encryption keys found - this may be the first rotation")
+                logger.warning(
+                    "No active encryption keys found - this may be the first rotation"
+                )
 
             # Check audit logging table exists and is accessible
             audit_count = session.query(KeyUsageLog).count()
@@ -193,9 +212,7 @@ class KeyRotationService:
             session.close()
 
     def _prepare_keys(
-        self,
-        data_key_id: Optional[str],
-        field_key_id: Optional[str]
+        self, data_key_id: Optional[str], field_key_id: Optional[str]
     ) -> Tuple[EncryptionKey, EncryptionKey]:
         """Generate or retrieve keys for rotation"""
 
@@ -203,22 +220,22 @@ class KeyRotationService:
         # through the KeyManagementService
         data_key = EncryptionKey(
             key_id=data_key_id or "rotation_data_key",
-            key_type='data',
-            name='Rotation Data Key',
-            encrypted_key=b'placeholder',  # Would be real encrypted key
-            key_hash='placeholder',
-            algorithm='aes-256-gcm',
-            status='active'
+            key_type="data",
+            name="Rotation Data Key",
+            encrypted_key=b"placeholder",  # Would be real encrypted key
+            key_hash="placeholder",
+            algorithm="aes-256-gcm",
+            status="active",
         )
 
         field_key = EncryptionKey(
             key_id=field_key_id or "rotation_field_key",
-            key_type='field',
-            name='Rotation Field Key',
-            encrypted_key=b'placeholder',  # Would be real encrypted key
-            key_hash='placeholder',
-            algorithm='aes-256-gcm',
-            status='active'
+            key_type="field",
+            name="Rotation Field Key",
+            encrypted_key=b"placeholder",  # Would be real encrypted key
+            key_hash="placeholder",
+            algorithm="aes-256-gcm",
+            status="active",
         )
 
         logger.info(f"Prepared keys: data={data_key.key_id}, field={field_key.key_id}")
@@ -228,7 +245,7 @@ class KeyRotationService:
         self,
         new_data_key: EncryptionKey,
         new_field_key: EncryptionKey,
-        environment: str
+        environment: str,
     ) -> RotationResult:
         """Rotate encrypted data to new keys"""
 
@@ -240,10 +257,10 @@ class KeyRotationService:
         try:
             # Define models with encrypted fields
             encrypted_models = [
-                (User, ['email_encrypted', 'password_hash_encrypted']),
-                (Agent, ['config_encrypted', 'capabilities_encrypted']),
-                (Conversation, ['user_query_encrypted', 'agent_response_encrypted']),
-                (Workflow, ['steps_encrypted', 'context_encrypted']),
+                (User, ["email_encrypted", "password_hash_encrypted"]),
+                (Agent, ["config_encrypted", "capabilities_encrypted"]),
+                (Conversation, ["user_query_encrypted", "agent_response_encrypted"]),
+                (Workflow, ["steps_encrypted", "context_encrypted"]),
             ]
 
             for model_class, encrypted_fields in encrypted_models:
@@ -255,10 +272,17 @@ class KeyRotationService:
                     # Check duration limit
                     elapsed = (datetime.utcnow() - start_time).total_seconds()
                     if elapsed > self.max_duration_seconds:
-                        raise TimeoutError(f"Rotation exceeded {self.max_duration_seconds}s limit")
+                        raise TimeoutError(
+                            f"Rotation exceeded {self.max_duration_seconds}s limit"
+                        )
 
                     # Get batch of records
-                    records = session.query(model_class).offset(offset).limit(self.batch_size).all()
+                    records = (
+                        session.query(model_class)
+                        .offset(offset)
+                        .limit(self.batch_size)
+                        .all()
+                    )
                     if not records:
                         break
 
@@ -268,7 +292,7 @@ class KeyRotationService:
                             for field_name in encrypted_fields:
                                 if hasattr(record, field_name):
                                     # Get current encrypted value
-                                    current_value = getattr(record, field_name)
+                                    # current_value = getattr(record, field_name)
 
                                     # Decrypt with old key and re-encrypt with new key
                                     # (This would use the encryption middleware logic)
@@ -295,8 +319,10 @@ class KeyRotationService:
                 new_key_hash="placeholder",  # Would compute actual hash
                 rotation_reason="scheduled_rotation",
                 rotated_by="system",
-                rotation_time_ms=int((datetime.utcnow() - start_time).total_seconds() * 1000),
-                success=True
+                rotation_time_ms=int(
+                    (datetime.utcnow() - start_time).total_seconds() * 1000
+                ),
+                success=True,
             )
             session.add(rotation_history)
             session.commit()
@@ -306,7 +332,7 @@ class KeyRotationService:
                 status=RotationStatus.COMPLETED,
                 records_processed=records_processed,
                 records_failed=records_failed,
-                duration_seconds=(datetime.utcnow() - start_time).total_seconds()
+                duration_seconds=(datetime.utcnow() - start_time).total_seconds(),
             )
 
         finally:
@@ -318,16 +344,24 @@ class KeyRotationService:
 
         try:
             # Check decrypt error rate
-            recent_errors = session.query(KeyUsageLog).filter(
-                KeyUsageLog.operation == 'decrypt',
-                KeyUsageLog.success == False,
-                KeyUsageLog.timestamp >= datetime.utcnow() - timedelta(minutes=5)
-            ).count()
+            recent_errors = (
+                session.query(KeyUsageLog)
+                .filter(
+                    KeyUsageLog.operation == "decrypt",
+                    KeyUsageLog.success.is_(False),
+                    KeyUsageLog.timestamp >= datetime.utcnow() - timedelta(minutes=5),
+                )
+                .count()
+            )
 
-            total_decrypts = session.query(KeyUsageLog).filter(
-                KeyUsageLog.operation == 'decrypt',
-                KeyUsageLog.timestamp >= datetime.utcnow() - timedelta(minutes=5)
-            ).count()
+            total_decrypts = (
+                session.query(KeyUsageLog)
+                .filter(
+                    KeyUsageLog.operation == "decrypt",
+                    KeyUsageLog.timestamp >= datetime.utcnow() - timedelta(minutes=5),
+                )
+                .count()
+            )
 
             if total_decrypts > 0:
                 error_rate = recent_errors / total_decrypts
@@ -351,7 +385,7 @@ class KeyRotationService:
         self,
         new_data_key: EncryptionKey,
         new_field_key: EncryptionKey,
-        rotation_result: RotationResult
+        rotation_result: RotationResult,
     ) -> None:
         """Finalize rotation and update key statuses"""
         # Mark old keys as rotated

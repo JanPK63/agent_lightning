@@ -17,6 +17,8 @@ from collections import deque
 import pickle
 import os
 
+from shared.events import EventBus, EventChannel
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -103,8 +105,8 @@ class SagaTransaction:
 
 class SagaCoordinator:
     """Coordinates distributed transactions using Saga pattern"""
-    
-    def __init__(self):
+
+    def __init__(self, service_name: str = "distributed-transaction"):
         self.transactions: Dict[str, SagaTransaction] = {}
         self.transaction_log: deque = deque(maxlen=1000)
         self.compensate_handlers: Dict[str, Callable] = {}
@@ -114,9 +116,18 @@ class SagaCoordinator:
             "workflow": "http://localhost:8003",
             "integration": "http://localhost:8004",
             "ai": "http://localhost:8005",
-            "gateway": "http://localhost:8000"
+            "gateway": "http://localhost:8000",
+            "visual-workflow-engine": "http://localhost:8007",
+            "visual-component-registry": "http://localhost:8008",
+            "visual-code-generator": "http://localhost:8009",
+            "visual-debugger": "http://localhost:8010",
+            "visual-deployment": "http://localhost:8011",
+            "visual-ai-assistant": "http://localhost:8012"
         }
-        
+
+        # Event bus integration
+        self.event_bus = EventBus(service_name)
+
         # Transaction persistence
         self.persist_path = "transactions.db"
         self._load_transactions()
@@ -170,7 +181,15 @@ class SagaCoordinator:
         
         self.transactions[transaction_id] = transaction
         self._save_transactions()
-        
+
+        # Emit transaction created event
+        self.event_bus.emit(EventChannel.TASK_CREATED, {
+            "transaction_id": transaction_id,
+            "name": name,
+            "steps_count": len(saga_steps),
+            "service": "distributed-transaction"
+        })
+
         logger.info(f"Created transaction: {transaction_id} with {len(saga_steps)} steps")
         return transaction
     
@@ -182,7 +201,15 @@ class SagaCoordinator:
         
         transaction.status = TransactionStatus.RUNNING
         transaction.started_at = datetime.now()
-        
+
+        # Emit transaction started event
+        self.event_bus.emit(EventChannel.TASK_STARTED, {
+            "transaction_id": transaction_id,
+            "name": transaction.name,
+            "started_at": transaction.started_at.isoformat(),
+            "service": "distributed-transaction"
+        })
+
         try:
             # Execute steps
             while True:
@@ -213,6 +240,17 @@ class SagaCoordinator:
                         
                         if transaction.compensate_on_failure:
                             await self._compensate_transaction(transaction)
+
+                            # Emit transaction compensated event
+                            self.event_bus.emit(EventChannel.TASK_FAILED, {
+                                "transaction_id": transaction_id,
+                                "name": transaction.name,
+                                "status": "compensated",
+                                "error": str(result),
+                                "compensated_at": transaction.completed_at.isoformat() if transaction.completed_at else None,
+                                "service": "distributed-transaction"
+                            })
+
                             return {
                                 "status": "compensated",
                                 "transaction_id": transaction_id,
@@ -221,7 +259,19 @@ class SagaCoordinator:
                         else:
                             transaction.status = TransactionStatus.FAILED
                             transaction.error = str(result)
+                            transaction.completed_at = datetime.now()
                             self._save_transactions()
+
+                            # Emit transaction failed event
+                            self.event_bus.emit(EventChannel.TASK_FAILED, {
+                                "transaction_id": transaction_id,
+                                "name": transaction.name,
+                                "status": "failed",
+                                "error": str(result),
+                                "failed_at": transaction.completed_at.isoformat(),
+                                "service": "distributed-transaction"
+                            })
+
                             return {
                                 "status": "failed",
                                 "transaction_id": transaction_id,
@@ -232,7 +282,17 @@ class SagaCoordinator:
             transaction.status = TransactionStatus.COMMITTED
             transaction.completed_at = datetime.now()
             self._save_transactions()
-            
+
+            # Emit transaction completed event
+            self.event_bus.emit(EventChannel.TASK_COMPLETED, {
+                "transaction_id": transaction_id,
+                "name": transaction.name,
+                "completed_at": transaction.completed_at.isoformat(),
+                "duration": (transaction.completed_at - transaction.started_at).total_seconds(),
+                "steps_executed": len(transaction.steps),
+                "service": "distributed-transaction"
+            })
+
             # Log transaction
             self.transaction_log.append({
                 "transaction_id": transaction_id,
@@ -240,7 +300,7 @@ class SagaCoordinator:
                 "duration": (transaction.completed_at - transaction.started_at).total_seconds(),
                 "steps_executed": len(transaction.steps)
             })
-            
+
             return {
                 "status": "committed",
                 "transaction_id": transaction_id,
@@ -410,10 +470,10 @@ class SagaCoordinator:
         return list(self.transaction_log)
 
 
-# Example Saga Definitions
+# Agent Lightning Saga Definitions
 class SagaDefinitions:
-    """Pre-defined saga workflows"""
-    
+    """Pre-defined saga workflows for Agent Lightning"""
+
     @staticmethod
     def create_agent_with_workflow():
         """Saga for creating an agent with associated workflow"""
@@ -462,6 +522,167 @@ class SagaDefinitions:
                     "environment": "production"
                 },
                 "compensate_action": "api/v1/agents/undeploy",
+                "compensate_params": {"agent_id": "{steps[0].result.id}"},
+                "depends_on": ["step-3"]
+            }
+        ]
+
+    @staticmethod
+    def create_visual_workflow():
+        """Saga for creating a visual workflow with components"""
+        return [
+            {
+                "name": "Create Project",
+                "service": "visual-workflow-engine",
+                "action": "api/v1/projects",
+                "params": {
+                    "name": "Visual Workflow Project",
+                    "description": "Generated visual workflow"
+                },
+                "compensate_action": "api/v1/projects/delete",
+                "compensate_params": {"project_id": "{result.id}"}
+            },
+            {
+                "name": "Add Components",
+                "service": "visual-component-registry",
+                "action": "api/v1/components/batch",
+                "params": {
+                    "project_id": "{steps[0].result.id}",
+                    "components": [
+                        {"type": "input", "name": "User Input"},
+                        {"type": "agent", "name": "AI Agent"},
+                        {"type": "output", "name": "Response"}
+                    ]
+                },
+                "compensate_action": "api/v1/components/remove",
+                "compensate_params": {"project_id": "{steps[0].result.id}"},
+                "depends_on": ["step-1"]
+            },
+            {
+                "name": "Generate Code",
+                "service": "visual-code-generator",
+                "action": "api/v1/generate",
+                "params": {
+                    "project_id": "{steps[0].result.id}",
+                    "template": "agent_workflow"
+                },
+                "compensate_action": "api/v1/generated/delete",
+                "compensate_params": {"project_id": "{steps[0].result.id}"},
+                "depends_on": ["step-2"]
+            },
+            {
+                "name": "Deploy Workflow",
+                "service": "visual-deployment",
+                "action": "api/v1/deploy",
+                "params": {
+                    "project_id": "{steps[0].result.id}",
+                    "environment": "staging"
+                },
+                "compensate_action": "api/v1/deploy/rollback",
+                "compensate_params": {"project_id": "{steps[0].result.id}"},
+                "depends_on": ["step-3"]
+            }
+        ]
+
+    @staticmethod
+    def process_training_dataset():
+        """Saga for processing and training on a dataset"""
+        return [
+            {
+                "name": "Validate Dataset",
+                "service": "data",
+                "action": "api/v1/datasets/validate",
+                "params": {
+                    "dataset_path": "/data/training.jsonl",
+                    "format": "jsonl"
+                }
+            },
+            {
+                "name": "Create Training Job",
+                "service": "training",
+                "action": "api/v1/training/jobs",
+                "params": {
+                    "dataset_id": "{steps[0].result.dataset_id}",
+                    "model_type": "agent",
+                    "hyperparameters": {
+                        "learning_rate": 0.001,
+                        "batch_size": 32
+                    }
+                },
+                "compensate_action": "api/v1/training/jobs/cancel",
+                "compensate_params": {"job_id": "{result.job_id}"},
+                "depends_on": ["step-1"]
+            },
+            {
+                "name": "Start Training",
+                "service": "training",
+                "action": "api/v1/training/start",
+                "params": {
+                    "job_id": "{steps[1].result.job_id}"
+                },
+                "depends_on": ["step-2"]
+            },
+            {
+                "name": "Monitor Training",
+                "service": "monitoring",
+                "action": "api/v1/monitoring/watch",
+                "params": {
+                    "job_id": "{steps[1].result.job_id}",
+                    "metrics": ["loss", "accuracy", "reward"]
+                },
+                "depends_on": ["step-3"],
+                "retry_count": 1
+            }
+        ]
+
+    @staticmethod
+    def deploy_agent_system():
+        """Saga for deploying a complete agent system"""
+        return [
+            {
+                "name": "Create Agent",
+                "service": "agent",
+                "action": "api/v1/agents",
+                "params": {
+                    "name": "Production Agent",
+                    "type": "multi_modal"
+                },
+                "compensate_action": "api/v1/agents/delete",
+                "compensate_params": {"agent_id": "{result.id}"}
+            },
+            {
+                "name": "Setup Memory System",
+                "service": "memory",
+                "action": "api/v1/memory/initialize",
+                "params": {
+                    "agent_id": "{steps[0].result.id}",
+                    "memory_type": "episodic_semantic"
+                },
+                "compensate_action": "api/v1/memory/cleanup",
+                "compensate_params": {"agent_id": "{steps[0].result.id}"},
+                "depends_on": ["step-1"]
+            },
+            {
+                "name": "Configure Monitoring",
+                "service": "monitoring",
+                "action": "api/v1/monitoring/setup",
+                "params": {
+                    "agent_id": "{steps[0].result.id}",
+                    "alerts": ["performance", "errors", "usage"]
+                },
+                "compensate_action": "api/v1/monitoring/remove",
+                "compensate_params": {"agent_id": "{steps[0].result.id}"},
+                "depends_on": ["step-2"]
+            },
+            {
+                "name": "Deploy to Production",
+                "service": "deployment",
+                "action": "api/v1/deploy/production",
+                "params": {
+                    "agent_id": "{steps[0].result.id}",
+                    "rollback_enabled": True
+                },
+                "compensate_action": "api/v1/deploy/rollback",
                 "compensate_params": {"agent_id": "{steps[0].result.id}"},
                 "depends_on": ["step-3"]
             }
@@ -540,7 +761,7 @@ class TransactionService:
     def __init__(self):
         self.app = FastAPI(title="Distributed Transaction Service", version="1.0.0")
         self.coordinator = SagaCoordinator()
-        
+
         # Setup middleware
         self.app.add_middleware(
             CORSMiddleware,
@@ -549,7 +770,10 @@ class TransactionService:
             allow_methods=["*"],
             allow_headers=["*"],
         )
-        
+
+        # Start event bus
+        self.coordinator.event_bus.start()
+
         self._setup_routes()
     
     def _setup_routes(self):

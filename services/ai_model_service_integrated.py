@@ -33,6 +33,9 @@ from shared.data_access import DataAccessLayer
 from shared.events import EventChannel
 from shared.cache import get_cache
 
+# Import Prometheus metrics
+from monitoring.metrics import get_metrics_collector
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -116,13 +119,13 @@ class ConversationMessage(BaseModel):
 
 class ModelRegistry:
     """Manages model configurations and selection"""
-    
+
     def __init__(self, dal: DataAccessLayer, cache):
         self.dal = dal
         self.cache = cache
         self.models = {}
         self.load_models()
-    
+
     def load_models(self):
         """Load model configurations from database"""
         # For now, use default models (in production, load from DB)
@@ -156,133 +159,133 @@ class ModelRegistry:
             }
         }
         logger.info(f"Loaded {len(self.models)} AI models")
-    
+
     def register_model(self, config: dict) -> dict:
         """Register new AI model configuration"""
         model_id = config.get('model_id', str(uuid.uuid4()))
-        
+
         # Store in memory (in production, save to DB)
         self.models[model_id] = config
-        
+
         # Cache model config
         cache_key = f"model:{model_id}"
         self.cache.set(cache_key, config, ttl=None)  # No expiry
-        
+
         # Emit event
         self.dal.event_bus.emit(EventChannel.SYSTEM_ALERT, {
             'type': 'model_registered',
             'model_id': model_id,
             'name': config['name']
         })
-        
+
         logger.info(f"Registered model {model_id}: {config['name']}")
         return config
-    
+
     def get_model(self, model_id: str) -> Optional[dict]:
         """Get specific model configuration"""
         if model_id in self.models:
             return self.models[model_id]
-        
+
         # Check cache
         cache_key = f"model:{model_id}"
         return self.cache.get(cache_key)
-    
+
     def get_best_model(self, model_type: ModelType, capabilities: List[str] = None) -> dict:
         """Select best model for task based on type and capabilities"""
         suitable_models = []
-        
+
         for model_id, model in self.models.items():
             if model['model_type'] == model_type:
                 if not capabilities or any(cap in model.get('capabilities', []) for cap in capabilities):
                     suitable_models.append(model)
-        
+
         if not suitable_models:
             # Return default model
             return list(self.models.values())[0] if self.models else None
-        
+
         # Select based on performance (simplified - in production use metrics)
         return suitable_models[0]
 
 
 class ContextManager:
     """Manages conversation context and history"""
-    
+
     def __init__(self, dal: DataAccessLayer, cache):
         self.dal = dal
         self.cache = cache
         self.active_contexts = {}
-    
+
     def get_context(self, session_id: str, limit: int = 10) -> List[dict]:
         """Get conversation context for session"""
         if not session_id:
             return []
-        
+
         # Check cache first
         cache_key = f"context:{session_id}"
         context = self.cache.get(cache_key)
-        
+
         if not context:
             # In production, load from database
             # For now, return empty context
             context = self.active_contexts.get(session_id, [])
-            
+
             # Cache for 5 minutes
             if context:
                 self.cache.set(cache_key, context, ttl=300)
-        
+
         # Limit context size
         return context[-limit:] if len(context) > limit else context
-    
+
     def add_message(self, session_id: str, message: dict):
         """Add message to conversation history"""
         if not session_id:
             return
-        
+
         # Update in-memory context
         if session_id not in self.active_contexts:
             self.active_contexts[session_id] = []
-        
+
         self.active_contexts[session_id].append({
             **message,
             'timestamp': datetime.utcnow().isoformat()
         })
-        
+
         # Limit history size
         if len(self.active_contexts[session_id]) > CONVERSATION_HISTORY_LIMIT:
             self.active_contexts[session_id] = self.active_contexts[session_id][-CONVERSATION_HISTORY_LIMIT:]
-        
+
         # Invalidate cache
         cache_key = f"context:{session_id}"
         self.cache.delete(cache_key)
-        
+
         # In production, save to database
         # self.dal.add_message(session_id, message)
-        
+
         # Emit event
         self.dal.event_bus.emit(EventChannel.SYSTEM_ALERT, {
             'type': 'message_added',
             'session_id': session_id,
             'role': message['role']
         })
-    
+
     def clear_context(self, session_id: str):
         """Clear conversation context"""
         if session_id in self.active_contexts:
             del self.active_contexts[session_id]
-        
+
         cache_key = f"context:{session_id}"
         self.cache.delete(cache_key)
 
 
 class InferenceEngine:
     """Handles model inference with caching and optimization"""
-    
+
     def __init__(self, dal: DataAccessLayer, cache, model_registry: ModelRegistry):
         self.dal = dal
         self.cache = cache
         self.model_registry = model_registry
         self.providers = self._initialize_providers()
-    
+
     def _initialize_providers(self) -> Dict[str, Any]:
         """Initialize model provider interfaces"""
         # In production, initialize actual provider clients
@@ -291,14 +294,14 @@ class InferenceEngine:
             ModelProvider.ANTHROPIC: self._mock_anthropic_provider,
             ModelProvider.LOCAL: self._mock_local_provider
         }
-    
+
     async def inference(self, request: dict, context: List[dict] = None) -> dict:
         """Perform model inference with caching"""
         # Generate cache key
         prompt_hash = hashlib.sha256(
             f"{request['prompt']}:{request.get('model_id', '')}".encode()
         ).hexdigest()
-        
+
         # Check cache if enabled
         if request.get('use_cache', True):
             cache_key = f"inference:{prompt_hash}"
@@ -307,7 +310,7 @@ class InferenceEngine:
                 logger.info(f"Cache hit for inference: {prompt_hash[:8]}")
                 self.dal.record_metric('inference_cache_hit', 1)
                 return cached
-        
+
         # Get model
         model_id = request.get('model_id')
         if not model_id:
@@ -317,32 +320,32 @@ class InferenceEngine:
             model_id = model['id'] if model else 'gpt-4'
         else:
             model = self.model_registry.get_model(model_id)
-        
+
         if not model:
             raise ValueError(f"Model {model_id} not found")
-        
+
         # Build messages with context
         messages = []
         if context:
             messages.extend(context)
         messages.append({"role": "user", "content": request['prompt']})
-        
+
         # Perform inference
         start_time = time.time()
         provider = self.providers.get(model['provider'])
-        
+
         if not provider:
             raise ValueError(f"Provider {model['provider']} not supported")
-        
+
         response = await provider(
             model=model,
             messages=messages,
             temperature=request.get('temperature', 0.7),
             max_tokens=request.get('max_tokens', 2048)
         )
-        
+
         latency_ms = int((time.time() - start_time) * 1000)
-        
+
         # Prepare result
         result = {
             'model_id': model_id,
@@ -351,12 +354,12 @@ class InferenceEngine:
             'latency_ms': latency_ms,
             'cached': False
         }
-        
+
         # Cache result
         if request.get('use_cache', True):
             cache_key = f"inference:{prompt_hash}"
             self.cache.set(cache_key, result, ttl=CACHE_TTL)
-        
+
         # Record metrics
         self.dal.record_metric('inference_latency', latency_ms, {
             'model': model_id,
@@ -365,27 +368,27 @@ class InferenceEngine:
         self.dal.record_metric('tokens_used', result['tokens_used'], {
             'model': model_id
         })
-        
+
         return result
-    
+
     async def stream_inference(self, request: dict, context: List[dict] = None):
         """Stream model responses for real-time interaction"""
         model_id = request.get('model_id', 'gpt-4')
         model = self.model_registry.get_model(model_id)
-        
+
         if not model:
             raise ValueError(f"Model {model_id} not found")
-        
+
         # Build messages with context
         messages = []
         if context:
             messages.extend(context)
         messages.append({"role": "user", "content": request['prompt']})
-        
+
         # Simulate streaming response
         response_text = f"This is a streaming response to: {request['prompt'][:50]}..."
         words = response_text.split()
-        
+
         for word in words:
             chunk = {
                 'type': 'stream_chunk',
@@ -394,38 +397,38 @@ class InferenceEngine:
             }
             yield json.dumps(chunk) + "\n"
             await asyncio.sleep(0.1)  # Simulate streaming delay
-        
+
         # Final chunk
         yield json.dumps({
             'type': 'stream_end',
             'model_id': model_id,
             'tokens_used': len(words) * 2
         }) + "\n"
-    
+
     async def _mock_openai_provider(self, model: dict, messages: List[dict], **kwargs) -> dict:
         """Mock OpenAI provider for testing"""
         await asyncio.sleep(0.3)  # Simulate API latency
-        
+
         last_message = messages[-1]['content'] if messages else "Hello"
         return {
             'content': f"[OpenAI {model['name']}] Response to: {last_message[:100]}...",
             'tokens': len(last_message.split()) * 3
         }
-    
+
     async def _mock_anthropic_provider(self, model: dict, messages: List[dict], **kwargs) -> dict:
         """Mock Anthropic provider for testing"""
         await asyncio.sleep(0.2)  # Simulate API latency
-        
+
         last_message = messages[-1]['content'] if messages else "Hello"
         return {
             'content': f"[Anthropic {model['name']}] Response to: {last_message[:100]}...",
             'tokens': len(last_message.split()) * 3
         }
-    
+
     async def _mock_local_provider(self, model: dict, messages: List[dict], **kwargs) -> dict:
         """Mock local model provider for testing"""
         await asyncio.sleep(0.1)  # Simulate local inference
-        
+
         last_message = messages[-1]['content'] if messages else "Hello"
         return {
             'content': f"[Local {model['name']}] Response to: {last_message[:100]}...",
@@ -435,24 +438,24 @@ class InferenceEngine:
 
 class TokenManager:
     """Manages token counting and context truncation"""
-    
+
     def count_tokens(self, text: str, model: str = "gpt-4") -> int:
         """Count tokens for text using model tokenizer"""
         # Simplified token counting (in production use tiktoken or model-specific tokenizer)
         return len(text.split()) * 1.3  # Rough approximation
-    
+
     def truncate_to_limit(self, messages: List[dict], limit: int = MAX_CONTEXT_TOKENS) -> List[dict]:
         """Truncate conversation to fit context window"""
         total_tokens = 0
         truncated = []
-        
+
         # Keep system message if present
         if messages and messages[0].get('role') == 'system':
             system_message = messages[0]
             total_tokens = self.count_tokens(system_message['content'])
             truncated.append(system_message)
             messages = messages[1:]
-        
+
         # Add messages from newest to oldest
         for message in reversed(messages):
             tokens = self.count_tokens(message['content'])
@@ -460,16 +463,16 @@ class TokenManager:
                 break
             truncated.insert(len(truncated) if truncated and truncated[0].get('role') == 'system' else 0, message)
             total_tokens += tokens
-        
+
         return truncated
 
 
 class AIModelService:
     """Main AI Model Service - Integrated with shared database"""
-    
+
     def __init__(self):
         self.app = FastAPI(title="AI Model Service (Integrated)", version="2.0.0")
-        
+
         # Initialize components
         self.dal = DataAccessLayer("ai_model")
         self.cache = get_cache()
@@ -477,7 +480,10 @@ class AIModelService:
         self.context_manager = ContextManager(self.dal, self.cache)
         self.inference_engine = InferenceEngine(self.dal, self.cache, self.model_registry)
         self.token_manager = TokenManager()
-        
+
+        # Initialize Prometheus metrics collector
+        self.metrics_collector = get_metrics_collector("ai_model")
+
         # Metrics
         self.metrics = {
             "total_inferences": 0,
@@ -485,13 +491,13 @@ class AIModelService:
             "total_tokens": 0,
             "average_latency": 0
         }
-        
+
         logger.info("✅ Connected to shared database and cache")
-        
+
         self._setup_middleware()
         self._setup_routes()
         self._setup_event_handlers()
-    
+
     def _setup_middleware(self):
         """Configure middleware"""
         self.app.add_middleware(
@@ -501,25 +507,30 @@ class AIModelService:
             allow_methods=["*"],
             allow_headers=["*"],
         )
-    
+
     def _setup_routes(self):
         """Setup API routes"""
-        
+
         @self.app.get("/health")
-        async def health():
+        async def health_check():
             """Health check endpoint"""
-            health_status = self.dal.health_check()
-            return {
-                "service": "ai_model",
-                "status": "healthy" if health_status['database'] and health_status['cache'] else "degraded",
-                "database": health_status['database'],
-                "cache": health_status['cache'],
-                "models_loaded": len(self.model_registry.models),
-                "active_sessions": len(self.context_manager.active_contexts),
-                "metrics": self.metrics,
-                "timestamp": datetime.utcnow().isoformat()
-            }
-        
+            try:
+                self.metrics_collector.increment_request("health", "GET", "200")
+                health_status = self.dal.health_check()
+                return {
+                    "service": "ai_model",
+                    "status": "healthy" if health_status['database'] and health_status['cache'] else "degraded",
+                    "database": health_status['database'],
+                    "cache": health_status['cache'],
+                    "models_loaded": len(self.model_registry.models),
+                    "active_sessions": len(self.context_manager.active_contexts),
+                    "metrics": self.metrics,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            except Exception as e:
+                self.metrics_collector.increment_error("health", type(e).__name__)
+                raise
+
         @self.app.post("/models")
         async def create_model(model: ModelCreate):
             """Register new AI model"""
@@ -535,30 +546,46 @@ class AIModelService:
                     "max_tokens": model.max_tokens,
                     "temperature": model.temperature
                 }
-                
+
                 registered = self.model_registry.register_model(model_config)
+                self.metrics_collector.increment_request("create_model", "POST", "200")
                 return registered
-                
+
             except Exception as e:
                 logger.error(f"Failed to register model: {e}")
+                self.metrics_collector.increment_error("create_model", type(e).__name__)
                 raise HTTPException(status_code=500, detail=str(e))
-        
+
         @self.app.get("/models")
         async def list_models():
             """List all available models"""
-            return {
-                "models": list(self.model_registry.models.values()),
-                "count": len(self.model_registry.models)
-            }
-        
+            try:
+                self.metrics_collector.increment_request("list_models", "GET", "200")
+                return {
+                    "models": list(self.model_registry.models.values()),
+                    "count": len(self.model_registry.models)
+                }
+            except Exception as e:
+                self.metrics_collector.increment_error("list_models", type(e).__name__)
+                raise
+
         @self.app.get("/models/{model_id}")
         async def get_model(model_id: str):
             """Get specific model details"""
-            model = self.model_registry.get_model(model_id)
-            if not model:
-                raise HTTPException(status_code=404, detail=f"Model {model_id} not found")
-            return model
-        
+            try:
+                model = self.model_registry.get_model(model_id)
+                if not model:
+                    self.metrics_collector.increment_request("get_model", "GET", "404")
+                    raise HTTPException(status_code=404, detail=f"Model {model_id} not found")
+
+                self.metrics_collector.increment_request("get_model", "GET", "200")
+                return model
+            except HTTPException:
+                raise
+            except Exception as e:
+                self.metrics_collector.increment_error("get_model", type(e).__name__)
+                raise
+
         @self.app.post("/inference")
         async def inference(request: InferenceRequest):
             """Perform model inference"""
@@ -567,11 +594,11 @@ class AIModelService:
                 context = []
                 if request.session_id and request.include_context:
                     context = self.context_manager.get_context(request.session_id)
-                    
+
                     # Truncate context to fit model window
                     if context:
                         context = self.token_manager.truncate_to_limit(context)
-                
+
                 # Prepare inference request
                 inference_request = {
                     "prompt": request.prompt,
@@ -581,30 +608,31 @@ class AIModelService:
                     "max_tokens": request.max_tokens,
                     "use_cache": request.use_cache
                 }
-                
+
                 # Handle streaming
                 if request.stream:
+                    self.metrics_collector.increment_request("inference", "POST", "200")
                     return StreamingResponse(
                         self.inference_engine.stream_inference(inference_request, context),
                         media_type="application/x-ndjson"
                     )
-                
+
                 # Regular inference
                 result = await self.inference_engine.inference(inference_request, context)
-                
+
                 # Update metrics
                 self.metrics["total_inferences"] += 1
                 if result.get('cached'):
                     self.metrics["cache_hits"] += 1
                 self.metrics["total_tokens"] += result.get('tokens_used', 0)
-                
+
                 # Update average latency
                 current_avg = self.metrics["average_latency"]
                 count = self.metrics["total_inferences"]
                 self.metrics["average_latency"] = (
                     (current_avg * (count - 1) + result['latency_ms']) / count
                 )
-                
+
                 # Add to conversation history
                 if request.session_id:
                     self.context_manager.add_message(request.session_id, {
@@ -615,88 +643,110 @@ class AIModelService:
                         "role": "assistant",
                         "content": result['response']
                     })
-                
+
+                self.metrics_collector.increment_request("inference", "POST", "200")
                 return result
-                
+
             except Exception as e:
                 logger.error(f"Inference failed: {e}")
+                self.metrics_collector.increment_error("inference", type(e).__name__)
                 raise HTTPException(status_code=500, detail=str(e))
-        
+
         @self.app.get("/sessions/{session_id}/history")
         async def get_session_history(session_id: str, limit: int = 50):
             """Get conversation history for session"""
-            context = self.context_manager.get_context(session_id, limit=limit)
-            return {
-                "session_id": session_id,
-                "messages": context,
-                "count": len(context)
-            }
-        
+            try:
+                context = self.context_manager.get_context(session_id, limit=limit)
+                self.metrics_collector.increment_request("session_history", "GET", "200")
+                return {
+                    "session_id": session_id,
+                    "messages": context,
+                    "count": len(context)
+                }
+            except Exception as e:
+                self.metrics_collector.increment_error("session_history", type(e).__name__)
+                raise
+
         @self.app.delete("/sessions/{session_id}/history")
         async def clear_session_history(session_id: str):
             """Clear conversation history for session"""
-            self.context_manager.clear_context(session_id)
-            return {"message": f"History cleared for session {session_id}"}
-        
+            try:
+                self.context_manager.clear_context(session_id)
+                self.metrics_collector.increment_request("clear_history", "DELETE", "200")
+                return {"message": f"History cleared for session {session_id}"}
+            except Exception as e:
+                self.metrics_collector.increment_error("clear_history", type(e).__name__)
+                raise
+
         @self.app.post("/sessions/{session_id}/messages")
         async def add_message(session_id: str, message: ConversationMessage):
             """Add message to conversation history"""
-            self.context_manager.add_message(session_id, {
-                "role": message.role,
-                "content": message.content,
-                "metadata": message.metadata
-            })
-            return {"message": "Message added to history"}
-        
+            try:
+                self.context_manager.add_message(session_id, {
+                    "role": message.role,
+                    "content": message.content,
+                    "metadata": message.metadata
+                })
+                self.metrics_collector.increment_request("add_message", "POST", "200")
+                return {"message": "Message added to history"}
+            except Exception as e:
+                self.metrics_collector.increment_error("add_message", type(e).__name__)
+                raise
+
         @self.app.get("/metrics")
         async def get_metrics():
             """Get service metrics"""
-            # Get additional metrics from DAL
-            db_metrics = {}
             try:
-                # In production, query actual metrics from database
-                pass
-            except:
-                pass
-            
-            return {
-                "service_metrics": self.metrics,
-                "cache_stats": {
-                    "size": len(self.cache.redis_client.keys("inference:*")),
-                    "hit_rate": (
-                        self.metrics["cache_hits"] / self.metrics["total_inferences"]
-                        if self.metrics["total_inferences"] > 0 else 0
-                    )
-                },
-                "database_metrics": db_metrics,
-                "timestamp": datetime.utcnow().isoformat()
-            }
-    
+                # Get additional metrics from DAL
+                db_metrics = {}
+                try:
+                    # In production, query actual metrics from database
+                    pass
+                except:
+                    pass
+
+                self.metrics_collector.increment_request("get_metrics", "GET", "200")
+                return {
+                    "service_metrics": self.metrics,
+                    "cache_stats": {
+                        "size": len(self.cache.redis_client.keys("inference:*")),
+                        "hit_rate": (
+                            self.metrics["cache_hits"] / self.metrics["total_inferences"]
+                            if self.metrics["total_inferences"] > 0 else 0
+                        )
+                    },
+                    "database_metrics": db_metrics,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            except Exception as e:
+                self.metrics_collector.increment_error("get_metrics", type(e).__name__)
+                raise
+
     def _setup_event_handlers(self):
         """Setup event handlers for cross-service communication"""
-        
+
         def on_agent_request(event):
             """Handle agent inference requests"""
             agent_id = event.data.get('agent_id')
             request = event.data.get('request')
             logger.info(f"Received inference request from agent {agent_id}")
-        
+
         def on_workflow_task(event):
             """Handle workflow task requiring AI inference"""
             task_id = event.data.get('task_id')
             prompt = event.data.get('prompt')
             logger.info(f"Processing workflow task {task_id}")
-        
+
         # Register handlers
         self.dal.event_bus.on(EventChannel.TASK_CREATED, on_workflow_task)
         self.dal.event_bus.on(EventChannel.SYSTEM_ALERT, on_agent_request)
-        
+
         logger.info("Event handlers registered for cross-service communication")
-    
+
     async def startup(self):
         """Startup tasks"""
         logger.info("AI Model Service (Integrated) starting up...")
-        
+
         # Verify connections
         health = self.dal.health_check()
         if not health['database']:
@@ -704,19 +754,19 @@ class AIModelService:
             raise Exception("Database connection failed")
         if not health['cache']:
             logger.warning("Cache not available, performance may be degraded")
-        
+
         # Load models from database (if any)
         # In production, would load persisted model configs
-        
+
         logger.info(f"AI Model Service ready with {len(self.model_registry.models)} models")
-    
+
     async def shutdown(self):
         """Cleanup on shutdown"""
         logger.info("AI Model Service shutting down...")
-        
+
         # Save active contexts to database
         # In production, persist conversation history
-        
+
         self.dal.cleanup()
 
 
@@ -724,17 +774,17 @@ def main():
     """Main entry point"""
     import uvicorn
     import uuid
-    
+
     service = AIModelService()
-    
+
     # Add lifecycle events
     service.app.add_event_handler("startup", service.startup)
     service.app.add_event_handler("shutdown", service.shutdown)
-    
+
     # Run service
     port = int(os.getenv("AI_MODEL_PORT", 8105))
     logger.info(f"Starting AI Model Service (Integrated) on port {port}")
-    
+
     uvicorn.run(
         service.app,
         host="0.0.0.0",

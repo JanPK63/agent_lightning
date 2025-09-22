@@ -4,17 +4,20 @@ Provides transparent encryption/decryption for database operations using SQLAlch
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from sqlalchemy import event
-from sqlalchemy.orm import Session, Mapper
-from sqlalchemy.orm.attributes import InstrumentedAttribute
+from sqlalchemy.orm import Session
 import time
 
 from services.key_management_service import key_management_service
 from shared.encrypted_fields import encryption_metrics, EncryptionContext
 from shared.models import (
-    User, Conversation, Agent, Workflow,
-    EncryptionKey, KeyUsageLog
+    User,
+    Conversation,
+    Agent,
+    Workflow,
+    EncryptionKey,
+    KeyUsageLog,
 )
 
 logger = logging.getLogger(__name__)
@@ -35,24 +38,23 @@ class EncryptionMiddleware:
         self.encryption_enabled = True
         self.performance_monitoring = True
         self.models_with_encryption = {
-            User: ['email_encrypted', 'password_hash_encrypted'],
-            Conversation: ['user_query_encrypted', 'agent_response_encrypted'],
-            Agent: ['config_encrypted', 'capabilities_encrypted'],
-            Workflow: ['steps_encrypted', 'context_encrypted']
+            User: ["email_encrypted", "password_hash_encrypted"],
+            Conversation: ["user_query_encrypted", "agent_response_encrypted"],
+            Agent: ["config_encrypted", "capabilities_encrypted"],
+            Workflow: ["steps_encrypted", "context_encrypted"],
         }
 
     def register_events(self):
         """Register SQLAlchemy event listeners"""
 
         # Before insert/update - encrypt sensitive fields
-        event.listen(Session, 'before_flush', self._before_flush)
+        event.listen(Session, "before_flush", self._before_flush)
 
         # After load - decrypt sensitive fields
         for model_class, encrypted_fields in self.models_with_encryption.items():
             for field_name in encrypted_fields:
                 if hasattr(model_class, field_name):
-                    field = getattr(model_class, field_name)
-                    event.listen(model_class, 'load', self._after_load)
+                    event.listen(model_class, "load", self._after_load)
 
         logger.info("Encryption middleware events registered")
 
@@ -146,19 +148,20 @@ class EncryptionMiddleware:
 
                 # Log the operation
                 context.record_operation(
-                    f"encrypt_{model_class.__name__}.{field_name}",
-                    True,
-                    encrypt_time
+                    f"encrypt_{model_class.__name__}.{field_name}", True, encrypt_time
                 )
 
                 # Record usage
-                self._record_key_usage(key_id, 'encrypt', field_name, model_class.__name__)
+                self._record_key_usage(
+                    key_id, "encrypt", field_name, model_class.__name__
+                )
 
             except Exception as e:
-                logger.error(f"Failed to encrypt {field_name} for {model_class.__name__}: {e}")
+                logger.error(
+                    f"Failed to encrypt {field_name} for {model_class.__name__}: {e}"
+                )
                 context.record_operation(
-                    f"encrypt_{model_class.__name__}.{field_name}",
-                    False
+                    f"encrypt_{model_class.__name__}.{field_name}", False
                 )
 
     def _decrypt_instance_fields(self, instance, context: EncryptionContext):
@@ -205,21 +208,22 @@ class EncryptionMiddleware:
 
                 # Log the operation
                 context.record_operation(
-                    f"decrypt_{model_class.__name__}.{field_name}",
-                    True,
-                    decrypt_time
+                    f"decrypt_{model_class.__name__}.{field_name}", True, decrypt_time
                 )
 
                 # Record usage
-                self._record_key_usage(key_id, 'decrypt', field_name, model_class.__name__)
+                self._record_key_usage(
+                    key_id, "decrypt", field_name, model_class.__name__
+                )
 
             except Exception as e:
-                logger.error(f"Failed to decrypt {field_name} for {model_class.__name__}: {e}")
+                logger.error(
+                    f"Failed to decrypt {field_name} for {model_class.__name__}: {e}"
+                )
                 # Set to error placeholder
                 setattr(instance, field_name, "[DECRYPTION_ERROR]")
                 context.record_operation(
-                    f"decrypt_{model_class.__name__}.{field_name}",
-                    False
+                    f"decrypt_{model_class.__name__}.{field_name}", False
                 )
 
     def _encrypt_field_value(self, value: Any, key_id: str) -> bytes:
@@ -234,6 +238,7 @@ class EncryptionMiddleware:
             Encrypted bytes
         """
         from shared.encrypted_fields import encrypt_value
+
         return encrypt_value(value, key_id)
 
     def _decrypt_field_value(self, encrypted_value: bytes, key_id: str) -> Any:
@@ -248,6 +253,7 @@ class EncryptionMiddleware:
             Decrypted value
         """
         from shared.encrypted_fields import decrypt_value
+
         return decrypt_value(encrypted_value, key_id)
 
     def _get_key_id_for_field(self, model_class, field_name: str) -> str:
@@ -264,31 +270,39 @@ class EncryptionMiddleware:
         # Map field names to key IDs
         key_mappings = {
             User: {
-                'email_encrypted': 'user_email_key',
-                'password_hash_encrypted': 'user_password_key'
+                "email_encrypted": "user_email_key",
+                "password_hash_encrypted": "user_password_key",
             },
             Conversation: {
-                'user_query_encrypted': 'conversation_query_key',
-                'agent_response_encrypted': 'conversation_response_key'
+                "user_query_encrypted": "conversation_query_key",
+                "agent_response_encrypted": "conversation_response_key",
             },
             Agent: {
-                'config_encrypted': 'agent_config_key',
-                'capabilities_encrypted': 'agent_capabilities_key'
+                "config_encrypted": "agent_config_key",
+                "capabilities_encrypted": "agent_capabilities_key",
             },
             Workflow: {
-                'steps_encrypted': 'workflow_steps_key',
-                'context_encrypted': 'workflow_context_key'
-            }
+                "steps_encrypted": "workflow_steps_key",
+                "context_encrypted": "workflow_context_key",
+            },
         }
 
         if model_class in key_mappings and field_name in key_mappings[model_class]:
             return key_mappings[model_class][field_name]
 
         # Fallback to generic key
-        return f"{model_class.__name__.lower()}_{field_name.replace('_encrypted', '')}_key"
+        return (
+            f"{model_class.__name__.lower()}_{field_name.replace('_encrypted', '')}_key"
+        )
 
-    def _record_key_usage(self, key_id: str, operation: str, field_name: str,
-                         table_name: str, success: bool = True):
+    def _record_key_usage(
+        self,
+        key_id: str,
+        operation: str,
+        field_name: str,
+        table_name: str,
+        success: bool = True,
+    ):
         """
         Record encryption key usage for audit purposes
 
@@ -302,10 +316,13 @@ class EncryptionMiddleware:
         try:
             # Get key record ID for audit
             from shared.database import db_manager
+
             with db_manager.get_db() as session:
-                key_record = session.query(EncryptionKey).filter(
-                    EncryptionKey.key_id == key_id
-                ).first()
+                key_record = (
+                    session.query(EncryptionKey)
+                    .filter(EncryptionKey.key_id == key_id)
+                    .first()
+                )
 
                 if key_record:
                     usage_log = KeyUsageLog(
@@ -313,7 +330,7 @@ class EncryptionMiddleware:
                         operation=operation,
                         field_name=field_name,
                         table_name=table_name,
-                        success=success
+                        success=success,
                     )
                     session.add(usage_log)
                     session.commit()
@@ -339,11 +356,11 @@ class EncryptionMiddleware:
             Dictionary with performance metrics
         """
         return {
-            'encryption_enabled': self.encryption_enabled,
-            'total_operations': encryption_metrics.operation_count,
-            'average_time_ms': encryption_metrics.get_average_time(),
-            'success_rate': encryption_metrics.get_success_rate(),
-            'operations': encryption_metrics.operations[-10:]  # Last 10 operations
+            "encryption_enabled": self.encryption_enabled,
+            "total_operations": encryption_metrics.operation_count,
+            "average_time_ms": encryption_metrics.get_average_time(),
+            "success_rate": encryption_metrics.get_success_rate(),
+            "operations": encryption_metrics.operations[-10:],  # Last 10 operations
         }
 
     def health_check(self) -> Dict[str, Any]:
@@ -359,18 +376,18 @@ class EncryptionMiddleware:
             key_accessible = test_key is not None and len(test_key) == 32
 
             return {
-                'status': 'healthy' if key_accessible else 'unhealthy',
-                'encryption_enabled': self.encryption_enabled,
-                'master_key_accessible': key_accessible,
-                'metrics_available': True
+                "status": "healthy" if key_accessible else "unhealthy",
+                "encryption_enabled": self.encryption_enabled,
+                "master_key_accessible": key_accessible,
+                "metrics_available": True,
             }
 
         except Exception as e:
             logger.error(f"Encryption middleware health check failed: {e}")
             return {
-                'status': 'unhealthy',
-                'error': str(e),
-                'encryption_enabled': self.encryption_enabled
+                "status": "unhealthy",
+                "error": str(e),
+                "encryption_enabled": self.encryption_enabled,
             }
 
 

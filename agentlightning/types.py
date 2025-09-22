@@ -1,7 +1,18 @@
 from typing import Any, Dict, List, Optional, Union, Literal, Annotated
+from datetime import datetime
+from enum import Enum
 
 from pydantic import BaseModel, Field, Discriminator
-from opentelemetry.sdk.trace import ReadableSpan
+
+# Mock ReadableSpan for tracing support (OpenTelemetry optional)
+class ReadableSpan:
+    """Mock ReadableSpan for environments without OpenTelemetry"""
+    def __init__(self, *args, **kwargs):
+        pass
+    def to_json(self):
+        return "{}"
+
+OPENTELEMETRY_AVAILABLE = False
 
 __all__ = [
     "Triplet",
@@ -22,7 +33,120 @@ __all__ = [
     "SpecPlan",
     "SpecExecution",
     "ParallelWorkerBase",
+    "Event",
+    "EventEnvelope",
+    "EventStream",
+    "EventFilter",
+    "MultiModalContent",
+    "TextContent",
+    "ImageContent",
+    "AudioContent",
+    "VideoContent",
+    "ContentType",
+    "AgentMessage",
+    "AgentAddress",
+    "CommunicationProtocol",
+    "MessageType",
 ]
+
+
+class ContentType(str, Enum):
+    """Enumeration of supported content types for multi-modal inputs"""
+    TEXT = "text"
+    IMAGE = "image"
+    AUDIO = "audio"
+    VIDEO = "video"
+
+
+class MultiModalContent(BaseModel):
+    """Base class for multi-modal content"""
+    content_type: ContentType
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class TextContent(MultiModalContent):
+    """Text content for multi-modal inputs"""
+    content_type: Literal[ContentType.TEXT] = ContentType.TEXT
+    text: str
+
+
+class ImageContent(MultiModalContent):
+    """Image content for multi-modal inputs"""
+    content_type: Literal[ContentType.IMAGE] = ContentType.IMAGE
+    # Can be base64 encoded string, URL, or file path
+    image_data: Union[str, bytes]
+    format: Optional[str] = None  # e.g., "png", "jpeg", "webp"
+
+
+class AudioContent(MultiModalContent):
+    """Audio content for multi-modal inputs"""
+    content_type: Literal[ContentType.AUDIO] = ContentType.AUDIO
+    # Can be base64 encoded string, URL, or file path
+    audio_data: Union[str, bytes]
+    format: Optional[str] = None  # e.g., "mp3", "wav", "flac"
+    duration: Optional[float] = None  # in seconds
+
+
+class VideoContent(MultiModalContent):
+    """Video content for multi-modal inputs"""
+    content_type: Literal[ContentType.VIDEO] = ContentType.VIDEO
+    # Can be base64 encoded string, URL, or file path
+    video_data: Union[str, bytes]
+    format: Optional[str] = None  # e.g., "mp4", "avi", "mov"
+    duration: Optional[float] = None  # in seconds
+    # Optional thumbnail image
+    thumbnail: Optional[ImageContent] = None
+
+
+class MessageType(str, Enum):
+    """Types of messages that can be exchanged between agents"""
+    REQUEST = "request"
+    RESPONSE = "response"
+    NOTIFICATION = "notification"
+    COMMAND = "command"
+    QUERY = "query"
+    EVENT = "event"
+
+
+class CommunicationProtocol(str, Enum):
+    """Supported communication protocols for agent-to-agent communication"""
+    DIRECT = "direct"  # Direct method calls
+    MESSAGE_QUEUE = "message_queue"  # Async message queues
+    PUBSUB = "pubsub"  # Publish-subscribe pattern
+    RPC = "rpc"  # Remote procedure calls
+    EVENT_STREAM = "event_stream"  # Event streaming
+
+
+class AgentAddress(BaseModel):
+    """Address information for an agent in the communication system"""
+    agent_id: str
+    agent_type: Optional[str] = None
+    namespace: Optional[str] = None  # For multi-tenant deployments
+    endpoint: Optional[str] = None  # Network endpoint if applicable
+    capabilities: List[str] = Field(default_factory=list)  # Agent capabilities
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class AgentMessage(BaseModel):
+    """Message structure for agent-to-agent communication"""
+    message_id: str
+    sender: AgentAddress
+    recipient: AgentAddress
+    message_type: MessageType
+    protocol: CommunicationProtocol = CommunicationProtocol.DIRECT
+    subject: str  # Brief description of the message purpose
+    content: Any  # The actual message payload
+    correlation_id: Optional[str] = None  # For request-response correlation
+    reply_to: Optional[AgentAddress] = None  # Where to send responses
+    timestamp: float
+    ttl: Optional[float] = None  # Time to live in seconds
+    priority: int = 0  # Message priority (higher = more important)
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }
 
 
 class Triplet(BaseModel):
@@ -58,7 +182,13 @@ class Rollout(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
-TaskInput = Any
+# Support both legacy Any inputs and new multi-modal inputs
+TaskInput = Union[
+    Any,  # Legacy support for any input type
+    str,  # Simple text input
+    List[MultiModalContent],  # Multi-modal content list
+    MultiModalContent,  # Single multi-modal content
+]
 
 
 class Task(BaseModel):
@@ -264,3 +394,67 @@ class ParallelWorkerBase:
 
     def teardown(self, *args: Any, **kwargs: Any) -> None:
         pass
+
+
+class Event(BaseModel):
+    """Event model for event sourcing - captures state changes in the system"""
+    event_id: str
+    aggregate_id: str  # Entity ID (agent_id, task_id, workflow_id, etc.)
+    aggregate_type: str  # 'agent', 'task', 'workflow', 'resource', 'rollout'
+    event_type: str  # 'created', 'updated', 'started', 'completed', 'failed', etc.
+    event_data: Dict[str, Any]  # Event payload with details
+    timestamp: datetime
+    version: int = 1  # Aggregate version for optimistic concurrency
+    correlation_id: Optional[str] = None  # For tracking related events
+    causation_id: Optional[str] = None  # ID of event that caused this event
+    user_id: Optional[str] = None  # User who triggered the event
+    service_name: Optional[str] = None  # Service that generated the event
+    metadata: Dict[str, Any] = Field(default_factory=dict)  # Additional event metadata
+
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }
+
+
+class EventEnvelope(BaseModel):
+    """Envelope for event transmission and storage"""
+    event: Event
+    partition_key: Optional[str] = None  # For distributed event stores
+    headers: Dict[str, Any] = Field(default_factory=dict)  # Transport headers
+
+
+class EventStream(BaseModel):
+    """Represents a stream of events for an aggregate"""
+    aggregate_id: str
+    aggregate_type: str
+    events: List[Event] = Field(default_factory=list)
+    version: int = 0
+    snapshot: Optional[Dict[str, Any]] = None  # Latest snapshot if available
+
+    def append_event(self, event: Event) -> None:
+        """Append an event to the stream"""
+        if event.aggregate_id != self.aggregate_id:
+            raise ValueError("Event aggregate_id does not match stream")
+        if event.version != self.version + 1:
+            raise ValueError(f"Event version {event.version} does not follow stream version {self.version}")
+
+        self.events.append(event)
+        self.version = event.version
+
+    def get_events_from_version(self, from_version: int) -> List[Event]:
+        """Get events from a specific version onwards"""
+        return [e for e in self.events if e.version >= from_version]
+
+
+class EventFilter(BaseModel):
+    """Filter criteria for querying events"""
+    aggregate_id: Optional[str] = None
+    aggregate_type: Optional[str] = None
+    event_type: Optional[str] = None
+    correlation_id: Optional[str] = None
+    user_id: Optional[str] = None
+    service_name: Optional[str] = None
+    from_timestamp: Optional[datetime] = None
+    to_timestamp: Optional[datetime] = None
+    metadata_filters: Dict[str, Any] = Field(default_factory=dict)

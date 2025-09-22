@@ -4,7 +4,8 @@ Implements comprehensive monitoring, tracing, and metrics collection
 Following Agent Lightning's approach to agent observability
 """
 
-from opentelemetry import trace, metrics, baggage
+from opentelemetry import trace, baggage
+from opentelemetry.metrics import set_meter_provider, get_meter_provider, get_meter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
 from opentelemetry.exporter.prometheus import PrometheusMetricReader
@@ -163,10 +164,10 @@ class AgentLightningObservability:
         )
         
         # Set global meter provider
-        metrics.set_meter_provider(provider)
-        
+        set_meter_provider(provider)
+
         # Get meter
-        self.meter = metrics.get_meter(
+        self.meter = get_meter(
             self.service_name,
             self.service_version
         )

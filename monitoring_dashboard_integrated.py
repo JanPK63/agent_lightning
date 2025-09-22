@@ -36,6 +36,15 @@ except ImportError:
 # Import Agent Lightning components
 from observability_setup import AgentLightningObservability, MetricsAggregator
 
+# Import agent service orchestrator
+try:
+    from agent_service_orchestrator import get_orchestrator, initialize_orchestrator
+    ORCHESTRATOR_AVAILABLE = True
+except ImportError:
+    ORCHESTRATOR_AVAILABLE = False
+    get_orchestrator = None
+    initialize_orchestrator = None
+
 # Setup logging
 logger = logging.getLogger(__name__)
 
@@ -261,9 +270,25 @@ class MonitoringDashboard:
         except:
             self.memory_manager = None
 
+        # Initialize Agent Service Orchestrator
+        self.orchestrator = None
+        if ORCHESTRATOR_AVAILABLE:
+            try:
+                import asyncio
+                # Initialize orchestrator in event loop
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                loop.run_until_complete(initialize_orchestrator())
+                self.orchestrator = get_orchestrator()
+                print("✅ Agent Service Orchestrator initialized")
+            except Exception as e:
+                print(f"❌ Failed to initialize orchestrator: {e}")
+                self.orchestrator = None
+
         print(f"📊 Monitoring Dashboard initialized")
         print(f"   Dashboard port: {config.dashboard_port}")
         print(f"   Refresh interval: {config.refresh_interval}s")
+        print(f"   Orchestrator: {'✅ Available' if self.orchestrator else '❌ Not available'}")
 
     def _classify_error(self, error: Exception, context: str = "") -> Dict[str, Any]:
         """
@@ -1369,6 +1394,81 @@ class MonitoringDashboard:
         
         fig_resources.update_layout(height=600, showlegend=False)
         st.plotly_chart(fig_resources, use_container_width=True)
+
+        # Database Connection Pool Metrics
+        st.subheader("🗄️ Database Connection Pool")
+
+        try:
+            from shared.database import db_manager
+
+            # Get pool statistics
+            pool_stats = db_manager.get_pool_stats()
+
+            if pool_stats.get("error"):
+                st.warning(f"Pool stats unavailable: {pool_stats['error']}")
+            elif pool_stats.get("type") == "mongodb":
+                st.info("🗄️ MongoDB uses native connection pooling")
+                st.metric("Pool Type", "MongoDB Native")
+            else:
+                # Display pool metrics
+                col1, col2, col3, col4 = st.columns(4)
+
+                with col1:
+                    st.metric(
+                        "Active Connections",
+                        pool_stats.get("checkedout", 0),
+                        help="Currently active database connections"
+                    )
+
+                with col2:
+                    st.metric(
+                        "Available Connections",
+                        pool_stats.get("connections_in_pool", 0),
+                        help="Connections available in pool"
+                    )
+
+                with col3:
+                    st.metric(
+                        "Pool Size",
+                        pool_stats.get("pool_size", 0),
+                        help="Total configured pool size"
+                    )
+
+                with col4:
+                    st.metric(
+                        "Overflow",
+                        pool_stats.get("connections_overflow", 0),
+                        help="Connections created beyond pool size"
+                    )
+
+                # Pool utilization gauge
+                total_connections = pool_stats.get("checkedout", 0) + pool_stats.get("connections_in_pool", 0)
+                pool_size = pool_stats.get("pool_size", 1)
+                utilization = (total_connections / pool_size) * 100 if pool_size > 0 else 0
+
+                fig_pool = self._create_gauge(
+                    utilization,
+                    "Pool Utilization",
+                    max_value=100,
+                    unit="%",
+                    color="normal" if utilization < 80 else "warning" if utilization < 95 else "danger"
+                )
+                st.plotly_chart(fig_pool, use_container_width=True)
+
+                # Connection info
+                conn_info = db_manager.get_connection_info()
+                with st.expander("Connection Details"):
+                    st.write(f"**Database Type:** {conn_info.get('type', 'Unknown').title()}")
+                    st.write(f"**Pool Class:** {conn_info.get('pool_class', 'N/A')}")
+                    st.write(f"**Pool Size:** {conn_info.get('pool_size', 'N/A')}")
+                    st.write(f"**Max Overflow:** {conn_info.get('max_overflow', 'N/A')}")
+                    st.write(f"**Timeout:** {conn_info.get('pool_timeout', 'N/A')}s")
+                    st.write(f"**Recycle:** {conn_info.get('pool_recycle', 'N/A')}s")
+                    st.write(f"**Pre-ping:** {conn_info.get('pool_pre_ping', 'N/A')}")
+
+        except Exception as e:
+            st.error(f"Error loading database metrics: {str(e)}")
+            st.info("Database connection pooling metrics require SQLAlchemy engine to be initialized")
     
     def _render_alerts(self):
         """Render alerts tab"""
@@ -2178,23 +2278,77 @@ class MonitoringDashboard:
                         # Track task submission latency
                         submission_start_time = time.time()
 
-                        # Execute task with agent including deployment config using resilient request
-                        task_response = self._make_resilient_request(
-                            "http://localhost:8002/api/v2/agents/execute",
-                            method="POST",
-                            json_data={
-                                "task": validated_payload["task_description"],
-                                "agent_id": validated_payload["agent_type"] if validated_payload["agent_type"] != "auto" else None,
-                                "context": {
-                                    "deployment": validated_payload["deployment_config"],
-                                    "model": validated_payload["ai_model"],
-                                    "reference_task_id": validated_payload["reference_task_id"]
+                        # Execute task using agent service orchestrator
+                        if self.orchestrator:
+                            try:
+                                import asyncio
+                                # Run orchestrator in event loop
+                                loop = asyncio.new_event_loop()
+                                asyncio.set_event_loop(loop)
+                                task_result = loop.run_until_complete(
+                                    self.orchestrator.execute_task(
+                                        task_description=validated_payload["task_description"],
+                                        agent_id=validated_payload["agent_type"] if validated_payload["agent_type"] != "auto" else None,
+                                        context={
+                                            "deployment": validated_payload["deployment_config"],
+                                            "model": validated_payload["ai_model"],
+                                            "reference_task_id": validated_payload["reference_task_id"]
+                                        }
+                                    )
+                                )
+
+                                # Convert orchestrator result to expected format
+                                task_response = type('MockResponse', (), {
+                                    'status_code': 200,
+                                    'json': lambda: {
+                                        "task_id": f"orchestrator_{int(time.time())}",
+                                        "metadata": {
+                                            "agent_id": task_result.get("agent_id", validated_payload["agent_type"]),
+                                            "confidence": 0.9,
+                                            "assignment_reason": "orchestrator_selection"
+                                        },
+                                        "result": task_result.get("result", {}),
+                                        "status": task_result.get("status", "completed")
+                                    }
+                                })()
+
+                            except Exception as e:
+                                logger.error(f"Orchestrator execution failed: {e}")
+                                # Fallback to direct API call
+                                task_response = self._make_resilient_request(
+                                    "http://localhost:8002/api/v2/agents/execute",
+                                    method="POST",
+                                    json_data={
+                                        "task": validated_payload["task_description"],
+                                        "agent_id": validated_payload["agent_type"] if validated_payload["agent_type"] != "auto" else None,
+                                        "context": {
+                                            "deployment": validated_payload["deployment_config"],
+                                            "model": validated_payload["ai_model"],
+                                            "reference_task_id": validated_payload["reference_task_id"]
+                                        },
+                                        "timeout": 60
+                                    },
+                                    headers=headers,
+                                    timeout=30
+                                )
+                        else:
+                            # Fallback to direct API call if orchestrator not available
+                            task_response = self._make_resilient_request(
+                                "http://localhost:8002/api/v2/agents/execute",
+                                method="POST",
+                                json_data={
+                                    "task": validated_payload["task_description"],
+                                    "agent_id": validated_payload["agent_type"] if validated_payload["agent_type"] != "auto" else None,
+                                    "context": {
+                                        "deployment": validated_payload["deployment_config"],
+                                        "model": validated_payload["ai_model"],
+                                        "reference_task_id": validated_payload["reference_task_id"]
+                                    },
+                                    "timeout": 60
                                 },
-                                "timeout": 60
-                            },
-                            headers=headers,
-                            timeout=30
-                        )
+                                headers=headers,
+                                timeout=30
+                            )
 
                         submission_latency = time.time() - submission_start_time
                         
@@ -3294,6 +3448,148 @@ class MonitoringDashboard:
                             st.text(f"Languages: {', '.join(project.tech_stack.languages)}")
                         if project.tech_stack.frameworks:
                             st.text(f"Frameworks: {', '.join(project.tech_stack.frameworks)}")
+
+                    # Database Configuration Section
+                    st.markdown("### 🗄️ Database Configuration")
+
+                    # Add database configuration button
+                    if st.button("⚙️ Configure Database", key=f"config_db_{selected_project}"):
+                        if f"configuring_db_{selected_project}" not in st.session_state:
+                            st.session_state[f"configuring_db_{selected_project}"] = True
+                        else:
+                            st.session_state[f"configuring_db_{selected_project}"] = True
+
+                    # Database configuration form
+                    if st.session_state.get(f"configuring_db_{selected_project}", False):
+                        with st.form(f"db_config_form_{selected_project}"):
+                            st.subheader("Database Settings")
+
+                            # Database type selection
+                            db_type = st.selectbox(
+                                "Database Type",
+                                options=["sqlite", "postgresql", "mongodb"],
+                                index=0,
+                                help="Choose the database backend for this project"
+                            )
+
+                            if db_type == "sqlite":
+                                db_path = st.text_input(
+                                    "Database File Path",
+                                    value="./data/agent_lightning.db",
+                                    help="Path to SQLite database file"
+                                )
+                                connection_string = f"sqlite:///{db_path}"
+
+                            elif db_type == "postgresql":
+                                col_pg1, col_pg2 = st.columns(2)
+                                with col_pg1:
+                                    pg_host = st.text_input("Host", value="localhost")
+                                    pg_port = st.text_input("Port", value="5432")
+                                    pg_database = st.text_input("Database", value="agent_lightning")
+                                with col_pg2:
+                                    pg_user = st.text_input("Username", value="postgres")
+                                    pg_password = st.text_input("Password", type="password")
+                                    pg_ssl = st.checkbox("SSL Connection", value=False)
+
+                                connection_string = f"postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_database}"
+                                if pg_ssl:
+                                    connection_string += "?sslmode=require"
+
+                            elif db_type == "mongodb":
+                                col_mongo1, col_mongo2 = st.columns(2)
+                                with col_mongo1:
+                                    mongo_host = st.text_input("Host", value="localhost")
+                                    mongo_port = st.text_input("Port", value="27017")
+                                    mongo_database = st.text_input("Database", value="agent_lightning")
+                                with col_mongo2:
+                                    mongo_user = st.text_input("Username (optional)")
+                                    mongo_password = st.text_input("Password (optional)", type="password")
+                                    mongo_auth_db = st.text_input("Auth Database", value="admin", help="Database for authentication")
+
+                                # Build MongoDB connection string
+                                if mongo_user and mongo_password:
+                                    connection_string = f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}/{mongo_database}?authSource={mongo_auth_db}"
+                                else:
+                                    connection_string = f"mongodb://{mongo_host}:{mongo_port}/{mongo_database}"
+
+                                st.info("💡 MongoDB supports document storage for flexible data models and is ideal for agent memory and knowledge bases.")
+
+                            # Connection string preview
+                            st.markdown("**Connection String Preview:**")
+                            st.code(connection_string, language="text")
+
+                            # Test connection button
+                            test_connection = st.checkbox("Test connection on save", value=True)
+
+                            col_save, col_cancel = st.columns(2)
+                            with col_save:
+                                if st.form_submit_button("💾 Save Database Config"):
+                                    # Store database configuration in project
+                                    if not hasattr(project, 'database_config'):
+                                        project.database_config = {}
+
+                                    project.database_config = {
+                                        "type": db_type,
+                                        "connection_string": connection_string,
+                                        "host": locals().get(f"{db_type}_host", mongo_host if db_type == "mongodb" else ""),
+                                        "port": locals().get(f"{db_type}_port", mongo_port if db_type == "mongodb" else ""),
+                                        "database": locals().get(f"{db_type}_database", mongo_database if db_type == "mongodb" else ""),
+                                        "username": locals().get(f"{db_type}_user", mongo_user if db_type == "mongodb" else ""),
+                                        "password": locals().get(f"{db_type}_password", mongo_password if db_type == "mongodb" else ""),
+                                        "ssl": locals().get(f"{db_type}_ssl", False),
+                                        "auth_database": locals().get(f"{db_type}_auth_db", mongo_auth_db if db_type == "mongodb" else "")
+                                    }
+
+                                    # Test connection if requested
+                                    if test_connection:
+                                        try:
+                                            if db_type == "mongodb":
+                                                import pymongo
+                                                client = pymongo.MongoClient(connection_string, serverSelectionTimeoutMS=5000)
+                                                client.admin.command('ping')
+                                                st.success("✅ MongoDB connection successful!")
+                                            elif db_type == "postgresql":
+                                                import psycopg2
+                                                conn = psycopg2.connect(connection_string)
+                                                conn.close()
+                                                st.success("✅ PostgreSQL connection successful!")
+                                            else:
+                                                # SQLite doesn't need connection test
+                                                st.success("✅ SQLite configuration saved!")
+                                        except Exception as e:
+                                            st.error(f"❌ Connection test failed: {str(e)}")
+                                            st.warning("Configuration saved but connection failed. Please check your settings.")
+
+                                    manager.update_project(selected_project, project)
+                                    st.session_state[f"configuring_db_{selected_project}"] = False
+                                    st.success("✅ Database configuration saved!")
+                                    st.rerun()
+
+                            with col_cancel:
+                                if st.form_submit_button("❌ Cancel"):
+                                    st.session_state[f"configuring_db_{selected_project}"] = False
+                                    st.rerun()
+
+                    # Display current database configuration
+                    if hasattr(project, 'database_config') and project.database_config:
+                        db_config = project.database_config
+                        st.markdown(f"**Current Database:** {db_config.get('type', 'Not configured').title()}")
+
+                        if db_config.get('type') == 'mongodb':
+                            st.info("🗄️ MongoDB is configured for document storage and flexible data models.")
+                            with st.expander("Database Details"):
+                                st.text(f"Host: {db_config.get('host', 'N/A')}")
+                                st.text(f"Port: {db_config.get('port', 'N/A')}")
+                                st.text(f"Database: {db_config.get('database', 'N/A')}")
+                                if db_config.get('username'):
+                                    st.text(f"Username: {db_config['username']}")
+                                st.text("Connection String: [hidden for security]")
+                        elif db_config.get('type') == 'postgresql':
+                            st.info("🐘 PostgreSQL is configured for relational data storage.")
+                        elif db_config.get('type') == 'sqlite':
+                            st.info("📁 SQLite is configured for local file-based storage.")
+                    else:
+                        st.info("No database configured yet. Click 'Configure Database' to set up.")
                     
                     # Quick deployment section
                     st.markdown("### 🚀 Quick Deploy")
@@ -3724,6 +4020,141 @@ class MonitoringDashboard:
                             if block:
                                 st.write(f"• {block.title}")
                                 if trace.get('output'):
+                                    st.code(trace['output'], language="text")
+            else:
+                st.info("No execution history")
+            
+            # Performance metrics
+            if current_state != DebugState.IDLE:
+                perf = st.session_state.visual_debugger.get_performance_metrics()
+                col1, col2 = st.columns(2)
+                with col1:
+                    if perf.get('total_duration'):
+                        st.metric("Duration", f"{perf['total_duration']:.2f}s")
+                with col2:
+                    if perf.get('block_statistics'):
+                        st.metric("Blocks", len(perf['block_statistics']))
+            
+            # Error display
+            if st.session_state.visual_debugger.last_error:
+                st.error(f"Error: {st.session_state.visual_debugger.last_error.get('message', 'Unknown error')}")
+    
+
+
+
+def run_dashboard():
+    """Run the monitoring dashboard"""
+    config = DashboardConfig(
+        refresh_interval=2,
+        max_data_points=1000,
+        dashboard_port=8501
+    )
+    
+    dashboard = MonitoringDashboard(config)
+    dashboard.create_dashboard()
+
+
+# Streamlit app initialization
+# This runs when streamlit run monitoring_dashboard.py is executed
+if __name__ == "__main__":
+    config = DashboardConfig()
+    dashboard = MonitoringDashboard(config)
+    dashboard.create_dashboard()
+else:
+    # For imports
+    config = DashboardConfig()
+    dashboard = MonitoringDashboard(config)
+    dashboard.create_dashboard()            if timeline:
+                with st.expander("Recent Execution", expanded=True):
+                    for trace in timeline[-5:]:
+                        if trace.get('block_id'):
+                            block = next((b for b in st.session_state.visual_program.blocks 
+                                        if b.block_id == trace['block_id']), None)
+                            if block:
+                                st.write(f"• {block.title}")
+                                if trace.get('output'):
+                                    st.code(trace['output'], language="text")
+            else:
+                st.info("No execution history")
+            
+            # Performance metrics
+            if current_state != DebugState.IDLE:
+                perf = st.session_state.visual_debugger.get_performance_metrics()
+                col1, col2 = st.columns(2)
+                with col1:
+                    if perf.get('total_duration'):
+                        st.metric("Duration", f"{perf['total_duration']:.2f}s")
+                with col2:
+                    if perf.get('block_statistics'):
+                        st.metric("Blocks", len(perf['block_statistics']))
+            
+            # Error display
+            if st.session_state.visual_debugger.last_error:
+                st.error(f"Error: {st.session_state.visual_debugger.last_error.get('message', 'Unknown error')}")
+    
+
+
+
+def run_dashboard():
+    """Run the monitoring dashboard"""
+    config = DashboardConfig(
+        refresh_interval=2,
+        max_data_points=1000,
+        dashboard_port=8501
+    )
+    
+    dashboard = MonitoringDashboard(config)
+    dashboard.create_dashboard()
+
+
+# Streamlit app initialization
+# This runs when streamlit run monitoring_dashboard.py is executed
+if __name__ == "__main__":
+    config = DashboardConfig()
+    dashboard = MonitoringDashboard(config)
+    dashboard.create_dashboard()
+else:
+    # For imports
+    config = DashboardConfig()
+    dashboard = MonitoringDashboard(config)
+    dashboard.create_dashboard()
+                with col1:
+                    if perf.get('total_duration'):
+                        st.metric("Duration", f"{perf['total_duration']:.2f}s")
+                with col2:
+                    if perf.get('block_statistics'):
+                        st.metric("Blocks", len(perf['block_statistics']))
+            
+            # Error display
+            if st.session_state.visual_debugger.last_error:
+                st.error(f"Error: {st.session_state.visual_debugger.last_error.get('message', 'Unknown error')}")
+    
+
+
+
+def run_dashboard():
+    """Run the monitoring dashboard"""
+    config = DashboardConfig(
+        refresh_interval=2,
+        max_data_points=1000,
+        dashboard_port=8501
+    )
+    
+    dashboard = MonitoringDashboard(config)
+    dashboard.create_dashboard()
+
+
+# Streamlit app initialization
+# This runs when streamlit run monitoring_dashboard.py is executed
+if __name__ == "__main__":
+    config = DashboardConfig()
+    dashboard = MonitoringDashboard(config)
+    dashboard.create_dashboard()
+else:
+    # For imports
+    config = DashboardConfig()
+    dashboard = MonitoringDashboard(config)
+    dashboard.create_dashboard()
                                     st.code(trace['output'], language="text")
             else:
                 st.info("No execution history")

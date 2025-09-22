@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="demo_coverage.md">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/demo_coverage.md.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

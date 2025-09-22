@@ -29,6 +29,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Import shared components
 from shared.events import EventChannel
 from shared.cache import get_cache
+from monitoring.metrics import MetricsCollector
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -481,6 +482,7 @@ class WebSocketService:
         self.auth = WebSocketAuth()
         self.event_router = EventRouter(self.connection_manager)
         self.heartbeat_manager = HeartbeatManager(self.connection_manager)
+        self.metrics_collector = MetricsCollector()
         
         logger.info(f"✅ WebSocket Service initialized with server ID: {SERVER_ID}")
         
@@ -503,22 +505,29 @@ class WebSocketService:
         @self.app.get("/health")
         async def health():
             """Health check endpoint"""
-            return {
-                "service": "websocket",
-                "status": "healthy",
-                "server_id": SERVER_ID,
-                "connections": len(self.connection_manager.connections),
-                "authenticated": sum(1 for c in self.connection_manager.connections.values() if c["authenticated"]),
-                "timestamp": datetime.utcnow().isoformat()
-            }
+            try:
+                self.metrics_collector.increment_request("health", "GET", "200")
+                return {
+                    "service": "websocket",
+                    "status": "healthy",
+                    "server_id": SERVER_ID,
+                    "connections": len(self.connection_manager.connections),
+                    "authenticated": sum(1 for c in self.connection_manager.connections.values() if c["authenticated"]),
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            except Exception as e:
+                logger.error(f"Health check failed: {e}")
+                self.metrics_collector.increment_error("health", type(e).__name__)
+                raise HTTPException(status_code=500, detail=str(e))
         
         @self.app.websocket("/ws")
         async def websocket_endpoint(websocket: WebSocket, token: Optional[str] = Query(None)):
             """Main WebSocket endpoint"""
             connection_id = str(uuid.uuid4())
-            
+
             # Accept connection
             await self.connection_manager.connect(websocket, connection_id)
+            self.metrics_collector.increment_request("websocket_connect", "WS", "101")
             
             # Auto-authenticate if token provided
             if token:

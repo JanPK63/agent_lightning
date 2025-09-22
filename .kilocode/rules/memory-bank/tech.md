@@ -4,14 +4,25 @@ Platform en taal:
 - Python 3.10+ (aanbevolen: 3.10 of 3.11)
 
 Belangrijke libraries:
-- LangGraph
-- LangChain
-- agentlightning (projectpakket)
-- OpenAI / Anthropic SDKs
-- Ray (distributed compute)
+- LangGraph (stateful workflow orchestration)
+- LangChain (LLM application framework)
+- agentlightning (project core framework)
+- OpenAI / Anthropic / Grok SDKs (LLM providers)
+- Ray (distributed compute framework)
 - VERL, vLLM (optioneel voor grote-scale LLM training)
-- PyTorch
-- sentence-transformers (embeddings)
+- PyTorch (deep learning framework)
+- sentence-transformers (embeddings voor knowledge retrieval)
+- FastAPI (web framework voor server componenten)
+- aiohttp (async HTTP client)
+- pydantic (data validation)
+- uvicorn (ASGI server)
+- httpx (async HTTP client voor OAuth)
+- jwt (JSON Web Tokens voor auth)
+- bcrypt (password hashing)
+- psutil (system monitoring)
+- opentelemetry (distributed tracing)
+- agentops (agent observability)
+- redis (optional voor pubsub messaging)
 
 Dev-dependencies:
 - pytest

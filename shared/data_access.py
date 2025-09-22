@@ -14,6 +14,7 @@ from shared.cache import get_cache
 from shared.events import EventBus, EventChannel
 from shared.cache_decorators import cached
 from shared.models import Agent, Task, Knowledge, Workflow, Session, Metric, User
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -801,3 +802,33 @@ class DataAccessLayer:
             logger.info(f"DataAccessLayer cleanup complete for {self.service_name}")
         except Exception as e:
             logger.error(f"Cleanup error: {e}")
+
+
+def create_data_access_layer(service_name: str):
+    """Factory function to create appropriate Data Access Layer
+
+    Args:
+        service_name: Name of the service using the DAL
+
+    Returns:
+        DataAccessLayer or MongoDBDataAccessLayer instance
+    """
+    current_url = os.getenv(
+        "DATABASE_URL",
+        "sqlite:///./agentlightning.db"
+    )
+
+    if current_url.startswith(("mongodb", "mongodb+srv")):
+        # Use MongoDB DAL
+        try:
+            from .mongodb_dal import MongoDBDataAccessLayer
+            logger.info(f"Using MongoDB Data Access Layer for {service_name}")
+            return MongoDBDataAccessLayer(service_name)
+        except ImportError as e:
+            logger.error(f"MongoDB dependencies not available: {e}")
+            logger.info(f"Falling back to SQL Data Access Layer for {service_name}")
+            return DataAccessLayer(service_name)
+    else:
+        # Use SQL DAL
+        logger.info(f"Using SQL Data Access Layer for {service_name}")
+        return DataAccessLayer(service_name)

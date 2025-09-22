@@ -697,3 +697,67 @@ class KeyAccessAudit(Base):
             'error_message': self.error_message,
             'metadata': self.access_metadata
         }
+
+
+class Event(Base):
+    """Event model for event sourcing - captures all state changes"""
+    __tablename__ = 'events'
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    event_id = Column(String(36), unique=True, index=True, nullable=False)
+    aggregate_id = Column(String(36), nullable=False, index=True)  # Entity ID (agent_id, task_id, etc.)
+    aggregate_type = Column(String(50), nullable=False, index=True)  # 'agent', 'task', 'workflow', 'resource', 'rollout'
+    event_type = Column(String(50), nullable=False, index=True)  # 'created', 'updated', 'started', 'completed', etc.
+    event_data = Column(JSON, nullable=False)  # Event payload
+    timestamp = Column(DateTime(timezone=True), server_default=func.now(), index=True, nullable=False)
+    version = Column(Integer, nullable=False, default=1)  # Aggregate version for optimistic concurrency
+    correlation_id = Column(String(36), index=True)  # For tracking related events
+    causation_id = Column(String(36), index=True)  # ID of event that caused this event
+    user_id = Column(String(36), index=True)  # User who triggered the event
+    service_name = Column(String(50), index=True)  # Service that generated the event
+    event_metadata = Column('metadata', JSON, default=dict)  # Additional event metadata
+
+    def to_dict(self):
+        """Convert event to dictionary"""
+        return {
+            'id': str(self.id),
+            'event_id': self.event_id,
+            'aggregate_id': self.aggregate_id,
+            'aggregate_type': self.aggregate_type,
+            'event_type': self.event_type,
+            'event_data': self.event_data,
+            'timestamp': self.timestamp.isoformat() if self.timestamp else None,
+            'version': self.version,
+            'correlation_id': self.correlation_id,
+            'causation_id': self.causation_id,
+            'user_id': self.user_id,
+            'service_name': self.service_name,
+            'metadata': self.event_metadata
+        }
+
+
+class EventSnapshot(Base):
+    """Snapshot model for event sourcing - periodic state snapshots for performance"""
+    __tablename__ = 'event_snapshots'
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    aggregate_id = Column(String(36), nullable=False, index=True)
+    aggregate_type = Column(String(50), nullable=False, index=True)
+    snapshot_data = Column(JSON, nullable=False)  # Current state snapshot
+    version = Column(Integer, nullable=False)  # Aggregate version at time of snapshot
+    last_event_id = Column(String(36), nullable=False)  # ID of last event included in snapshot
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True, nullable=False)
+    expires_at = Column(DateTime(timezone=True))  # When this snapshot expires
+
+    def to_dict(self):
+        """Convert snapshot to dictionary"""
+        return {
+            'id': str(self.id),
+            'aggregate_id': self.aggregate_id,
+            'aggregate_type': self.aggregate_type,
+            'snapshot_data': self.snapshot_data,
+            'version': self.version,
+            'last_event_id': self.last_event_id,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'expires_at': self.expires_at.isoformat() if self.expires_at else None
+        }

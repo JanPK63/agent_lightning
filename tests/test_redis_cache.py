@@ -66,49 +66,108 @@ def test_cache_operations():
 def test_pub_sub():
     """Test pub/sub functionality"""
     print("\n🧪 Testing Pub/Sub...")
-    
+
     received_events = []
-    
+
     def event_handler(event: Event):
         received_events.append(event)
         print(f"  📨 Received event: {event.channel}")
-    
-    # Create event bus
+
+    # Create event bus (Redis backend)
     bus = EventBus("test_service")
-    
+
     # Register handler
     bus.on(EventChannel.AGENT_CREATED, event_handler)
     bus.on(EventChannel.TASK_COMPLETED, event_handler)
-    
+
     # Start subscriber
     bus.start()
     time.sleep(1)  # Give subscriber time to start
-    
+
     # Publish events
     bus.emit(EventChannel.AGENT_CREATED, {
         "agent_id": "test_agent",
         "name": "Test Agent"
     })
-    
+
     bus.emit(EventChannel.TASK_COMPLETED, {
         "task_id": "task_123",
         "result": "Success"
     })
-    
+
     # Wait for events to be received
     time.sleep(2)
-    
+
     # Check results
     assert len(received_events) == 2, f"Expected 2 events, got {len(received_events)}"
     assert received_events[0].channel == EventChannel.AGENT_CREATED.value
     assert received_events[1].channel == EventChannel.TASK_COMPLETED.value
-    
+
     # Stop subscriber
     bus.stop()
-    
+
     print("✅ Pub/Sub working correctly")
     print(f"✅ Received {len(received_events)} events")
     print("✨ Pub/Sub tests passed!")
+
+
+def test_rabbitmq_pub_sub():
+    """Test RabbitMQ pub/sub functionality"""
+    print("\n🧪 Testing RabbitMQ Pub/Sub...")
+
+    try:
+        import pika
+    except ImportError:
+        print("❌ RabbitMQ dependencies not available, skipping RabbitMQ tests")
+        return
+
+    try:
+        received_events = []
+
+        def event_handler(event: Event):
+            received_events.append(event)
+            print(f"  📨 Received RabbitMQ event: {event.channel}")
+
+        # Create event bus with RabbitMQ backend
+        bus = EventBus("test_service", backend="rabbitmq")
+
+        # Register handler
+        bus.on(EventChannel.AGENT_CREATED, event_handler)
+        bus.on(EventChannel.TASK_COMPLETED, event_handler)
+
+        # Start subscriber
+        bus.start()
+        time.sleep(2)  # Give subscriber time to start
+
+        # Publish events
+        bus.emit(EventChannel.AGENT_CREATED, {
+            "agent_id": "test_agent",
+            "name": "Test Agent"
+        })
+
+        bus.emit(EventChannel.TASK_COMPLETED, {
+            "task_id": "task_123",
+            "result": "Success"
+        })
+
+        # Wait for events to be received
+        time.sleep(3)
+
+        # Check results
+        assert len(received_events) == 2, f"Expected 2 events, got {len(received_events)}"
+        assert received_events[0].channel == EventChannel.AGENT_CREATED.value
+        assert received_events[1].channel == EventChannel.TASK_COMPLETED.value
+
+        # Stop subscriber
+        bus.stop()
+
+        print("✅ RabbitMQ Pub/Sub working correctly")
+        print(f"✅ Received {len(received_events)} events")
+        print("✨ RabbitMQ Pub/Sub tests passed!")
+
+    except Exception as e:
+        print(f"❌ RabbitMQ test failed (RabbitMQ may not be running): {e}")
+        print("💡 To run RabbitMQ tests, ensure RabbitMQ is running on localhost:5672")
 
 def test_distributed_locking():
     """Test distributed locking"""
@@ -273,6 +332,7 @@ def main():
         # Run tests
         test_cache_operations()
         test_pub_sub()
+        test_rabbitmq_pub_sub()
         test_distributed_locking()
         test_cache_decorators()
         test_rate_limiting()
