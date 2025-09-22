@@ -1,0 +1,513 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Agent Lightning - System Overview",
+    "tags": ["agent-lightning", "overview", "monitoring"],
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "System Health Overview",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "up",
+            "legendFormat": "{{job}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "text": "DOWN",
+                    "color": "red"
+                  },
+                  "1": {
+                    "text": "UP",
+                    "color": "green"
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "green",
+                  "value": 1
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "Total Requests by Service",
+        "type": "barchart",
+        "targets": [
+          {
+            "expr": "sum(rate(agent_lightning_requests_total[5m])) by (job)",
+            "legendFormat": "{{job}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 6
+        }
+      },
+      {
+        "id": 3,
+        "title": "Error Rate by Service",
+        "type": "barchart",
+        "targets": [
+          {
+            "expr": "sum(rate(agent_lightning_requests_total{status=~\"5..\"}[5m])) by (job) / sum(rate(agent_lightning_requests_total[5m])) by (job) * 100",
+            "legendFormat": "{{job}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "percent"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 6
+        }
+      },
+      {
+        "id": 4,
+        "title": "Agent Coordination Services",
+        "type": "row",
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 14
+        }
+      },
+      {
+        "id": 5,
+        "title": "Agent Coordinator Requests",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"agent-coordinator\"}[5m])",
+            "legendFormat": "Requests"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 15
+        }
+      },
+      {
+        "id": 6,
+        "title": "Agent Designer Requests",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"agent-designer\"}[5m])",
+            "legendFormat": "Requests"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 15
+        }
+      },
+      {
+        "id": 7,
+        "title": "AI Model Services",
+        "type": "row",
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 23
+        }
+      },
+      {
+        "id": 8,
+        "title": "AI Model Service Requests",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"ai-model-service\"}[5m])",
+            "legendFormat": "Requests"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 24
+        }
+      },
+      {
+        "id": 9,
+        "title": "LangChain Integration Requests",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"langchain-integration\"}[5m])",
+            "legendFormat": "Requests"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 24
+        }
+      },
+      {
+        "id": 10,
+        "title": "Memory & Knowledge Services",
+        "type": "row",
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 32
+        }
+      },
+      {
+        "id": 11,
+        "title": "Memory Manager Operations",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"memory-manager\"}[5m])",
+            "legendFormat": "Operations"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 33
+        }
+      },
+      {
+        "id": 12,
+        "title": "Knowledge Manager Operations",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"knowledge-manager\"}[5m])",
+            "legendFormat": "Operations"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 33
+        }
+      },
+      {
+        "id": 13,
+        "title": "Workflow & Orchestration Services",
+        "type": "row",
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 41
+        }
+      },
+      {
+        "id": 14,
+        "title": "Workflow Engine Executions",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"workflow-engine\"}[5m])",
+            "legendFormat": "Executions"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 42
+        }
+      },
+      {
+        "id": 15,
+        "title": "RL Orchestrator Operations",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"rl-orchestrator\"}[5m])",
+            "legendFormat": "Operations"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 42
+        }
+      },
+      {
+        "id": 16,
+        "title": "Monitoring & Dashboard Services",
+        "type": "row",
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 50
+        }
+      },
+      {
+        "id": 17,
+        "title": "Monitoring Dashboard Requests",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"monitoring-dashboard\"}[5m])",
+            "legendFormat": "Requests"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 51
+        }
+      },
+      {
+        "id": 18,
+        "title": "Performance Metrics Requests",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"performance-metrics\"}[5m])",
+            "legendFormat": "Requests"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 51
+        }
+      },
+      {
+        "id": 19,
+        "title": "Communication Services",
+        "type": "row",
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 59
+        }
+      },
+      {
+        "id": 20,
+        "title": "WebSocket Service Connections",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"websocket-service\"}[5m])",
+            "legendFormat": "Connections"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 60
+        }
+      },
+      {
+        "id": 21,
+        "title": "Event Replay Debugger Operations",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(agent_lightning_requests_total{job=\"event-replay-debugger\"}[5m])",
+            "legendFormat": "Operations"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 60
+        }
+      },
+      {
+        "id": 22,
+        "title": "System Resources",
+        "type": "row",
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 68
+        }
+      },
+      {
+        "id": 23,
+        "title": "CPU Usage by Service",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(process_cpu_user_seconds_total[5m]) * 100",
+            "legendFormat": "{{job}} CPU %"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 69
+        }
+      },
+      {
+        "id": 24,
+        "title": "Memory Usage by Service",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "process_resident_memory_bytes / 1024 / 1024",
+            "legendFormat": "{{job}} Memory (MB)"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "MB"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 69
+        }
+      }
+    ],
+    "timepicker": {},
+    "templating": {
+      "list": []
+    },
+    "annotations": {
+      "list": []
+    },
+    "refresh": "30s",
+    "schemaVersion": 27,
+    "version": 0,
+    "links": []
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "service": {
+    "name": "Integrated Monitoring Dashboard",
+    "version": "1.0.0",
+    "description": "Unified monitoring service for Agent Lightning ecosystem"
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8051,
+    "dashboard_port": 8501,
+    "api_port": 8002,
+    "websocket_port": 8765,
+    "workers": 4,
+    "reload": false
+  },
+  "monitoring": {
+    "refresh_interval": 5,
+    "max_data_points": 1000,
+    "metrics_retention_hours": 24,
+    "alert_cooldown_minutes": 5,
+    "health_check_interval": 30,
+    "auto_discovery": true
+  },
+  "services": {
+    "auto_register": true,
+    "health_check_timeout": 5,
+    "service_timeout": 30,
+    "max_retry_attempts": 3,
+    "retry_delay": 1.0
+  },
+  "alerting": {
+    "enabled": true,
+    "rules": {
+      "cpu_high": {
+        "name": "High CPU Usage",
+        "condition": ">",
+        "threshold": 90.0,
+        "severity": "warning",
+        "enabled": true,
+        "cooldown_minutes": 5
+      },
+      "memory_high": {
+        "name": "High Memory Usage",
+        "condition": ">",
+        "threshold": 85.0,
+        "severity": "warning",
+        "enabled": true,
+        "cooldown_minutes": 10
+      },
+      "service_down": {
+        "name": "Service Down",
+        "condition": "==",
+        "threshold": 0,
+        "severity": "error",
+        "enabled": true,
+        "cooldown_minutes": 1
+      }
+    }
+  },
+  "visualization": {
+    "theme": "dark",
+    "charts": {
+      "default_height": 400,
+      "default_width": 600,
+      "colors": {
+        "primary": "#667eea",
+        "secondary": "#764ba2",
+        "success": "#28a745",
+        "warning": "#ffc107",
+        "error": "#dc3545"
+      }
+    },
+    "dashboards": {
+      "main": {
+        "title": "Integrated Monitoring Dashboard",
+        "refresh_interval": 5,
+        "widgets": [
+          "system_health",
+          "services_count",
+          "alerts_count",
+          "system_load",
+          "recent_metrics",
+          "service_status"
+        ]
+      },
+      "training": {
+        "title": "Training Metrics",
+        "widgets": [
+          "loss_chart",
+          "reward_chart",
+          "accuracy_chart",
+          "learning_rate"
+        ]
+      },
+      "agents": {
+        "title": "Agent Performance",
+        "widgets": [
+          "agent_status",
+          "performance_comparison",
+          "response_time",
+          "task_completion"
+        ]
+      },
+      "system": {
+        "title": "System Resources",
+        "widgets": [
+          "cpu_gauge",
+          "memory_gauge",
+          "gpu_gauge",
+          "resource_timeline",
+          "database_pool"
+        ]
+      }
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "handlers": {
+      "file": {
+        "enabled": true,
+        "filename": "logs/integrated_monitoring.log",
+        "max_bytes": 10485760,
+        "backup_count": 5
+      },
+      "console": {
+        "enabled": true
+      }
+    }
+  },
+  "storage": {
+    "metrics": {
+      "type": "memory",
+      "retention_policy": "time_based",
+      "max_age_hours": 24
+    },
+    "alerts": {
+      "type": "memory",
+      "max_history": 1000
+    },
+    "services": {
+      "type": "memory",
+      "persistence": false
+    }
+  },
+  "security": {
+    "cors_origins": ["*"],
+    "api_keys": {
+      "enabled": false,
+      "keys": []
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "requests_per_minute": 60
+    }
+  },
+  "integrations": {
+    "influxdb": {
+      "enabled": false,
+      "url": "http://localhost:8086",
+      "database": "agent_lightning",
+      "token": ""
+    },
+    "prometheus": {
+      "enabled": false,
+      "port": 9090,
+      "path": "/metrics"
+    },
+    "grafana": {
+      "enabled": false,
+      "url": "http://localhost:3000",
+      "api_key": ""
+    }
+  },
+  "deployment": {
+    "environment": "development",
+    "scaling": {
+      "enabled": false,
+      "min_instances": 1,
+      "max_instances": 3,
+      "cpu_threshold": 70.0
+    },
+    "health_checks": {
+      "enabled": true,
+      "endpoint": "/health",
+      "interval": 30,
+      "timeout": 5
+    }
+  }
+}
