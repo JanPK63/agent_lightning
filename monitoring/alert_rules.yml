@@ -1,0 +1,82 @@
+groups:
+  - name: agent_lightning_alerts
+    rules:
+      # Service Health Alerts
+      - alert: ServiceDown
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "Service {{ $labels.job }} has been down for more than 5 minutes."
+
+      # High Error Rate Alerts
+      - alert: HighErrorRate
+        expr: rate(agent_lightning_requests_total{status=~"5.."}[5m]) / rate(agent_lightning_requests_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate on {{ $labels.job }}"
+          description: "Error rate for {{ $labels.job }} is {{ $value | printf \"%.2f\" }}% over the last 5 minutes."
+
+      # Memory Usage Alerts
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / process_virtual_memory_max_bytes > 0.9
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.job }}"
+          description: "Memory usage for {{ $labels.job }} is above 90%."
+
+      # CPU Usage Alerts
+      - alert: HighCPUUsage
+        expr: rate(process_cpu_user_seconds_total[5m]) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.job }}"
+          description: "CPU usage for {{ $labels.job }} is above 80%."
+
+      # WebSocket Connection Issues
+      - alert: WebSocketConnectionErrors
+        expr: increase(agent_lightning_websocket_errors_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High WebSocket connection errors"
+          description: "WebSocket service has {{ $value }} connection errors in the last 5 minutes."
+
+      # RL Training Issues
+      - alert: RLTrainingStalled
+        expr: agent_lightning_rl_training_steps_total < 1
+        for: 30m
+        labels:
+          severity: info
+        annotations:
+          summary: "RL training appears stalled"
+          description: "No RL training steps recorded for {{ $labels.job }} in the last 30 minutes."
+
+      # Memory Manager Issues
+      - alert: MemoryRetrievalErrors
+        expr: increase(agent_lightning_memory_errors_total[5m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Memory retrieval errors increasing"
+          description: "Memory service has {{ $value }} retrieval errors in the last 5 minutes."
+
+      # Workflow Engine Issues
+      - alert: WorkflowExecutionErrors
+        expr: increase(agent_lightning_workflow_errors_total[5m]) > 3
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Workflow execution errors"
+          description: "Workflow engine has {{ $value }} execution errors in the last 5 minutes."

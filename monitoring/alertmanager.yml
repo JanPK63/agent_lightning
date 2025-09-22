@@ -1,0 +1,39 @@
+global:
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alertmanager@agent-lightning.local'
+  smtp_auth_username: ''
+  smtp_auth_password: ''
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'web.hook'
+  routes:
+  - match:
+      alertname: ServiceDown
+    receiver: 'web.hook'
+    group_wait: 5s
+  - match:
+      alertname: HighErrorRate
+    receiver: 'web.hook'
+    group_wait: 30s
+
+receivers:
+- name: 'web.hook'
+  webhook_configs:
+  - url: 'http://localhost:5001/alert'
+    send_resolved: true
+
+- name: 'email'
+  email_configs:
+  - to: 'admin@agent-lightning.local'
+    send_resolved: true
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance']
